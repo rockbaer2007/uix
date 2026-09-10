@@ -7,6 +7,8 @@ docs/.cache/
 docs/mkdocs.release.yml
 docs/source/uix-docs.json
 docs/source/uix_sites.json
+docs/source-*/uix-docs.json
+docs/source-*/uix_sites.json
 *.egg-info/
 
 # Test artifacts — actual screenshots are transient; baselines are committed.

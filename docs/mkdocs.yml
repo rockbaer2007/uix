@@ -24,11 +24,11 @@ theme:
     - schema: default
       toggle:
         icon: material/brightness-7
-        name: Switch to dark mode
+        name: Zu dunklem Modus wechseln
     - scheme: slate
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Zu hellem Modus wechseln
   logo: assets/images/icon.png
   favicon: assets/images/icon.png
   custom_dir: overrides
@@ -55,17 +55,17 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 nav:
   - UI eXtension:
-       - About: index.md
-       - Quick Start: /quick-start
+       - Über UIX: index.md
+       - Schnellstart: /quick-start
        - UIX Styling: /using
        - UIX Forge: /forge
        - UIX Broker: /broker
        - UIX Extras: /extras
-       - UIX Guides: /guides
+       - UIX-Anleitungen: /guides
        - FAQ: /faq
-       - Contributing: /contributing
-       - License: /license
-  - Quick Start: 'quick-start.md'
+       - Mitwirken: /contributing
+       - Lizenz: /license
+  - Schnellstart: 'quick-start.md'
   - UIX Styling:
       -  Styling:
           - using/index.md
@@ -79,7 +79,7 @@ nav:
           - using/templates.md
           - using/themes.md
           - using/other.md
-      - Concepts:
+      - Konzepte:
           - concepts/index.md
           - concepts/dom.md
           - concepts/application.md
@@ -88,7 +88,7 @@ nav:
           - debugging/cards.md
           - debugging/templates.md
           - debugging/cache.md
-      - Developers:
+      - Entwickler:
           - developers/index.md
           - developers/cards.md
           - developers/themes.md
@@ -130,7 +130,7 @@ nav:
       - extras/disable-entity-picture-image-override.md
       - extras/always-patch-ha-card.md
       - extras/style-custom-panels.md
-  - UIX Guides: 'guides.md'
+  - UIX-Anleitungen: 'guides.md'
   - FAQ: 'faq.md'
 repo_url: https://github.com/Lint-Free-Technology/uix
 repo_name: GitHub

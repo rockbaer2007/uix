@@ -1,7 +1,9 @@
 {
   "schema": 1,
-  "language": "en",
-  "name": "English",
-  "site_url": "https://uix.lf.technology",
-  "canonical_url": "https://uix.lf.technology"
+  "language": "de",
+  "name": "Deutsch",
+  "site_url": "https://rockbaer2007.github.io/uix/",
+  "canonical_url": "https://uix.lf.technology",
+  "translation_notice": "Diese unabhängige Übersetzung kann Ungenauigkeiten enthalten. Bitte beachten Sie {canonical}.",
+  "translation_notice_link": "die kanonische englische Dokumentation"
 }
