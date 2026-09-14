@@ -12,6 +12,8 @@ Direktiven laufen nacheinander, nachdem alle Interaktionsregeln gepasst haben. J
 - [Call](#call) – eine Elementmethode aufrufen.
 - [Button](#button) – eine interaktive Home-Assistant-Schaltfläche einfügen.
 - [Tile icon](#tile-icon) – ein interaktives Home-Assistant-Tile-Icon einfügen.
+- [Tooltip](#tooltip) – einen gestalteten Tooltip an ein Element anhängen.
+- [Lock](#lock) – eine Entsperr-Abfrage verlangen, bevor ein Element verwendet werden kann.
 - [Action](#action) – eine Home-Assistant-, Frontend- oder UIX-Aktion ausführen.
 - [Template](#template) – ein Jinja2-Template einmalig rendern und das Ergebnis speichern.
 - [JavaScript](#javascript) – JavaScript synchron auswerten und den Rückgabewert speichern.
@@ -19,7 +21,7 @@ Direktiven laufen nacheinander, nachdem alle Interaktionsregeln gepasst haben. J
 
 ## Direktivenregeln
 
-Füge `rules` zu jeder Direktive außer `block` hinzu, um nur diese Direktive zu bedingen. Die Syntax entspricht den [Interaktionsregeln](./rules.md). Bei `property`, `event`, `call`, `button` und `tile-icon` prüfen Host-Element-Regeln standardmäßig den aufgelösten Direktivenanker. Bei `action` und `wait` prüfen sie den Interaktionsanker. Der eigene `anchor` einer Regel bleibt relativ zu diesem Standardanker oder kann wie üblich absolut sein.
+Füge `rules` zu jeder Direktive außer `block` hinzu, um nur diese Direktive zu bedingen. Die Syntax entspricht den [Interaktionsregeln](./rules.md). Bei `property`, `event`, `call`, `button`, `tile-icon`, `tooltip` und `lock` prüfen Host-Element-Regeln standardmäßig den aufgelösten Direktivenanker. Bei `action` und `wait` prüfen sie den Interaktionsanker. Der eigene `anchor` einer Regel bleibt relativ zu diesem Standardanker oder kann wie üblich absolut sein.
 
 ```yaml
 directives:
@@ -50,7 +52,7 @@ Diese Direktive ist nur in den Realms `browser` und `shortcut` verfügbar. Der I
 
 ## Direktivenanker
 
-Die Direktiven `property`, `event`, `call`, `button` und `tile-icon` verwenden standardmäßig den Interaktionsanker. Jede kann diesen Standard mit einer eigenen `anchor`-Konfiguration überschreiben. Eine einfache Zeichenfolge ist relativ zum Interaktionsanker, eine Zeichenfolge mit führendem `&` ist ein kompakter absoluter `select_tree`-Pfad ab dem Dokument-Root, und `{ select_tree: ... }` ist die entsprechende lange absolute Form.
+Die Direktiven `property`, `event`, `call`, `button`, `tile-icon`, `tooltip` und `lock` verwenden standardmäßig den Interaktionsanker. Jede kann diesen Standard mit einer eigenen `anchor`-Konfiguration überschreiben. Eine einfache Zeichenfolge ist relativ zum Interaktionsanker, eine Zeichenfolge mit führendem `&` ist ein kompakter absoluter `select_tree`-Pfad ab dem Dokument-Root, und `{ select_tree: ... }` ist die entsprechende lange absolute Form.
 
 ```yaml
 directives:
@@ -192,7 +194,7 @@ Nutze `style` für ein flaches Mapping von CSS-Eigenschaftsnamen und Werten. Die
     "--ha-icon-button-size": 32px
 ```
 
-Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root der Schaltfläche. Der UIX-Typ ist `uix-broker-button`, und die aufgelösten Button-Einstellungen stehen in UIX-Templates als `config` zur Verfügung.
+Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root der Schaltfläche. Der UIX-Typ ist `uix-broker-button`; die aufgelösten Button-Einstellungen stehen in UIX-Templates als `config` zur Verfügung, und Ergebnisse vorheriger `template`- oder `javascript`-Direktiven stehen als `directive` bereit.
 
 !!! info
     `button`-UIX-Styling ist ab 8.3.0-beta.3 verfügbar
@@ -269,7 +271,7 @@ Nutze `style` für ein flaches Mapping von CSS-Eigenschaftsnamen und Werten. Die
     z-index: 1
 ```
 
-Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root des Tile-Icons. Der UIX-Typ ist `broker-tile-icon`, und die aufgelösten Tile-Icon-Einstellungen stehen in UIX-Templates als `config` zur Verfügung.
+Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root des Tile-Icons. Der UIX-Typ ist `broker-tile-icon`; die aufgelösten Tile-Icon-Einstellungen stehen in UIX-Templates als `config` zur Verfügung, und Ergebnisse vorheriger `template`- oder `javascript`-Direktiven stehen als `directive` bereit.
 
 ```yaml
 - type: tile-icon
@@ -300,6 +302,130 @@ Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root d
     - Entitybasierte Tile-Icons aktualisieren sich bei Home-Assistant-Zustandsänderungen.
     - Pointer-, Maus-, Touch- und Click-Ereignisse enden am erzeugten Icon. Dadurch reagieren Ripple oder Action-Handler eines umschließenden Elements nicht, während die eigene Aktion und Ripple des Tile-Icons erhalten bleiben.
     - Broker fügt jedem erzeugten Tile-Icon das Attribut `data-uix-broker-tile-icon` hinzu, damit es über UIX Styling ausgewählt werden kann.
+
+## Tooltip
+
+`tooltip` hängt ein Home-Assistant-`wa-tooltip` neben dem ausgewählten Ziel an. Die Optionen und CSS-Variablen entsprechen dem [Forge tooltip spark](../forge/sparks/tooltip.md). Standardmäßig ist `for` der aufgelöste Direktivenanker. Ein Selektor ist relativ zu diesem Anker und nutzt die normale UIX-`select_tree`-Syntax. Das Ziel muss zu einem Element aufgelöst werden, nicht zu einem terminalen shadow root.
+
+```yaml
+- type: tooltip
+  content: Open the living-room light controls
+  placement: bottom
+```
+
+Nutze `for: previous` direkt nach einer UI-Direktive, um den Tooltip an das gerade erzeugte Element anzuhängen. Das funktioniert derzeit mit `button` und `tile-icon` und funktioniert auch mit späteren elementerzeugenden Direktiven, ohne dass ein Elementselektor nötig ist.
+
+```yaml
+- type: button
+  icon: mdi:lightbulb
+  tap_action:
+    action: toggle
+- type: tooltip
+  for: previous
+  content: Toggle the light
+  placement: bottom
+```
+
+```yaml
+- type: tooltip
+  for: "$ ha-dialog ha-icon-button"
+  content: Close
+  without_arrow: true
+```
+
+Nutze `style` für ein flaches Mapping von CSS-Eigenschaften. Das ist besonders nützlich, um die `--uix-tooltip-*`-Variablen direkt auf dem erzeugten Tooltip zu setzen.
+
+```yaml
+- type: tooltip
+  for: previous
+  content: Toggle the light
+  style:
+    "--uix-tooltip-background-color": var(--primary-color)
+    "--uix-tooltip-content-color": white
+    "--uix-tooltip-max-width": 24ch
+```
+
+`trigger` akzeptiert die durch Leerzeichen getrennten Web-Awesome-Aktivierungsmodi `hover`, `focus`, `click` und `manual`. Wenn `hover` aktiviert ist, bleibt der Tooltip offen, während sich der Mauszeiger vom Ziel in den Tooltip-Inhalt bewegt. Dadurch kann begrenzter Inhalt gescrollt werden. `manual` aktiviert nicht automatisch; nutze `open`, um den Zustand zu setzen, wenn die Direktive läuft.
+
+```yaml
+- type: tooltip
+  for: previous
+  trigger: manual
+  open: true
+  content: This tooltip is opened by the directive
+```
+
+| Schlüssel | Typ | Standard | Beschreibung |
+| --- | --- | --- | --- |
+| `for` | string | Direktivenanker | Zielselektor oder `previous` für die vorherige elementerzeugende Direktive. |
+| `content` | string | `""` | HTML-Inhalt des Tooltip-Körpers. |
+| `placement` | string | `"top"` | `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end`, `right`, `right-start` oder `right-end`. |
+| `distance` | number | `8` | Abstand in Pixeln zwischen Tooltip und Ziel. |
+| `skidding` | number | `0` | Versatz in Pixeln entlang der Zielachse. |
+| `show_delay` | number | `150` | Millisekunden, bevor der Tooltip angezeigt wird. |
+| `hide_delay` | number | `150` | Millisekunden, bevor der Tooltip ausgeblendet wird. |
+| `trigger` | string | `"hover focus"` | Durch Leerzeichen getrennte Aktivierungsmodi: `hover`, `focus`, `click` oder `manual`. |
+| `open` | boolean | `false` | Setzt den offenen Zustand des Tooltips, wenn die Direktive läuft. Das ist besonders mit `trigger: manual` nützlich. |
+| `without_arrow` | boolean | `false` | Blendet den Richtungspfeil aus. |
+| `style` | object | — | Flaches Mapping von CSS-Eigenschaftsnamen und String- oder Zahlenwerten, inline auf `wa-tooltip` gesetzt. |
+
+Der Tooltip wird als Geschwisterelement seines Ziels eingefügt. Setze die `--uix-tooltip-*`-CSS-Variablen auf dem Elternelement des Ziels oder einem Vorfahren, um ihn anzupassen; siehe die [CSS-Variablenreferenz des Forge tooltip spark](../forge/sparks/tooltip.md#css-variables-reference).
+
+## Lock
+
+`lock` legt eine Sperrfläche über den Direktivenanker und verhindert die Nutzung, bis der aktuelle Benutzer die konfigurierte PIN-, Passphrase- oder Bestätigungsabfrage abgeschlossen hat. Die Direktive verwendet dieselbe Zugriffsprüfung, Wiederholungsbehandlung, Icons und `--uix-lock-*`-CSS-Variablen wie der [Forge lock spark](../forge/sparks/lock.md).
+
+```yaml
+- type: lock
+  action: tap
+  duration: 5s
+  entity: light.living_room
+  unlocked_action:
+    action: toggle
+  locks:
+    - code: 1234
+      admins: true
+```
+
+Der Direktivenanker ist standardmäßig das gesperrte Element. Setze `for` auf einen relativen Selektor, um ein Kindelement zu sperren, oder nutze `for: previous` direkt nach einer elementerzeugenden Direktive wie `button` oder `tile-icon`.
+
+```yaml
+- type: button
+  icon: mdi:account
+- type: lock
+  for: previous
+  locks:
+    - confirmation: true
+      admins: true
+```
+
+Nutze `anchor`, um die Direktivenwurzel für `for`-Selektoren zu ändern. `locks`, `permissive`, `code_dialog`, `action`, `duration`, `icon_locked`, `icon_unlocked`, `icon_locked_color`, `icon_unlocked_color`, `icon_position` und `icon_size` haben dieselbe Bedeutung wie beim Forge lock spark.
+
+`unlocked_action` ist optional. Eine normale Home-Assistant-Aktion läuft gegen `entity`; `element_tap`, `element_hold` und `element_double_tap` lösen die entsprechende Aktion aus der `config` des gesperrten Elements aus, wenn es eine besitzt.
+
+Nutze `style` für ein flaches Mapping von CSS-Eigenschaftsnamen und Werten auf der erzeugten Sperrfläche. Die `--uix-lock-*`-CSS-Variablen sind in der Regel vorzuziehen, weil sie weiter gelten, während die Sperre zwischen gesperrten, entsperrten und blockierten Zuständen wechselt.
+
+```yaml
+- type: lock
+  style:
+    "--uix-lock-background": rgba(0, 0, 0, 0.25)
+    "--uix-lock-icon-size": 20px
+    z-index: 2
+```
+
+Nutze `uix` für UIX Styling auf der erzeugten Sperrfläche. Der UIX-Typ ist `uix-broker-lock`; die aufgelösten Lock-Einstellungen stehen als `config` zur Verfügung, und Ergebnisse früherer `template`- oder `javascript`-Direktiven stehen als `directive` bereit.
+
+```yaml
+- type: lock
+  locks:
+    - confirmation: true
+      admins: true
+  uix:
+    style: |
+      :host {
+        --uix-lock-background: {{ 'rgba(0, 0, 0, 0.35)' if config.locks else 'transparent' }};
+      }
+```
 
 ## Action
 

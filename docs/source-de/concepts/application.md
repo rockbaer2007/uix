@@ -5,6 +5,8 @@ description: Learn about how UI eXtension patches and applies to UI elements in 
 
 UIX has near 100% coverage of standard Home Assistant Frontend cards while still supporting custom cards not utilising the modern Home Assistant rendering container for cards.
 
+UIX-Styling-Lifecycle-Events werden ausgelöst, wenn ein `<uix-node>` angehängt wird, Styles rendert oder ein Theme-Update erneut verarbeitet. Siehe dazu [UIX-Styling-Lifecycle-Events](../broker/realms.md#uix-styling-lifecycle-events). UIX Broker kann sie nutzen, um darauf zu reagieren, dass ein bestimmtes Element verfügbar wird oder erneut gestylt wird.
+
 !!! info "Definitions"
     1. patch/patching => UIX is running injected code into the element class
     2. application/applying => UIX applies a `<uix-node>` to element, usually in the shadowRoot, and children as per selectors

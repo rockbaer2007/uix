@@ -14,6 +14,12 @@ Der `realm` einer Interaktion bestimmt, wo Broker lauscht und wie der Wert von `
 
 Alle Realms unterstützen [Regeln](rules.md) und [Direktiven](directives.md). Das ausgewählte Element des [Interaktionsankers](interaction-anchors.md) befindet sich immer im aktuellen Browser. Daher kann ein aus dem `server`-Realm erfasstes Ereignis trotzdem ein Browser-Element aktualisieren oder ein Ereignis an dieses Element auslösen.
 
+## Listener-Registrierungen
+
+Broker registriert einen Browser-Listener für jeden eindeutigen Ereignisnamen im `browser`-Realm und ein Home-Assistant-Event-Bus-Abonnement für jeden eindeutigen Ereignisnamen im `server`-Realm. Interaktionen mit demselben aktivierten `listen`-Wert teilen sich diese Registrierung. Broker wertet ihre Anker und Regeln aus, nachdem das Ereignis angekommen ist.
+
+Zum Beispiel verwenden zwei `browser`-Interaktionen, die beide auf `uix-applied` lauschen, einen gemeinsamen `window`-Listener. Zwei `server`-Interaktionen, die beide auf `state_changed` lauschen, verwenden ein gemeinsames Event-Bus-Abonnement. Teile Interaktionen nach Ziel, Regeln oder Direktiven auf, wenn die Konfiguration dadurch klarer wird; eine Gruppierung ist nicht nötig, um Listener-Registrierungen zu reduzieren.
+
 ## Browser
 
 `browser` lauscht während der Capture-Phase auf `window`. Nutze diesen Realm für DOM-Ereignisse wie `click`, `change`, `show-dialog` und benutzerdefinierte Browser-Ereignisse von Home Assistant. `listen` kann ein einzelner Ereignisname oder eine Liste sein, wenn dieselbe Interaktion auf mehrere Ereignisse reagieren soll.
@@ -45,6 +51,36 @@ Beispiel: Eine Interaktion nach dem Start von Broker und jedes Mal ausführen, w
 ```
 
 Das `detail`-Objekt des Browser-Ereignisses ist die Wurzel der erfassten Daten. Siehe [Regeln für erfasste Daten](./rules.md#regeln-für-erfasste-daten) und [Event-Direktive](./directives.md#event), um zu erfahren, wie erfasste Daten abgeglichen und wiederverwendet werden.
+
+### UIX-Styling-Lifecycle-Events
+
+!!! info
+    UIX-Styling-Lifecycle-Events sind ab 8.3.0-beta.9 verfügbar
+
+UIX Styling löst die folgenden bubbling und composed Browser-Ereignisse von seinem `<uix-node>` aus:
+
+- `uix-applied` – nachdem UIX an ein Element angehängt oder erneut angewendet wurde. Das Ereignis kann erneut ausgelöst werden, wenn der Host aktualisiert oder die UIX-Konfiguration erneut angewendet wird. Verbraucher sollten ihre Direktiven daher idempotent gestalten.
+- `uix-styles-update` – wenn dieser UIX-Knoten seinen gerenderten CSS-Text aktualisiert, einschließlich templategesteuerter Updates. Der neueste Text steht als `detail.uix_node._rendered_styles` bereit, aber Lit hat sein `<style>`-Element zu diesem Zeitpunkt noch nicht committed. Um berechnete Styles zu lesen, warte zuerst in einer JavaScript-Direktive auf `detail.uix_node.updateComplete`.
+- `uix-theme-update` – nachdem dieser UIX-Knoten ein Theme-Update erneut verarbeitet hat. Dieses Ereignis wird auch ausgelöst, wenn das daraus resultierende UIX-CSS unverändert bleibt.
+
+Alle drei Ereignisse liefern den auslösenden `<uix-node>` als `detail.uix_node`. Nutze den Event-Path-Anker `"< target"`, um dessen Elternelement auszuwählen. Das ist das Element, auf das UIX angewendet wurde, unabhängig davon, ob sich der Knoten im Light DOM oder in einem shadow root befindet.
+
+Beispiel: Den `themeMode` einer Karte setzen, wenn UIX auf die umgebende Karten-Card angewendet wird und wenn sich ihr Theme aktualisiert:
+
+```yaml
+- realm: browser
+  listen:
+    - uix-applied
+    - uix-theme-update
+  anchor: "< target"
+  rules:
+    - hui-map-card
+  directives:
+    - type: property
+      anchor: "$ ha-map"
+      set: themeMode
+      value: dark
+```
 
 ## Shortcut
 
