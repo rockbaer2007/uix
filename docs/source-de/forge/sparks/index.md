@@ -10,6 +10,7 @@ Available sparks:
 
 - :speech_balloon: [Tooltip](./tooltip.md) — attach a styled tooltip to any element within the forged element.
 - :material-button-cursor: [Button](button.md) — insert an interactive `ha-button` element as a sibling after any element within the forged element.
+- :material-badge-account-horizontal-outline: [Badge](badge.md) — fügt ein im Web-Awesome-Stil gestaltetes `uix-badge` vor oder nach einem Element innerhalb des Forge-Elements ein.
 - :label: [Attribute](attribute.md) — add, replace or remove an attribute of any element within the forged element.
 - :zap: [Event](event.md) — receive DOM events from `fire-dom-event` actions and expose their data as template variables.
 - :star: [Tile Icon](tile-icon.md) — insert a `ha-tile-icon` element as a sibling before or after any element within the forged element.
