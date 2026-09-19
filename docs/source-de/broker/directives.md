@@ -11,6 +11,7 @@ Direktiven laufen nacheinander, nachdem alle Interaktionsregeln gepasst haben. J
 - [Event](#event) – ein `CustomEvent` auslösen.
 - [Call](#call) – eine Elementmethode aufrufen.
 - [Button](#button) – eine interaktive Home-Assistant-Schaltfläche einfügen.
+- [Textinhalt](#textinhalt) – gestalteten Text neben einem Element einfügen.
 - [Tile icon](#tile-icon) – ein interaktives Home-Assistant-Tile-Icon einfügen.
 - [Tooltip](#tooltip) – einen gestalteten Tooltip an ein Element anhängen.
 - [Lock](#lock) – eine Entsperr-Abfrage verlangen, bevor ein Element verwendet werden kann.
@@ -21,7 +22,7 @@ Direktiven laufen nacheinander, nachdem alle Interaktionsregeln gepasst haben. J
 
 ## Direktivenregeln
 
-Füge `rules` zu jeder Direktive außer `block` hinzu, um nur diese Direktive zu bedingen. Die Syntax entspricht den [Interaktionsregeln](./rules.md). Bei `property`, `event`, `call`, `button`, `tile-icon`, `tooltip` und `lock` prüfen Host-Element-Regeln standardmäßig den aufgelösten Direktivenanker. Bei `action` und `wait` prüfen sie den Interaktionsanker. Der eigene `anchor` einer Regel bleibt relativ zu diesem Standardanker oder kann wie üblich absolut sein.
+Füge `rules` zu jeder Direktive außer `block` hinzu, um nur diese Direktive zu bedingen. Die Syntax entspricht den [Interaktionsregeln](./rules.md). Bei `property`, `event`, `call`, `action-handler`, `button`, `badge`, `text-content`, `tile-icon`, `tooltip` und `lock` prüfen Host-Element-Regeln standardmäßig den aufgelösten Direktivenanker. Bei `action` und `wait` prüfen sie den Interaktionsanker. Der eigene `anchor` einer Regel bleibt relativ zu diesem Standardanker oder kann wie üblich absolut sein.
 
 ```yaml
 directives:
@@ -52,7 +53,7 @@ Diese Direktive ist nur in den Realms `browser` und `shortcut` verfügbar. Der I
 
 ## Direktivenanker
 
-Die Direktiven `property`, `event`, `call`, `button`, `tile-icon`, `tooltip` und `lock` verwenden standardmäßig den Interaktionsanker. Jede kann diesen Standard mit einer eigenen `anchor`-Konfiguration überschreiben. Eine einfache Zeichenfolge ist relativ zum Interaktionsanker, eine Zeichenfolge mit führendem `&` ist ein kompakter absoluter `select_tree`-Pfad ab dem Dokument-Root, und `{ select_tree: ... }` ist die entsprechende lange absolute Form.
+Die Direktiven `property`, `event`, `call`, `action-handler`, `button`, `badge`, `text-content`, `tile-icon`, `tooltip` und `lock` verwenden standardmäßig den Interaktionsanker. Jede kann diesen Standard mit einer eigenen `anchor`-Konfiguration überschreiben. Eine einfache Zeichenfolge ist relativ zum Interaktionsanker, eine Zeichenfolge mit führendem `&` ist ein kompakter absoluter `select_tree`-Pfad ab dem Dokument-Root, und `{ select_tree: ... }` ist die entsprechende lange absolute Form.
 
 ```yaml
 directives:
@@ -232,6 +233,38 @@ Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root d
     - Pointer-, Maus-, Touch- und Click-Ereignisse enden an der erzeugten Schaltfläche. Dadurch reagieren Ripple oder Action-Handler eines umschließenden Elements nicht, während die eigene Aktion und Ripple der Schaltfläche erhalten bleiben.
     - Es gilt dieselbe CSS-Variable `--uix-button-margin` wie beim Forge button spark. Der Standardabstand ist `-6px` für eine beschriftete Schaltfläche und `0px` für eine reine Icon-Schaltfläche.
     - Andere CSS-Variablen, die für den Forge button spark gelten, gelten ebenfalls.
+
+## Textinhalt
+
+`text-content` fügt unmittelbar nach seinem Direktivenanker ein `<span>` mit Text ein. Das ist nützlich, wenn CSS-Pseudo-Inhalte sonst nur für ein kleines Label oder eine zweite Textzeile verwendet würden. Das erzeugte Span trägt das Attribut `data-uix-broker-text-content` und wird wiederverwendet, wenn dieselbe Direktive erneut ausgeführt wird.
+
+```yaml
+- type: text-content
+  anchor: "$ div.panels-list div.wrapper ha-list-nav slot ha-list-item-button#sidebar-panel-home $ a#item div.content div.headline slot"
+  content: Gesichert
+  style:
+    display: block
+    font-size: var(--ha-font-size-s)
+    font-weight: var(--ha-font-weight-medium)
+    line-height: 1
+    color: var(--success-color)
+    width: min-content
+- type: tooltip
+  for: previous
+  content: Alle Alarmbereiche des Hauses sind gesichert
+  placement: top
+```
+
+`content` wird immer als Text eingefügt, niemals als HTML. Es akzeptiert eine Zeichenfolge oder Zahl und unterstützt erfasste Daten sowie Ergebnisse vorheriger `template`- oder `javascript`-Direktiven.
+
+Nutze `style` für ein flaches Mapping von CSS-Eigenschaftsnamen und Zeichenfolgen- oder Zahlenwerten. Die Eigenschaften werden inline auf dem erzeugten Span gesetzt.
+
+Wenn das Ziel ein benannter Slot ist, verwende entweder das tatsächliche `<slot>`-Element als Anker wie im Beispiel, oder verankere ein Light-DOM-Element, das diesem Slot bereits zugeordnet ist. Im zweiten Fall kopiert UIX das `slot`-Attribut des Ankers auf das erzeugte Span, damit es in denselben Slot projiziert wird. `text-content` besitzt keine eigene `slot`-Option; die Direktive folgt dem aufgelösten Anker.
+
+| Schlüssel | Typ | Standard | Beschreibung |
+| --- | --- | --- | --- |
+| `content` | Zeichenfolge oder Zahl | `""` | Text, der in das erzeugte Span eingefügt wird. |
+| `style` | Objekt | — | Flaches Mapping von CSS-Eigenschaftsnamen und Zeichenfolgen- oder Zahlenwerten; wird inline auf dem erzeugten Span gesetzt. |
 
 ## Tile icon
 
