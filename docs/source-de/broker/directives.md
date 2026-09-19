@@ -234,7 +234,101 @@ Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root d
     - Es gilt dieselbe CSS-Variable `--uix-button-margin` wie beim Forge button spark. Der Standardabstand ist `-6px` für eine beschriftete Schaltfläche und `0px` für eine reine Icon-Schaltfläche.
     - Andere CSS-Variablen, die für den Forge button spark gelten, gelten ebenfalls.
 
+## Badge
+
+!!! info
+    Die Direktive `badge` ist ab 8.3.0-beta.10 verfügbar.
+
+`badge` fügt neben dem Direktivenanker ein `uix-badge` ein. Das Badge verwendet die von Home Assistant angepasste Web-Awesome-Basis und deren Styles; seine Varianten folgen daher dem aktiven Home-Assistant-Theme. UIX behält das Element im eigenen Namespace und registriert nicht die globale Web-Awesome-Komponente `wa-badge`.
+
+Standardmäßig wird das Badge nach dem Direktivenanker eingefügt. Mit `after` oder `before` wird ein anderes Geschwisterelement über dieselbe UIX-`select_tree`-Syntax wie bei `button` gewählt. Ist die Referenz ein `ha-button` oder `ha-tile-icon`, zeigt UIX das Badge stattdessen automatisch auf diesem Element. Bei allen anderen Zielen positioniert `placement` das Badge auf dem Parent.
+
+```yaml
+- type: badge
+  content: 3
+  variant: danger
+  appearance: filled
+  pill: true
+```
+
+Verwende `style` für ein flaches Mapping aus CSS-Eigenschaftsnamen und Werten oder `uix` für UIX Styling. Der UIX-Typ ist `uix-broker-badge`; die aufgelösten Badge-Einstellungen stehen in UIX-Templates als `config`, Ergebnisse vorheriger `template`- oder `javascript`-Direktiven als `directive` bereit.
+
+```yaml
+- type: badge
+  anchor: "$ div.title"
+  before: ".label"
+  content: Experimentell
+  variant: warning
+  appearance: outlined
+  start_icon: mdi:flask-outline
+  style:
+    margin-inline-start: 8px
+```
+
+| Schlüssel | Typ | Standard | Beschreibung |
+| --- | --- | --- | --- |
+| `after` | Zeichenfolge | Direktivenanker | Relativer Selektor für die Referenz. Normalerweise wird das Badge danach eingefügt. Bei `ha-button` oder `ha-tile-icon` erscheint es auf diesem Element; mit `placement` wird es bei allen anderen Zielen auf dem Parent positioniert. |
+| `before` | Zeichenfolge | — | Relativer Selektor für die Referenz. Normalerweise wird das Badge davor eingefügt. Bei `ha-button` oder `ha-tile-icon` erscheint es auf diesem Element; mit `placement` wird es bei allen anderen Zielen auf dem Parent positioniert. |
+| `for` | `previous` | — | Unmittelbar nach einer Element erzeugenden Direktive verwenden, um ihr erzeugtes Element anzusprechen. Nicht mit `after` oder `before` kombinierbar. |
+| `content` | Zeichenfolge oder Zahl | `""` | Im Badge angezeigter Text. |
+| `variant` | Zeichenfolge | `brand` | `brand`, `neutral`, `success`, `warning` oder `danger`. |
+| `appearance` | Zeichenfolge | `accent` | `accent`, `filled`, `outlined` oder `filled-outlined`. |
+| `pill` | Boolean | `false` | Verwendet die vollständig abgerundete Pillenform. |
+| `attention` | Zeichenfolge | `none` | `none`, `pulse` oder `bounce`. |
+| `placement` | Zeichenfolge | — | Position auf `ha-button` oder `ha-tile-icon`; bei allen anderen Zielen auf deren Parent. Möglich sind `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end`, `right`, `right-start` und `right-end`. |
+| `start_icon` / `end_icon` | Zeichenfolge | — | MDI-Icon vor oder nach dem Inhalt. |
+| `style` | Objekt | — | Flaches Mapping aus CSS-Eigenschaftsnamen und Zeichenfolgen- oder Zahlenwerten, inline auf `uix-badge` gesetzt. |
+| `uix` | Objekt | — | UIX-Konfiguration für das erzeugte Badge mit Typ `uix-broker-badge`. |
+
+### Automatische Platzierung
+
+Die automatische Platzierung gilt nur, wenn der aufgelöste Direktivenanker oder die Referenz von `after` / `before` eines dieser Elemente ist. Ein von UIX erzeugter Button-Spark wird wie sein enthaltenes `ha-button` behandelt.
+
+| Ziel | Platzierung | Umsetzung |
+| --- | --- | --- |
+| `ha-button` | Ecke oben rechts | UIX fügt das Badge innerhalb des Buttons ein und folgt dem Web-Awesome-Button-Badge-Muster. |
+| `ha-tile-icon` | Ecke oben rechts | UIX verwendet den dokumentierten Standard-Slot des Tile-Icons, die Tile-Badge-Eckenversätze und die kompakte Tile-Badge-Größe von Home Assistant. |
+
+Bei diesen Zielen bestimmen `after` und `before`, welches Element das Badge erhält; sie steuern nicht das Einfügen eines Geschwisterelements. Ohne `placement` verwenden andere Ziele das normale Geschwisterverhalten. Ein gesetztes `placement` positioniert das Badge relativ zum Parent: UIX belässt es außerhalb des Ziels und verändert das ausgewählte Ziel nicht.
+
+Alle Platzierungen nutzen standardmäßig die kompakte Home-Assistant-Schriftgröße `--ha-font-size-xs` und `0.25em 0.5em` Innenabstand. Es gelten dieselben Werte wie für `wa-tooltip`. `ha-button` und `ha-tile-icon` verwenden `top-end` als Standard.
+
+Die [CSS-Variablen des Forge-Badges](../forge/sparks/badge.md#css-variablen) können über `style` für ein einzelnes Broker-Badge oder über `uix` für wiederverwendbare Regeln gesetzt werden. `--uix-badge-offset-x` und `--uix-badge-offset-y` verschieben ein platziertes Badge nach dem Auflösen der Position; positive Werte bewegen es nach rechts bzw. unten.
+
+```yaml
+- type: badge
+  after: "$ ha-button"
+  content: 3
+  variant: danger
+  pill: true
+  placement: bottom-end
+```
+
+Mit `for: previous` direkt nach einer `button`-Direktive erscheint ein Badge auf dem erzeugten Button:
+
+```yaml
+- type: button
+  label: Wohnzimmer
+  end_icon: mdi:lightbulb-fluorescent-tube-outline
+  tap_action:
+    action: toggle
+- type: badge
+  for: previous
+  content: 3
+  variant: danger
+  pill: true
+```
+
+!!! note
+    - Höchstens eines von `after` und `before` setzen.
+    - `for: previous` kann nicht mit `after` oder `before` kombiniert werden.
+    - Ziele vom Typ `ha-button` und `ha-tile-icon` erhalten das Badge direkt statt als Geschwisterelement.
+    - `content` wird als Text eingefügt, nicht als HTML.
+
 ## Textinhalt
+
+!!! info
+    Die Direktive `text-content` ist ab 8.3.0-beta.12 verfügbar.
 
 `text-content` fügt unmittelbar nach seinem Direktivenanker ein `<span>` mit Text ein. Das ist nützlich, wenn CSS-Pseudo-Inhalte sonst nur für ein kleines Label oder eine zweite Textzeile verwendet würden. Das erzeugte Span trägt das Attribut `data-uix-broker-text-content` und wird wiederverwendet, wenn dieselbe Direktive erneut ausgeführt wird.
 
@@ -459,6 +553,47 @@ Nutze `uix` für UIX Styling auf der erzeugten Sperrfläche. Der UIX-Typ ist `ui
         --uix-lock-background: {{ 'rgba(0, 0, 0, 0.35)' if config.locks else 'transparent' }};
       }
 ```
+
+## Action handler
+
+!!! info
+    Die Direktive `action-handler` ist ab 8.3.0-beta.12 verfügbar.
+
+`action-handler` bindet den Action-Handler von Home Assistant an den Direktivenanker. Es können eine oder mehrere Standardaktionen konfiguriert werden; `tap_action`, `hold_action` und `double_tap_action` werden unterstützt. Die passende Aktion wird vom Anker als normales `hass-action`-Event ausgelöst.
+
+Jeder konfigurierte Aktionstyp gehört UIX Broker: Sein `action`-Event erreicht keine anderen Listener auf dem Anker oder dessen Vorfahren. Verwende die Direktive daher, um vorhandenes Verhalten für diesen Aktionstyp zu ersetzen, nicht um Aktionen zu kombinieren. Einen Aktionstyp auslassen oder seine Aktion auf `none` setzen, um ihn unverändert zu lassen.
+
+Mit `entity` wird eine Entity-ID an entitätsbasierte Aktionen wie `toggle` und `more-info` übergeben. `cursor` setzt den Cursor nur auf dem Anker dieser Direktive und ist standardmäßig `pointer`; jeder CSS-Cursorwert wie `default` oder `auto` ist möglich.
+
+```yaml
+- type: action-handler
+  anchor: "$ div.menu div.title"
+  tap_action:
+    action: navigate
+    navigation_path: /home
+```
+
+```yaml
+- type: action-handler
+  anchor: "$ div.menu div.title"
+  cursor: default
+  entity: light.living_room
+  tap_action:
+    action: toggle
+  hold_action:
+    action: more-info
+  double_tap_action:
+    action: navigate
+    navigation_path: /dashboard-lights
+```
+
+| Schlüssel | Typ | Beschreibung |
+| --- | --- | --- |
+| `entity` | Zeichenfolge | Entity-ID für entitätsbasierte Aktionen. |
+| `cursor` | Zeichenfolge | CSS-Cursor für den Anker. Standard ist `pointer`. |
+| `tap_action` | Aktion | Beim Tippen auszuführende Aktion. |
+| `hold_action` | Aktion | Beim Gedrückthalten auszuführende Aktion. |
+| `double_tap_action` | Aktion | Beim Doppeltippen auszuführende Aktion. |
 
 ## Action
 
