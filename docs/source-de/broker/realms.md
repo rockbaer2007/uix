@@ -54,9 +54,6 @@ Das `detail`-Objekt des Browser-Ereignisses ist die Wurzel der erfassten Daten. 
 
 ### UIX-Styling-Lifecycle-Events
 
-!!! info
-    UIX-Styling-Lifecycle-Events sind ab 8.3.0-beta.9 verfügbar
-
 UIX Styling löst die folgenden bubbling und composed Browser-Ereignisse von seinem `<uix-node>` aus:
 
 - `uix-applied` – nachdem UIX an ein Element angehängt oder erneut angewendet wurde. Das Ereignis kann erneut ausgelöst werden, wenn der Host aktualisiert oder die UIX-Konfiguration erneut angewendet wird. Verbraucher sollten ihre Direktiven daher idempotent gestalten.

@@ -5,9 +5,6 @@ icon: material/badge-account-horizontal-outline
 
 # :material-badge-account-horizontal-outline: Badge-Spark
 
-!!! info
-    Der `badge`-Spark ist ab 8.3.0-beta.10 verfügbar.
-
 Der `badge`-Spark fügt ein `uix-badge` als DOM-Geschwisterelement unmittelbar vor oder nach einem Element innerhalb eines Forge-Elements ein. Er verwendet die von Home Assistant angepasste Web-Awesome-Badge-Basis und deren Styles; die Farben folgen daher automatisch dem aktiven Home-Assistant-Theme.
 
 Ist das Ziel ein `ha-button` oder `ha-tile-icon`, zeigt UIX das Badge mit kompaktem Styling automatisch auf diesem Element. Nur diese beiden Ziele besitzen eine automatische Platzierung.

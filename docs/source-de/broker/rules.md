@@ -72,9 +72,6 @@ rules:
 
 ### Home-Assistant-Benutzer
 
-!!! info
-    Home-Assistant-Benutzerregeln sind ab 8.3.0-beta.1 verfügbar
-
 Verwende `type: user`, um den angemeldeten Home-Assistant-Benutzer entweder über seinen Anzeigenamen (`hass.user.name`) oder seine stabile Benutzer-ID (`hass.user.id`) abzugleichen. Home-Assistant-Benutzernamen sind im Frontend-Benutzerobjekt nicht verfügbar und werden von dieser Regel nicht unterstützt; verwende einen Anzeigenamen oder eine ID. `match` und `value` verwenden dieselbe Matching-Syntax und dieselben Operatoren wie [Regeln für erfasste Daten](#regeln-für-erfasste-daten), einschließlich Wildcards, regulärer Ausdrücke und boolescher Komposition. Setze entweder `match` oder `value`.
 
 ```yaml

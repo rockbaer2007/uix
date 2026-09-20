@@ -11,10 +11,12 @@ Direktiven laufen nacheinander, nachdem alle Interaktionsregeln gepasst haben. J
 - [Event](#event) – ein `CustomEvent` auslösen.
 - [Call](#call) – eine Elementmethode aufrufen.
 - [Button](#button) – eine interaktive Home-Assistant-Schaltfläche einfügen.
+- [Badge](#badge) – ein Web-Awesome-Status-Badge einfügen.
 - [Textinhalt](#textinhalt) – gestalteten Text neben einem Element einfügen.
 - [Tile icon](#tile-icon) – ein interaktives Home-Assistant-Tile-Icon einfügen.
 - [Tooltip](#tooltip) – einen gestalteten Tooltip an ein Element anhängen.
 - [Lock](#lock) – eine Entsperr-Abfrage verlangen, bevor ein Element verwendet werden kann.
+- [Action handler](#action-handler) – Home-Assistant-Aktionen an ein bestehendes Element binden.
 - [Action](#action) – eine Home-Assistant-, Frontend- oder UIX-Aktion ausführen.
 - [Template](#template) – ein Jinja2-Template einmalig rendern und das Ergebnis speichern.
 - [JavaScript](#javascript) – JavaScript synchron auswerten und den Rückgabewert speichern.
@@ -197,9 +199,6 @@ Nutze `style` für ein flaches Mapping von CSS-Eigenschaftsnamen und Werten. Die
 
 Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root der Schaltfläche. Der UIX-Typ ist `uix-broker-button`; die aufgelösten Button-Einstellungen stehen in UIX-Templates als `config` zur Verfügung, und Ergebnisse vorheriger `template`- oder `javascript`-Direktiven stehen als `directive` bereit.
 
-!!! info
-    `button`-UIX-Styling ist ab 8.3.0-beta.3 verfügbar
-
 ```yaml
 - type: button
   entity: light.living_room
@@ -235,9 +234,6 @@ Nutze `uix` für UIX Styling, einschließlich Styles innerhalb des shadow root d
     - Andere CSS-Variablen, die für den Forge button spark gelten, gelten ebenfalls.
 
 ## Badge
-
-!!! info
-    Die Direktive `badge` ist ab 8.3.0-beta.10 verfügbar.
 
 `badge` fügt neben dem Direktivenanker ein `uix-badge` ein. Das Badge verwendet die von Home Assistant angepasste Web-Awesome-Basis und deren Styles; seine Varianten folgen daher dem aktiven Home-Assistant-Theme. UIX behält das Element im eigenen Namespace und registriert nicht die globale Web-Awesome-Komponente `wa-badge`.
 
@@ -327,9 +323,6 @@ Mit `for: previous` direkt nach einer `button`-Direktive erscheint ein Badge auf
 
 ## Textinhalt
 
-!!! info
-    Die Direktive `text-content` ist ab 8.3.0-beta.12 verfügbar.
-
 `text-content` fügt unmittelbar nach seinem Direktivenanker ein `<span>` mit Text ein. Das ist nützlich, wenn CSS-Pseudo-Inhalte sonst nur für ein kleines Label oder eine zweite Textzeile verwendet würden. Das erzeugte Span trägt das Attribut `data-uix-broker-text-content` und wird wiederverwendet, wenn dieselbe Direktive erneut ausgeführt wird.
 
 ```yaml
@@ -361,9 +354,6 @@ Wenn das Ziel ein benannter Slot ist, verwende entweder das tatsächliche `<slot
 | `style` | Objekt | — | Flaches Mapping von CSS-Eigenschaftsnamen und Zeichenfolgen- oder Zahlenwerten; wird inline auf dem erzeugten Span gesetzt. |
 
 ## Tile icon
-
-!!! info
-    Die Direktive `tile-icon` ist ab 8.3.0-beta.3 verfügbar
 
 `tile-icon` fügt neben dem Direktivenanker ein Home-Assistant-`ha-tile-icon` ein. Die Direktive verwendet dieselbe Icon-Darstellung und Aktionsbehandlung wie der [Forge tile-icon spark](../forge/sparks/tile-icon.md). Standardmäßig wird das Tile-Icon nach dem Direktivenanker eingefügt.
 
@@ -555,9 +545,6 @@ Nutze `uix` für UIX Styling auf der erzeugten Sperrfläche. Der UIX-Typ ist `ui
 ```
 
 ## Action handler
-
-!!! info
-    Die Direktive `action-handler` ist ab 8.3.0-beta.12 verfügbar.
 
 `action-handler` bindet den Action-Handler von Home Assistant an den Direktivenanker. Es können eine oder mehrere Standardaktionen konfiguriert werden; `tap_action`, `hold_action` und `double_tap_action` werden unterstützt. Die passende Aktion wird vom Anker als normales `hass-action`-Event ausgelöst.
 
