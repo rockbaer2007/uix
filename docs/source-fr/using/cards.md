@@ -1,25 +1,25 @@
 ---
-description: Learn all about styling cards.
+description: Découvrez comment styliser les cartes.
 ---
 
-# Styling cards
+# Styliser les cartes
 
-Cards are styled by adding the following to the card configuration:
+Les cartes se stylisent en ajoutant le bloc suivant à leur configuration :
 
 ```yaml
 uix:
   style: <styles>
 ```
 
-In the simplest form, `<styles>` is a string of [CSS](https://www.w3schools.com/css/) which will be injected into the appropriate element based on the card type. See [Concepts - application](../concepts/application.md) for a detailed description on where UI eXtension is applied.
+Dans sa forme la plus simple, `<styles>` est une chaîne de [CSS](https://www.w3schools.com/css/) injectée dans l'élément adapté au type de carte. Consultez [Concepts - application](../concepts/application.md) pour savoir précisément où UI eXtension est appliqué.
 
 !!! note
-    UI eXtension only works on cards that are contained by a `<hui-card>` element, or contain a `<ha-card>` element. This includes almost every standard Home Assistant Frontend card, and most custom cards.
+    UI eXtension fonctionne uniquement avec les cartes contenues dans un élément `<hui-card>` ou qui contiennent un élément `<ha-card>`. Cela couvre presque toutes les cartes standard de l'interface Home Assistant et la plupart des cartes personnalisées.
 
-For a card contained by a `<hui-card>` element, which is almost every standard Home Assistant Frontend card, styles are injected into a shadowRoot and the bottom most element is `:host`, though in most cases the first element in the shadowRoot is `<ha-card>`. For many custom cards which do not take advantage of the modern `<hui-root>` container, but contain a `<ha-card>` element, the styles are injected into ha-card and the bottommost element is `<ha-card>`. See [Concepts - application](../concepts/application.md) for more details.
+Pour une carte contenue dans `<hui-card>`, ce qui est le cas de presque toutes les cartes standard Home Assistant, les styles sont injectés dans un shadowRoot et l'élément le plus bas est `:host`, même si le premier élément du shadowRoot est généralement `<ha-card>`. Pour de nombreuses cartes personnalisées qui n'utilisent pas le conteneur moderne `<hui-root>` mais contiennent un élément `<ha-card>`, les styles sont injectés dans ha-card et l'élément le plus bas est `<ha-card>`. Consultez [Concepts - application](../concepts/application.md) pour plus de détails.
 
 !!! tip
-    Home Assistant themes make use of [CSS variables](https://www.w3schools.com/css/css3_variables.asp). Those can both be set and used in UIX - prepended by two dashes:
+    Les thèmes Home Assistant utilisent des [variables CSS](https://www.w3schools.com/css/css3_variables.asp). Vous pouvez les définir et les utiliser dans UIX ; elles commencent par deux tirets :
     ```yaml
     type: tile
     entity: light.bed_light
@@ -35,7 +35,7 @@ For a card contained by a `<hui-card>` element, which is almost every standard H
     ```
     ![Styling with CSS variables](../assets/page-assets/using/basic-first-uix.png)
 
-You can also optionally set a local Home Assistant theme for just that styled element. The theme can contain [UIX Themes](./themes.md).
+Vous pouvez aussi définir un thème Home Assistant local uniquement pour cet élément stylisé. Ce thème peut contenir des [thèmes UIX](./themes.md).
 
 ```yaml
 uix:
@@ -46,10 +46,10 @@ uix:
     }
 ```
 
-`uix.theme` overrides the inherited/current theme for that UIX node and its UIX child paths unless a child sets its own `theme`. See [UIX Themes - Override with `uix.theme`](./themes.md#local-theme-override-with-uixtheme) for a full example.
+`uix.theme` remplace le thème hérité ou courant pour ce nœud UIX et ses chemins enfants UIX, sauf si un enfant définit son propre `theme`. Consultez [Thèmes UIX - Remplacer avec `uix.theme`](./themes.md#local-theme-override-with-uixtheme) pour un exemple complet.
 
-### Custom CSS variables
-UIX themes can be leveraged with [custom css variables](https://uix-guides.lf.technology/elements/2026/03/02/css-vars-entities.html), by declaring those high in the Frontend hierarchy, say `uix-drawer`, `uix-view`, or `uix-root`:
+### Variables CSS personnalisées
+Les thèmes UIX peuvent exploiter des [variables CSS personnalisées](https://uix-guides.lf.technology/elements/2026/03/02/css-vars-entities.html), en les déclarant haut dans la hiérarchie de l'interface, par exemple dans `uix-drawer`, `uix-view` ou `uix-root` :
 
 ```yaml
 uix-drawer: |
@@ -63,7 +63,7 @@ uix-drawer: |
     }
 ```
 
-and use those custom css variables lower in the frontend hierarchy, say `uix-card` or `uix-dialog`, or even in a direct UIX card styling:
+Utilisez ensuite ces variables CSS personnalisées plus bas dans la hiérarchie de l'interface, par exemple dans `uix-card` ou `uix-dialog`, ou directement dans le style UIX d'une carte :
 
 ```yaml
 type: entities

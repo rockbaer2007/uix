@@ -1,4 +1,4 @@
-# Developers
+# Développeurs
 
 If you are a developer of custom card or theme or integration, check out the links to developer information below.
 

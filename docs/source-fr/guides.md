@@ -1,5 +1,5 @@
-# UIX Guides
+# Guides UIX
 
 [![light-logo-icon](./assets/images/mixed.png)](https://uix-guides.lf.technology)
 
-The UIX community curates a resource of UIX guides. These are available at <https://uix-guides.lf.technology>. UIX Guides are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/) (CC BY-SA 4.0).
+La communauté UIX maintient une collection de guides UIX, disponible sur <https://uix-guides.lf.technology>. Les guides UIX sont publiés sous licence [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/) (CC BY-SA 4.0).

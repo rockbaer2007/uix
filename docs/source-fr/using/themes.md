@@ -1,6 +1,6 @@
-# Themes
+# Thèmes
 
-## Getting started
+## Premiers pas
 
 To get started, you need themes enabled in Home Assistant.
 
@@ -28,7 +28,7 @@ red-theme:
 
 ![Red theme example](../assets/page-assets/using/theme-red.png){ width="500" }
 
-## Basic UIX theme
+## Thème UIX de base
 
 !!! info "Theme variable"
     The theme MUST define a `uix-theme` variable whose value selects the theme
@@ -162,7 +162,7 @@ entities:
 
 ![Red theme with classes](../assets/page-assets/using/theme-red-classes.png){ width="500" }
 
-## Navigating the shadow DOM
+## Naviguer dans le DOM shadow
 
 Just like with UIX styles applied to a card, you can traverse the shadow DOM structure of the thing you want to style. To do this, you need to specify the variable `uix-<thing>-yaml`, and then the syntax is exactly the same.
 
@@ -186,7 +186,7 @@ red-theme:
 !!! tip "Theme variables MUST be strings"
     While the value of the `uix-<thing>-yaml` variable is actually yaml, as far as the theme is concerned it MUST be a string, which in turn contains more strings.
 
-## Local theme override with `uix.theme`
+## Surcharge locale de thème avec `uix.theme` { #local-theme-override-with-uixtheme }
 
 You can force one styled card/row/badge/element to use a different Home Assistant theme than the currently active global theme. `uix.theme` takes precedence over inherited/current theme for that UIX node.
 
@@ -233,7 +233,7 @@ entities:
 !!! warning "Take caution where you use theme overrides"
     Styling and theming in Home Assistant can get quite complex. You may expect a CSS variable to apply and find it does not. For example, if you apply `--primary-text-color: color;` to an entities row either by direct UIX styling to `:host {}` or `uix.theme` override you may expect the entities text to be the color you have set to `--primary-text-color`. However in this case `color` style is set at the `ha-card` element of the entities card, so this override will have no effect.
 
-## Updating `uix-<thing>` variable to `uix-<thing>-yaml` variable
+## Mettre à jour une variable `uix-<thing>` vers `uix-<thing>-yaml`
 
 !!! tip "UIX theme variable precedence"
     `uix-<thing>-yaml` always takes precedence over `uix-<thing>` which is NOT used if `uix-<thing>-yaml` is present in the theme.
@@ -270,7 +270,7 @@ red-theme:
       }
 ```
 
-## Theme variables
+## Variables de thème
 
 - `uix-card`
 - `uix-row`
@@ -300,7 +300,7 @@ red-theme:
 
 Also `<any variable>-yaml`.
 
-## Dialogs
+## Boîtes de dialogue
 
 `uix-dialog` and `uix-dialog-yaml` apply to styles rooted in the dialog element of dialogs which may be `ha-dialog`, `ha-adaptive-dialog`, or `ha-drawer` (notification uses a dialog with an element using the drawer type). Dialogs will also have their class set to `type-<dialog-type>` where `<dialog-type>` will be the dialog element name with any `ha-` prefix stripped. e.g. UIX will append `type-dialog-box` to dialog boxes as used by alerts and other dialog boxes. The Home Assistant dialog manager places dialogs in the shadow root of the top `<home-assistant>` element. The active dialog will be the last child of the shadow root. To view what dialog you wish to target, review the last child of this shadow root node.
 

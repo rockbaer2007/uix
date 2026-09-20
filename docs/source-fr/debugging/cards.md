@@ -1,4 +1,4 @@
-# Debugging Cards
+# Débogage des cartes
 
 The DOM navigation can be tricky to get right the first few times, but you'll eventually get the hang of it.
 
@@ -20,7 +20,7 @@ uix:
   debug: true
 ```
 
-## Setting debug via theme variables
+## Définir le débogage avec les variables de thème
 
 Just like you can set debug on a card with `uix:` -> `debug: true`, you can also set debug via a theme variable. This may be the only way to debug a certain type and/or class when styling a panel that is not a Lovelace dashboard or a Lovelace strategy dashboard.
 

@@ -1,7 +1,7 @@
 ---
 description: Learn how to review the Home Assistant DOM to become a UI eXtension expert.
 ---
-# DOM navigation
+# Navigation dans le DOM
 
 Home Assistant makes extensive use of a concept called [shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM). This allows for easy reuse of components (such as `<ha-card>` or `<ha-icon>`) but requires some advanced techniques when applying CSS styles to elements.
 
@@ -88,7 +88,7 @@ Chains ending with `$` is a special case for convenience, selecting the shadow r
 
     In short, if things seem to be working intermittently, then try splitting up the chain into several steps.
 
-## Express search selector `$$`
+## Sélecteur de recherche rapide `$$`
 
 For deeply-nested elements — especially card features and more-info controls — writing out the full chain of intermediate shadow-root crossings can be verbose. The `$$` **express search selector** provides a shorthand: it performs a **recursive, shadow-piercing search** through all descendants of the current context, regardless of how many shadow-root boundaries lie in between.
 
@@ -161,7 +161,7 @@ where all the intermediate shadow-host hops are resolved automatically.
     ```
     This lets UIX retry from `hui-card-features $` independently.
 
-## Host/element path selection
+## Sélection de chemin hôte/élément
 
 A path may begin with a `&` **host/element** as its first step. It filters the initial element where UIX is applied before any traversal takes place:
 
@@ -288,11 +288,11 @@ Class-based selectors may optionally be wrapped in parentheses for readability: 
 
     All the same operators as attribute selectors are supported (`=`, `~=`, `^=`, `$=`, `*=`, `|=`). Integer path segments are used as array indices when the current value is an `Array`; named (string) keys always use plain property access and work on both arrays and plain objects.
 
-## DOM inspection helpers
+## Outils d'inspection du DOM
 
 UIX ships browser console helpers that make it easier to discover valid style paths, forge spark paths, Broker directive anchors, and understand the UIX element hierarchy at runtime. Open your browser's DevTools console, select an element in the **Elements** panel (it becomes `$0`), then call one of the functions below.
 
-### `uix_tree($0)` — general helper
+### `uix_tree($0)` — outil général
 
 Reports everything UIX knows about the area surrounding the selected element:
 
@@ -328,7 +328,7 @@ uix_tree($0)
 
     Each group label shows a YAML style key followed by the required `:` syntax. The CSS selectors inside are valid within that key's style string. Each selector is followed by a clickable element reference — click it to jump straight to that element in the DevTools inspector.
 
-### `uix_style_path($0)` — specific helper
+### `uix_style_path($0)` — outil de style
 
 Reports the exact UIX path to the selected element and generates a ready-to-paste YAML snippet:
 
@@ -379,7 +379,7 @@ uix_style_path($0)
 
     The **Path** line shows the YAML key including the required `:`. The **Suggested CSS selector** is followed by a clickable element reference that jumps to the element in DevTools.
 
-### `uix_forge_path($0)` — forge helper
+### `uix_forge_path($0)` — outil Forge
 
 Reports the path from the closest `uix-forge` forge to the selected element. Use the reported path as the value of `for`, `before`, or `after` in a forge spark config.
 
@@ -417,7 +417,7 @@ uix_forge_path($0)
         #   icon: mdi:home
     ```
 
-### `uix_broker_path($0)` — Broker directive-anchor helper
+### `uix_broker_path($0)` — outil pour les ancres de directive Broker
 
 After triggering a Broker interaction, select an element inside its resolved
 interaction anchor and run:
@@ -435,7 +435,7 @@ the intended interaction anchor explicitly as the second argument:
 uix_broker_path($0, $1)
 ```
 
-### `uix_broker_absolute_path($0)` — Broker interaction-anchor helper
+### `uix_broker_absolute_path($0)` — outil pour les ancres d'interaction Broker
 
 Select an element in the **Elements** panel and run:
 

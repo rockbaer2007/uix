@@ -1,7 +1,7 @@
 ---
 description: Learn all about styling entities, badges, elements and entity markers.
 ---
-# Styling entities, badges, elements and entity markers
+# Styliser les entités, badges, éléments et marqueurs d'entité
 
 In `entities`, `glance` and `map` cards, [each entity can have options](https://www.home-assistant.io/lovelace/entities/#options-for-entities). Those elements can be styled individually by adding a `uix` parameter to the entity configuration.
 
@@ -34,7 +34,7 @@ entities:
 
 ![Entities row coloring](../assets/page-assets/using/entities-base.png)
 
-## Styling entities conditional rows
+## Styliser les lignes conditionnelles des entités
 
 Rows in entities conditional rows can be styled directly. If you style the conditional config itself, you need to take care as the conditional row wrapper is not in a shadowRoot so styles may leak to other rows/elements.
 
@@ -100,7 +100,7 @@ Rows in entities conditional rows can be styled directly. If you style the condi
     ```
     ![Conditional entities leakage](../assets/page-assets/using/entities-conditional-leakage.gif)
 
-## Styling picture-elements conditional elements
+## Styliser les éléments conditionnels de picture-elements
 
 The elements in a picture-elements conditional element can be styled directly. If you style the conditional config itself, you need to take care as the conditional element wrapper is not in a shadowRoot so styles may leak to other rows/elements.
 
@@ -193,7 +193,7 @@ The elements in a picture-elements conditional element can be styled directly. I
     ```
     ![Conditional picture element styling leakage](../assets/page-assets/using/elements-conditional-leakage.gif)
 
-## Styling entity markers on a map
+## Styliser les marqueurs d'entité sur une carte
 
 Entity markers on a map can be styled individually by card config or by theme. In both examples the picture image is also styled.
 

@@ -1,4 +1,4 @@
-# Debugging
+# Débogage
 
 - [Debugging - cards](./cards.md)
 - [Debugging - templates](./templates.md)

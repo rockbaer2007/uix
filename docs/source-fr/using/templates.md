@@ -1,7 +1,7 @@
 ---
 description: Learn all about using templates.
 ---
-# Templates
+# Modèles
 
 All styles may contain [Jinja2 templates](https://www.home-assistant.io/docs/configuration/templating/) that will be processed by the Home Assistant backend.
 
@@ -34,7 +34,7 @@ UI eXtension also makes the following variables available for templates:
 
 UI eXtension supports reusable [Jinja2 macros](https://jinja.palletsprojects.com/en/stable/templates/#macros) that can be defined at card level or via a theme, and are prepended to every template in the card.
 
-### Defining macros on a card
+### Définir des macros sur une carte
 
 Macros are defined under `uix.macros` in the card configuration. A macro without `returns` renders its template inline as a string — use this when you want to substitute a text value (such as a CSS color or icon name) directly into the template:
 
@@ -89,7 +89,7 @@ This generates the following Jinja2 macro signature:
 
 The `default` value is injected verbatim as a Jinja2 expression. Quote string values with single quotes inside the YAML string (e.g. `"'yellow'"`).
 
-### Macros with `returns`
+### Macros avec `returns`
 
 When a macro renders inline (no `returns`), its output is always a string — even `{{ is_state(entity_id, "on") }}` produces the string `"True"` or `"False"`, and any non-empty string is truthy in Jinja2. To return an actual boolean or numeric value that behaves correctly in conditionals and comparisons, use `returns: true`.
 
@@ -120,7 +120,7 @@ This generates the following Jinja2 block that is prepended to every template:
 {% set is_on = macro_is_on | as_function %}
 ```
 
-### Composing macros
+### Composer des macros
 
 Macros can call other macros defined in the same card. UIX automatically detects these dependencies and includes all required macros in the output, even if only the outermost macro is referenced in the main template.
 
@@ -154,7 +154,7 @@ Even though only `border_style` is used in the style template, `color_for_state`
 {% endmacro %}
 ```
 
-### Importing macros from custom template files
+### Importer des macros depuis des fichiers de modèles personnalisés
 
 In addition to defining macros inline, you can import macros from [Home Assistant reusable templates](https://www.home-assistant.io/docs/configuration/templating/#reusing-templates) stored in `/config/custom_templates/*.jinja`. To do this, set the macro entry's value to the filename (a plain string) instead of a macro definition object:
 
@@ -191,7 +191,7 @@ uix:
 
 Inline and file-import macros can be freely mixed within the same card.
 
-### Theme macros
+### Macros de thème
 
 Macros can also be defined in a theme so they are available to all cards that use it. See [Themes - Macros](themes.md#macros) for details.
 
@@ -201,7 +201,7 @@ Card-level macros take precedence over theme macros of the same name, allowing i
 
 Billets are named YAML values that become plain template constants — usable **without parentheses**, unlike macros. They are available in both UIX Styling and UIX Forge templates. Billet string values may reference other billets via `{name}` substitution — declaration order does not matter.
 
-### Billets in UIX Styling
+### Billets dans UIX Styling
 
 Define billets under `uix.billets` on a card. Each billet is injected as a `{%- set name = value -%}` statement ahead of every style template on that card:
 
@@ -283,7 +283,7 @@ In templates, billets are used as plain constants:
 {{ tags | join(', ') }}    {# living_room, ambient #}
 ```
 
-### Billets in UIX Forge
+### Billets dans UIX Forge
 
 When using [UIX Forge](../forge/index.md), billets defined under `forge.billets` are available in all forge templates **and** in any `uix:` style on the forge card or the forged element. Forge billets are merged with any billets defined directly in the `uix:` config, with the local `uix:` billets taking precedence.
 

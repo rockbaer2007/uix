@@ -1,11 +1,11 @@
 ---
-description: Learn about other styling techniques including using mod-card for troublesome custom cards.
+description: Découvrez d'autres techniques de style, dont l'utilisation de mod-card pour les cartes personnalisées difficiles à traiter.
 ---
-# Other styling
+# Autres styles
 
-Cards that don't have a `<ha-element>` can still be styled by using the supplied `custom:mod-card` card. This is only necessary in **very very few** instances, and likely to bring more problems than it solves. Most likely your card contains another card, in which case **that** is the one you should apply the styles to.
+Les cartes qui ne possèdent pas de `<ha-element>` peuvent tout de même être stylisées avec la carte `custom:mod-card` fournie. Cette solution n'est nécessaire que dans de **très rares** cas et peut créer davantage de problèmes qu'elle n'en résout. Votre carte contient probablement une autre carte : appliquez alors le style à **celle-ci**.
 
-??? warning "Use custom:mod-card with caution"
+??? warning "Utilisez custom:mod-card avec prudence"
     ```yaml
     type: custom:mod-card
     card:
@@ -17,4 +17,4 @@ Cards that don't have a `<ha-element>` can still be styled by using the supplied
           ...
         }
     ```
-    The mod-card will create a `<ha-card>` element and put your card inside that. The card will be styled transparent with no border or background.
+    La mod-card crée un élément `<ha-card>` et y place votre carte. Cette carte sera transparente, sans bordure ni arrière-plan.

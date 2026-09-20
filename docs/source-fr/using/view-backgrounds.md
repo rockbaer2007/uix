@@ -1,14 +1,14 @@
 ---
 description: Learn how to display a full-screen camera stream, video, or image as a view background using UIX theme CSS variables.
 ---
-# View Backgrounds
+# Arrière-plans des vues
 
 UIX can display a full-screen **camera stream**, **video**, or **image** as a background behind your Home Assistant dashboard views and config panels.  The background is controlled entirely through CSS variables set in your theme and supports Jinja2 templates, so you can switch sources per view without any custom code.
 
 !!! info "How it works"
     The `ha-drawer` styling patch also controls the view background, which allows the feature to work in dashboard views *and* config panels.  Variables must be set on `:host` inside the `uix-drawer` theme key so they are readable via `getComputedStyle(ha-drawer)`.  Because `ha-drawer` persists across navigation, the background element is **reused** when navigating between views with the same  / video / image — no teardown/recreate cycle.
 
-## CSS variables
+## Variables CSS
 
 | Variable | Description |
 |---|---|
@@ -30,7 +30,7 @@ UIX can display a full-screen **camera stream**, **video**, or **image** as a ba
 !!! tip
     You don't need to include `url()` around any of the camera entity, image entity, video or image CSS variables to use view backgrounds. `url()` will be added if and when required. You **DO** need to provide if you are using `--uix-view-background`.
 
-## Coverage modes
+## Modes de couverture
 
 The `--uix-view-background-cover` variable controls how much of the viewport the background fills.
 
@@ -39,9 +39,9 @@ The `--uix-view-background-cover` variable controls how much of the viewport the
 | `view` *(default)* | Background fills only the **content area** — offset below the top bar (`--header-height`) and to the right of the sidebar.  The offset adjusts automatically when the sidebar is resized or toggled. NOTE: For any config panels like developer tools which have double header height, the view will not compensate beyond `--header-height`. |
 | `full` | Background fills the **entire viewport**, sitting behind the top bar and sidebar. |
 
-## Basic examples
+## Exemples de base
 
-### Camera stream background
+### Arrière-plan de flux caméra
 
 ```yaml
 my-theme:
@@ -55,7 +55,7 @@ my-theme:
     :host { opacity: 0.7; }
 ```
 
-### Video background
+### Arrière-plan vidéo
 
 ```yaml
 my-theme:
@@ -69,7 +69,7 @@ my-theme:
     :host { opacity: 0.5; }
 ```
 
-### Image background
+### Arrière-plan d'image
 
 ```yaml
 my-theme:
@@ -81,7 +81,7 @@ my-theme:
     }
 ```
 
-### Background shorthand
+### Raccourci d'arrière-plan
 
 Use `--uix-view-background` when you need the full CSS `background` shorthand — gradients, multiple images, `url()` with sizing and positioning all in one value.  You are responsible for the complete value.
 
@@ -104,7 +104,7 @@ Gradients work equally well:
     }
 ```
 
-## Switching per view with templates
+## Changer par vue avec des modèles
 
 As the `uix-drawer` style supports Jinja2 templates and the `panel` template variable reflects the current view, you can switch the background source automatically:
 
@@ -132,7 +132,7 @@ See [Templates](./templates.md) for full template variable documentation.
       {{ '/* testing */' }}
     ```
 
-## Styling the background with `uix-view-background`
+## Styliser l'arrière-plan avec `uix-view-background`
 
 UIX styling for the view background is available using the theme variables `uix-view-background`.  This lets you style the background content using the `uix-view-background` theme key — exactly like any other UIX theme target.
 
@@ -162,7 +162,7 @@ If you wish to adjust position or other attributes of the view background you ca
 | Image | `div.uix-bg-image` |
 | Background shorthand | `div.uix-bg-image` |
 
-### Camera positioning
+### Positionnement de la caméra
 
 Camera backgrounds are **centred by default** — the stream fills the container and any aspect-ratio overflow is clipped symmetrically on all sides.  Use `--uix-camera-position` to change where the stream is anchored when it overflows:
 
@@ -186,7 +186,7 @@ Camera backgrounds are **centred by default** — the stream fills the container
     }
 ```
 
-### Camera zoom and pan
+### Zoom et déplacement de la caméra
 
 UIX injects a default transform rule into every camera background so that you can zoom and pan the stream by setting CSS custom properties.  The variables can be set in **`uix-drawer`** (alongside `--uix-view-background-camera-entity`, for convenience) or in **`uix-view-background`** (for more targeted control).  When set in both places the `uix-drawer` value takes precedence.
 
@@ -282,7 +282,7 @@ You can combine this with `--uix-camera-position` for screens of different propo
     }
 ```
 
-### Customising image background CSS properties
+### Personnaliser les propriétés CSS de l'arrière-plan d'image
 
 Both **entity image** and **plain image** backgrounds render as a `<div class="uix-bg-image">`.  The div defaults to `background-size: cover; background-position: center; background-repeat: no-repeat`.  You can override any of these properties — or add new ones — via the `.uix-bg-image` selector:
 
@@ -304,7 +304,7 @@ my-theme:
     }
 ```
 
-## Making top app bar and sidebar transparent
+## Rendre la barre d'application et la barre latérale transparentes
 
 You can use UIX styling on `uix-top-app-bar-fixed` to make the top app bar and sidebar transparent. Further config panels may have their own toolbars which you may also need to style via `uix-config`.
 
@@ -321,7 +321,7 @@ You can use UIX styling on `uix-top-app-bar-fixed` to make the top app bar and s
     }
 ```
 
-## Loading spinner
+## Indicateur de chargement
 
 While the media is loading UIX shows a CSS-only animated spinner centred on the background container.  The spinner fades out automatically once the media is ready (camera stream starts playing, video can play, or image has loaded).
 
@@ -350,7 +350,7 @@ my-theme:
     }
 ```
 
-## Tab visibility recovery
+## Récupération de la visibilité d'un onglet
 
 Browsers suspend WebRTC/HLS streams and video playback when a tab is in the background for a long time.  UIX automatically recreates camera stream and video elements when you return to the tab, recovering the stream or playback without any manual intervention.
 

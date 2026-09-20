@@ -1,4 +1,3 @@
-# Debugging Templates
+# Débogage des modèles
 
-  You can debug UIX Jinja2 templates by placing the comment `{# uix.debug #}` anywhere in your template. You will see debug messages on template binding, value updated, reuse, unbinding and final unsubscribing. Any template is kept subscribed in cache for a 20s cooldown period to assist with template application, which can bring a slight speed improvement when switching back and forth to views, or using the same template on cards on different views.
-  
+Vous pouvez déboguer les modèles UIX Jinja2 en plaçant le commentaire `{# uix.debug #}` n'importe où dans votre modèle. Vous verrez les messages de débogage lors de la liaison du modèle, de la mise à jour de valeur, de la réutilisation, de la déliaison et du désabonnement final. Chaque modèle reste abonné dans le cache pendant 20 secondes afin de faciliter l'application des modèles et d'améliorer légèrement la vitesse lorsque vous passez d'une vue à l'autre ou utilisez le même modèle sur des cartes de vues différentes.

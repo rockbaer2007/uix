@@ -1,27 +1,27 @@
 ---
-description: Learn all about styling entity images.
+description: Découvrez comment styliser les images d'entités.
 ---
-# Styling entity images
+# Styliser les images d'entités
 
-UIX can substitute the background entity image displayed by the following elements:
+UIX peut remplacer l'image d'entité affichée en arrière-plan par les éléments suivants :
 
-- `ha-entity-marker` (map card entity markers)
-- `ha-tile-icon` (tile card icons)
-- `state-badge` (state badges)
-- `ha-user-badge` (user badges)
-- `ha-person-badge` (person badges)
-- `hui-entity-badge` (entity badge)
+- `ha-entity-marker` (marqueurs d'entités de la carte)
+- `ha-tile-icon` (icônes de carte Tuile)
+- `state-badge` (badges d'état)
+- `ha-user-badge` (badges utilisateur)
+- `ha-person-badge` (badges de personne)
+- `hui-entity-badge` (badge d'entité)
 
-Styling can be via [specifying for an entity override](#specifying-for-an-entity-override) or a [generic override](#specifying-generic-override).
+Vous pouvez appliquer le style par une [surcharge propre à une entité](#specifying-for-an-entity-override) ou par une [surcharge générique](#specifying-generic-override).
 
 !!! note
-    When styling entity image for an entity badge (`hui-entity-badge`), you must set **Show entity picture** (`show_entity_picture: true` in YAML).
+    Pour styliser l'image d'un badge d'entité (`hui-entity-badge`), activez **Afficher l'image de l'entité** (`show_entity_picture: true` en YAML).
 
-## Specifying for an entity override
+## Définir une surcharge pour une entité { #specifying-for-an-entity-override }
 
-Define a CSS variable of the form `--uix-image-for-<entity_id>`, where every `.` in the entity ID is replaced with `_`. When an element is rendered for the matching entity, the background image is replaced with the supplied URL.
+Définissez une variable CSS sous la forme `--uix-image-for-<entity_id>`, en remplaçant chaque `.` de l'identifiant d'entité par `_`. Lorsqu'un élément est affiché pour l'entité correspondante, l'image de fond est remplacée par l'URL fournie.
 
-Templates are supported.
+Les modèles sont pris en charge.
 
 ```yaml
 type: tile
@@ -34,16 +34,16 @@ uix:
 ```
 
 !!! tip
-    - The variable can be set at any ancestor level in the DOM. UIX will detect it on the element via computed styles. If the variable is not set, or the element's entity does not match, the original image is left unchanged.
-    - To style an override across Home Assistant Frontend add `--uix-image-for-<entity_id>` to theme variables `uix-root(-yaml)`, `uix-config(-yaml)` and `uix-more-info(-yaml)`.
+    - La variable peut être définie à n'importe quel niveau parent du DOM. UIX la détecte sur l'élément à partir des styles calculés. Si elle n'est pas définie ou que l'entité ne correspond pas, l'image d'origine reste inchangée.
+    - Pour appliquer une surcharge à toute l'interface Home Assistant, ajoutez `--uix-image-for-<entity_id>` aux variables de thème `uix-root(-yaml)`, `uix-config(-yaml)` et `uix-more-info(-yaml)`.
 
-## Specifying generic override
+## Définir une surcharge générique { #specifying-generic-override }
 
-Define a generic CSS variable `--uix-image` in the context of the image you wish to override, for example on an element containing `ha-entity-marker` (e.g. map), `ha-tile-icon` (e.g. tile card), or `state-badge` (e.g. entities row).
+Définissez la variable CSS générique `--uix-image` dans le contexte de l'image à remplacer, par exemple sur un élément contenant `ha-entity-marker` (par exemple une carte), `ha-tile-icon` (par exemple une carte Tuile) ou `state-badge` (par exemple une ligne Entités).
 
-When a supported element is rendered within that context, the background image is replaced with the supplied URL regardless of entity ID.
+Lorsqu'un élément pris en charge est affiché dans ce contexte, l'image de fond est remplacée par l'URL fournie, quelle que soit l'entité.
 
-Templates are supported.
+Les modèles sont pris en charge.
 
 !!! tip
-    If both `--uix-image` and `--uix-image-for-<entity_id>` are defined, `--uix-image` takes precedence.
+    Si `--uix-image` et `--uix-image-for-<entity_id>` sont tous deux définis, `--uix-image` est prioritaire.

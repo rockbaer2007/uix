@@ -1,11 +1,11 @@
 ---
 description: Learn all about styling icons including change icons and their color.
 ---
-# Styling icons
+# Styliser les icônes
 
 With UI eXtension installed, the `ha-state-icon`, `<ha-icon>` or `ha-svg-icon` elements - used, for example, by `tile`, `entities`, `glance`, `heading` and many more cards can have its icon and color set using CSS variables either directly in UIX styling on the card or by theme.
 
-## Specifying for an entity override
+## Définir une surcharge pour une entité
 
 Define CSS variables of the form `--uix-icon-for-<entity_id>` and/or `--uix-icon-color-for-<entity_id>`, where every `.` in the entity ID is replaced with `_`. When an icon is rendered its icon and/or color is replaced with the supplied icon and/or color.
 
@@ -17,7 +17,7 @@ Templates are supported. For use see [Full theme example](#full-theme-example).
     - To style overrides for config and UI editing add `--uix-icon-for-<entity_id>` and/or `--uix-icon-color-for-<entity_id>` to theme variables `uix-config(-yaml)` and `uix-dialog(-yaml)`.
     - To style override for other UIX stylable panels add  `--uix-icon-for-<entity_id>` and/or `--uix-icon-color-for-<entity_id>` to the appropriate theme variable. e.g. For History panel add the overrides to `uix-history(-yaml)`.
 
-## Specifying generic override
+## Définir une surcharge générique
 
 Define generic CSS variables `--uix-icon` and/or `--uix-icon-color` in the context of the icon you wish to override.
 
@@ -146,7 +146,7 @@ Templates are supported.
 
     ![Icon generic override example](../assets/page-assets/using/icons-direct-icon-color-entity.png)
 
-## Full theme example
+## Exemple complet de thème
 
 This example uses two macros in UIX theme and applying those macros in styling for theme variables `uix-root-yaml` and `uix-more-info-yaml`. While the root selector `.:` is the only selector used, the example uses the `-yaml` variants as you may already have these variants in your [theme](./themes.md).
 

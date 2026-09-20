@@ -1,7 +1,7 @@
 ---
 description: Information for developers of custom cards
 ---
-# Developers - Custom cards
+# Développeurs - Cartes personnalisées
 
 Generally UIX should work with all custom cards.
 
@@ -38,7 +38,7 @@ The UIX configuration is an object with the following optional properties:
 
 When `theme` is set, UIX applies Home Assistant frontend-style `applyThemesOnElement()` logic directly on the target element before processing UIX theme styles/macros.
 
-## Example
+## Exemple
 
 Custom card javascript:
 

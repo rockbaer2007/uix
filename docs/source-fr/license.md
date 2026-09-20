@@ -3,14 +3,14 @@ hide:
   - toc
   - navigation
 ---
-# Documentation license
+# Licence de la documentation
 
-UIX documentation prose and original documentation media are licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0).
+Les textes et les médias originaux de la documentation UIX sont publiés sous licence [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0).
 
-CC BY 4.0 lets you share and adapt this material for any purpose, including commercially, provided that you give appropriate credit, link to the license, and indicate changes.
+La licence CC BY 4.0 vous permet de partager et d'adapter ce contenu, y compris à des fins commerciales, à condition de citer correctement la source, de créer un lien vers la licence et d'indiquer les modifications.
 
-UIX source code, documentation tooling, stylesheets, templates, code blocks, and configuration examples remain licensed under the [MIT License](https://github.com/Lint-Free-Technology/uix/blob/master/LICENSE.txt). Third-party material, including trademarks, remains subject to its own license or terms.
+Le code source UIX, les outils de documentation, les feuilles de style, les modèles, les blocs de code et les exemples de configuration restent publiés sous [licence MIT](https://github.com/Lint-Free-Technology/uix/blob/master/LICENSE.txt). Les contenus de tiers, y compris les marques, restent soumis à leur propre licence ou à leurs propres conditions.
 
-Documentation previously published under the repository-wide MIT License remains available under that license. CC BY 4.0 is an additional permission for the documentation material described above.
+La documentation déjà publiée sous la licence MIT applicable à l'ensemble du dépôt reste disponible sous cette licence. La licence CC BY 4.0 constitue une autorisation complémentaire pour le contenu de documentation décrit ci-dessus.
 
-For the repository-source notice, see [`docs/LICENSE.md`](https://github.com/Lint-Free-Technology/uix/blob/master/docs/LICENSE.md).
+Pour l'avis de licence du code source du dépôt, consultez [`docs/LICENSE.md`](https://github.com/Lint-Free-Technology/uix/blob/master/docs/LICENSE.md).

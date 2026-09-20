@@ -1,7 +1,7 @@
 ---
 description: Learn about how UI eXtension patches and applies to UI elements in Home Assistant.
 ---
-# UIX application
+# Application UIX
 
 UIX has near 100% coverage of standard Home Assistant Frontend cards while still supporting custom cards not utilising the modern Home Assistant rendering container for cards.
 
@@ -10,7 +10,7 @@ UIX has near 100% coverage of standard Home Assistant Frontend cards while still
     2. application/applying => UIX applies a `<uix-node>` to element, usually in the shadowRoot, and children as per selectors
     3. ignore/ignoring => UIX element patching code takes no action when running at the element level
 
-## Standard card structure
+## Structure d'une carte standard
 
 !!! example
     - Using `tile` card as an example.
@@ -24,7 +24,7 @@ hui-card           ⇐ UIX patches here
       ↳ ha-card    ⇐ UIX v4 also patches here but ignores due to known standard structure
 ```
 
-## Custom card structure - button-card as an example
+## Structure d'une carte personnalisée - button-card comme exemple
 
 !!! example
     - button-card has a `div` before `ha-card`, thus not a standard card structure
@@ -41,7 +41,7 @@ hui-card                 ⇐ UIX patches here
           ↳ shadowRoot
 ```
 
-## Custom card structure - streamline-card with tile
+## Structure d'une carte personnalisée - streamline-card avec tuile
 
 !!! example
     - As host card is still patched you could apply CSS vars via `:host { }`.

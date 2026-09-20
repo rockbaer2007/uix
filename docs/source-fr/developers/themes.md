@@ -1,7 +1,7 @@
 ---
 description: Information for developers of themes and integrations.
 ---
-# Developers - Themes & Integrations
+# Développeurs - Thèmes et intégrations
 
 When using UI eXtension in a theme please **DO NOT** attempt to ship any part of the UI eXtension integration standalone. Always guide your theme users to the UI eXtension Quick Start Guide to install the integration.
 
