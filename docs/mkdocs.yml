@@ -4,7 +4,7 @@ site_url: https://uix.lf.technology # UIX_RELEASE_SITE_URL
 docs_dir: source # UIX_RELEASE_DOCS_DIR
 theme:
   name: material
-  language: en # UIX_RELEASE_LANGUAGE
+  language: fr # UIX_RELEASE_LANGUAGE
   variant: classic
   features:
     - navigation.tabs
@@ -24,11 +24,11 @@ theme:
     - schema: default
       toggle:
         icon: material/brightness-7
-        name: Zu dunklem Modus wechseln
+        name: Passer au mode sombre
     - scheme: slate
       toggle:
         icon: material/brightness-4
-        name: Zu hellem Modus wechseln
+        name: Passer au mode clair
   logo: assets/images/icon.png
   favicon: assets/images/icon.png
   custom_dir: overrides
@@ -55,19 +55,19 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 nav:
   - UI eXtension:
-       - Über UIX: index.md
-       - Schnellstart: /quick-start
+       - À propos de UIX: index.md
+       - Démarrage rapide: /quick-start
        - UIX Styling: /using
        - UIX Forge: /forge
        - UIX Broker: /broker
        - UIX Extras: /extras
-       - UIX-Anleitungen: /guides
+       - Guides UIX: /guides
        - FAQ: /faq
-       - Mitwirken: /contributing
-       - Lizenz: /license
-  - Schnellstart: 'quick-start.md'
+       - Contribuer: /contributing
+       - Licence: /license
+  - Démarrage rapide: 'quick-start.md'
   - UIX Styling:
-      -  Styling:
+      -  Style:
           - using/index.md
           - using/cards.md
           - using/entities.md
@@ -79,16 +79,16 @@ nav:
           - using/templates.md
           - using/themes.md
           - using/other.md
-      - Konzepte:
+      - Concepts:
           - concepts/index.md
           - concepts/dom.md
           - concepts/application.md
-      - Debugging:
+      - Débogage:
           - debugging/index.md
           - debugging/cards.md
           - debugging/templates.md
           - debugging/cache.md
-      - Entwickler:
+      - Développeurs:
           - developers/index.md
           - developers/cards.md
           - developers/themes.md
@@ -130,7 +130,7 @@ nav:
       - extras/disable-entity-picture-image-override.md
       - extras/always-patch-ha-card.md
       - extras/style-custom-panels.md
-  - UIX-Anleitungen: 'guides.md'
+  - Guides UIX: 'guides.md'
   - FAQ: 'faq.md'
 repo_url: https://github.com/Lint-Free-Technology/uix
 repo_name: GitHub
