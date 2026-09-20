@@ -1,35 +1,35 @@
 ---
 title: UIX Forge
-description: Learn about UIX Forge, a powerful custom element that combines templates, sparks, and UIX styling.
+description: Découvrez UIX Forge, un élément personnalisé puissant qui combine modèles, sparks et UIX Styling.
 ---
-UIX Forge provides a way to forge Home Assistant elements allowing for templates for all of the element's configuration, as well as additional advanced augmentation of the element through [UIX Forge Sparks](./sparks/).
+UIX Forge permet de créer des éléments Home Assistant avec des modèles pour toute leur configuration, ainsi que des extensions avancées grâce aux [Sparks UIX Forge](./sparks/).
 
-Home Assistant elements supported are card, badge, row, section and picture-element. Cross-context molds allow embedding one element type in a different parent context, such as a card used as a row inside an entities card — see [Cross-context molds](./forge.md#cross-context-molds).
+Les éléments Home Assistant pris en charge sont les cartes, badges, lignes, sections et éléments image. Les moules intercontextes permettent d'intégrer un type d'élément dans un autre contexte parent, par exemple une carte utilisée comme ligne dans une carte Entités ; consultez les [moules intercontextes](./forge.md#cross-context-molds).
 
-See [Forge](./forge.md) for complete forge config reference.
+Consultez [Forge](./forge.md) pour la référence complète de la configuration.
 
-## Foundries
+## Fonderies
 
-A **foundry** is a server-stored UIX Forge template that lets you define reusable `forge`, `element`, and `uix` configs once and share them across many cards. Reference a foundry with the `foundry:` key and override only what you need locally.
+Une **fonderie** est un modèle UIX Forge enregistré sur le serveur. Elle permet de définir une seule fois des configurations `forge`, `element` et `uix` réutilisables sur plusieurs cartes. Référencez une fonderie avec la clé `foundry:` et ne remplacez localement que ce qui est nécessaire.
 
-See [Foundries](./foundries.md) for a full guide including merge behaviour, nested foundries, and management via the integration options.
+Consultez [Fonderies](./foundries.md) pour un guide complet sur la fusion, les fonderies imbriquées et leur gestion dans les options de l'intégration.
 
 ## Sparks
 
-Sparks are optional behaviours that you add to the `forge.sparks` list. Each spark has a `type` key and its own options.
+Les Sparks sont des comportements optionnels ajoutés à la liste `forge.sparks`. Chaque Spark possède une clé `type` et ses propres options.
 
-Available sparks:
+Sparks disponibles :
 
-- :speech_balloon: [Tooltip](./sparks/tooltip.md) — attach a styled tooltip to any element inside the forged element.
-- :material-button-cursor: [Button](./sparks/button.md) - attach a styled button (`ha-button`) with actions as a sibling before or after any element within the forged element.
-- :label: [Attribute](./sparks/attribute.md) — add, replace or remove an attribute of any element within the forged element.
-- :zap: [Event](./sparks/event.md) — receive DOM events from `fire-dom-event` actions and expose their data as template variables.
-- :star: [Tile Icon](./sparks/tile-icon.md) — insert a `ha-tile-icon` element as a sibling before or after any element within the forged element.
-- :shield: [State badge](./sparks/state-badge.md) - insert a `state-badge` element as a sibling before or after any element within the forged element.
-- :material-grid: [Grid](./sparks/grid.md) - apply **CSS Grid** layout to any container element inside a forged element
-- :mag: [Search](./sparks/search.md) - queries a container within a forged element with a CSS selector and optional inner text to find, then apply mutations to the found element(s).
-- :material-map: [Map](./sparks/map.md) — preserve the zoom level and centre of a map card across Home Assistant state updates.
-- :material-lock: [Lock](./sparks/lock.md) — overlay a lock icon on any element to block interaction until the user passes a PIN, passphrase, or confirmation challenge.
-- :material-star-four-points-outline: [Overlay Icon](./sparks/overlay-icon.md) — overlay a `ha-icon`/`ha-state-icon` on any element inside the forged element.
-- :material-image-outline: [Background](./sparks/background.md) — inject a background layer (colour, image, video, or live camera) behind any element within the forged element.
-- :material-palette: [Theme](./sparks/theme.md) — apply a Frontend theme to the forged element or one of its descendants.
+- :speech_balloon: [Infobulle](./sparks/tooltip.md) — attache une infobulle stylisée à tout élément créé.
+- :material-button-cursor: [Bouton](./sparks/button.md) — attache un bouton stylisé (`ha-button`) avec actions avant ou après un élément.
+- :label: [Attribut](./sparks/attribute.md) — ajoute, remplace ou supprime un attribut d'un élément.
+- :zap: [Événement](./sparks/event.md) — reçoit des événements DOM d'actions `fire-dom-event` et expose leurs données comme variables de modèle.
+- :star: [Icône Tile](./sparks/tile-icon.md) — insère un élément `ha-tile-icon` avant ou après un élément.
+- :shield: [Badge d'état](./sparks/state-badge.md) — insère un élément `state-badge` avant ou après un élément.
+- :material-grid: [Grille](./sparks/grid.md) — applique une mise en page **CSS Grid** à un conteneur.
+- :mag: [Recherche](./sparks/search.md) — recherche des éléments avec un sélecteur CSS et applique des modifications aux éléments trouvés.
+- :material-map: [Carte](./sparks/map.md) — conserve le niveau de zoom et le centre d'une carte lors des mises à jour Home Assistant.
+- :material-lock: [Verrou](./sparks/lock.md) — superpose un verrou et bloque l'interaction jusqu'à la saisie d'un PIN, d'une phrase secrète ou d'une confirmation.
+- :material-star-four-points-outline: [Icône superposée](./sparks/overlay-icon.md) — superpose une `ha-icon` ou `ha-state-icon` à un élément.
+- :material-image-outline: [Arrière-plan](./sparks/background.md) — ajoute un calque d'arrière-plan, couleur, image, vidéo ou caméra, derrière un élément.
+- :material-palette: [Thème](./sparks/theme.md) — applique un thème Frontend à l'élément créé ou à l'un de ses descendants.

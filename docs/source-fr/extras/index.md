@@ -1,15 +1,15 @@
 ---
-title: UIX Extras
-description: Learn about UIX Extra settings available in the integration to control UIX or Home Assistant Frontend
+title: Extras UIX
+description: Découvrez les réglages supplémentaires de l'intégration qui contrôlent UIX ou le Frontend Home Assistant.
 ---
 
-UI eXtension provides for additional settings to control the integration or Home Assistant Frontend.
+UI eXtension propose des réglages supplémentaires pour contrôler l'intégration ou le Frontend Home Assistant.
 
-- [UIX actions](./uix-actions.md)
-- [Frontend states throttling](./frontend-states-throttling.md)
-- [Dialog styling delay](./dialog-styling-delay.md)
-- [Disable hash template variable and updates](./hash-template-variable-updates.md)
-- [Disable icon styling patching](./disable-icon-styling.md)
-- [Disable entity picture image overrides](./disable-entity-picture-image-override.md)
-- [Always patch ha-card (experimental)](always-patch-ha-card.md)
-- [Style custom panels (experimental)](style-custom-panels.md)
+- [Actions UIX](./uix-actions.md)
+- [Limitation des mises à jour d'états Frontend](./frontend-states-throttling.md)
+- [Délai de style des dialogues](./dialog-styling-delay.md)
+- [Désactiver la variable de modèle hash et ses mises à jour](./hash-template-variable-updates.md)
+- [Désactiver le patch de style des icônes](./disable-icon-styling.md)
+- [Désactiver le remplacement des images d'entité](./disable-entity-picture-image-override.md)
+- [Toujours patcher ha-card (expérimental)](always-patch-ha-card.md)
+- [Styliser les panneaux personnalisés (expérimental)](style-custom-panels.md)

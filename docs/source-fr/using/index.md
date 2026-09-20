@@ -1,16 +1,16 @@
 ---
-title: Using
-description: Learn all about using UI eXtension to style elements in your Home Assistant UI.
+title: Utiliser UIX
+description: Découvrez comment utiliser UI eXtension pour styliser les éléments de votre interface Home Assistant.
 ---
-# Using UI eXtension Styling for Home Assistant
+# Utiliser UIX Styling pour Home Assistant
 
-- :bar_chart: [Styling cards](./cards.md)
-- :bulb: [Styling entities, badges, elements and entity markers](entities.md)
-- :red_circle: [Styling icons](./icons.md)
-- :adult: [Styling entity images](./images.md)
-- :white_square_button: [Styling section backgrounds](./section-backgrounds.md)
-- :film_frames: [View backgrounds (camera, video, image)](./view-backgrounds.md)
-- :abacus: [Styling custom panels](./custom-panels.md)
-- :clipboard: [Templates](./templates.md)
-- :art: [Themes](./themes.md)
-- :hammer_and_pick: [Other](other.md)
+- :bar_chart: [Styliser les cartes](./cards.md)
+- :bulb: [Styliser les entités, badges, éléments et marqueurs d'entité](entities.md)
+- :red_circle: [Styliser les icônes](./icons.md)
+- :adult: [Styliser les images d'entité](./images.md)
+- :white_square_button: [Arrière-plans de sections](./section-backgrounds.md)
+- :film_frames: [Arrière-plans de vues : caméra, vidéo et image](./view-backgrounds.md)
+- :abacus: [Styliser les panneaux personnalisés](./custom-panels.md)
+- :clipboard: [Modèles](./templates.md)
+- :art: [Thèmes](./themes.md)
+- :hammer_and_pick: [Autres options](other.md)
