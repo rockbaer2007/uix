@@ -1,25 +1,25 @@
 ---
-title: Disable icon styling patching
-description: Learn how to disable icon styling patching and when to use this performance option
+title: Désactiver la correction du style des icônes
+description: Découvrez comment désactiver la correction du style des icônes et quand utiliser cette option de performance.
 ---
-# Disable icon styling patching
+# Désactiver la correction du style des icônes
 
-By default, UIX patches standard Home Assistant icon elements (`ha-icon`, `ha-state-icon`, `ha-svg-icon`) to allow custom styling and overrides (such as `--uix-icon`, `--uix-icon-color`, `--uix-icon-dim`, or `--uix-icon-for-<entity_id>`). UIX provides an option to disable this icon patching behavior to improve rendering performance and reduce CPU overhead on low-power devices.
+Par défaut, UIX corrige les éléments d'icône standard de Home Assistant (`ha-icon`, `ha-state-icon`, `ha-svg-icon`) pour permettre les styles et surcharges personnalisés, comme `--uix-icon`, `--uix-icon-color`, `--uix-icon-dim` ou `--uix-icon-for-<entity_id>`. UIX propose une option pour désactiver cette correction afin d'améliorer le rendu et de réduire la charge processeur des appareils peu puissants.
 
-## Setting via the integration UI
+## Réglage depuis l'interface de l'intégration
 
-The option is **unset by default**. To set the option:
+Cette option est **désactivée par défaut**. Pour l'activer :
 
-1. In Home Assistant, go to **Settings → Devices & Services → UI eXtension → Configure**.
-2. Select **Performance settings** from the menu.
-3. Toggle **Disable icon styling patching** on.
-4. Save.
+1. Dans Home Assistant, ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer**.
+2. Sélectionnez **Réglages de performance**.
+3. Activez **Désactiver la correction du style des icônes**.
+4. Enregistrez.
 
-The setting takes effect immediately across all connected browser sessions — no page reload required.
+Le réglage prend effet immédiatement dans toutes les sessions de navigateur connectées ; aucun rechargement n'est nécessaire.
 
-## Behavior when set
+## Comportement lorsqu'elle est activée
 
-When this option is set:
+Lorsque cette option est activée :
 
-- Standard Home Assistant icon elements are **not patched** or monitored for custom icon properties.
-- Existing custom icon or icon color overrides via CSS variables (e.g. `--uix-icon`, `--uix-icon-color`, `--uix-icon-dim`, `--uix-icon-for-*`) will **not** be applied to standard icon elements.
+- Les éléments d'icône standard Home Assistant ne sont **pas corrigés** ni surveillés pour les propriétés d'icône personnalisées.
+- Les surcharges existantes d'icône ou de couleur via des variables CSS, par exemple `--uix-icon`, `--uix-icon-color`, `--uix-icon-dim` ou `--uix-icon-for-*`, ne s'appliquent **pas** aux éléments d'icône standard.

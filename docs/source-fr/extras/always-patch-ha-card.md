@@ -1,27 +1,27 @@
 ---
-title: Always patch ha-card (Experimental)
-description: Learn how to enable the patching of ha-card at all times with this experimental setting
+title: Toujours corriger ha-card (expérimental)
+description: Découvrez comment activer en permanence la correction de ha-card avec ce réglage expérimental.
 ---
-# Always patch ha-card
+# Toujours corriger ha-card
 
-By default, UIX does not patch `ha-card` if it cannot find a card config in the first Frontend or custom element in its ancestor DOM tree. This experimental option allows for always patching ha-card element so theme variable `uix-card(-yaml)` can apply. `ha-card` without config may be used on config or custom panels.
+Par défaut, UIX ne corrige pas `ha-card` s'il ne trouve pas de configuration de carte dans le premier élément Frontend ou personnalisé de son arbre DOM parent. Cette option expérimentale permet de toujours corriger l'élément ha-card afin que la variable de thème `uix-card(-yaml)` puisse s'appliquer. Un `ha-card` sans configuration peut être utilisé dans des panneaux de configuration ou personnalisés.
 
-When `ha-card` is patched without config the class `type-generic-card` will be added to `ha-card`.
+Lorsqu'un `ha-card` est corrigé sans configuration, la classe `type-generic-card` lui est ajoutée.
 
-## Setting via the integration UI
+## Réglage depuis l'interface de l'intégration
 
-The option is **unset by default**. To set the option:
+Cette option est **désactivée par défaut**. Pour l'activer :
 
-1. In Home Assistant, go to **Settings → Devices & Services → UI eXtension → Configure**.
-2. Select **Experimental settings** from the menu.
-3. Toggle **Always patch ha-card** on.
-4. Save.
+1. Dans Home Assistant, ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer**.
+2. Sélectionnez **Réglages expérimentaux** dans le menu.
+3. Activez **Toujours corriger ha-card**.
+4. Enregistrez.
 
-The setting is available immediately across all connected browser sessions. A page reload may be required for the setting to take effect.
+Le réglage est disponible immédiatement dans toutes les sessions de navigateur connectées. Un rechargement de la page peut être nécessaire pour qu'il prenne effet.
 
-## Behavior when set
+## Comportement lorsqu'elle est activée
 
-When this option is set:
+Lorsque cette option est activée :
 
-- `ha-card` is always patched even when there is no card config available.
-- When patched in this way the class `type-generic-card` will be added to `ha-card`.
+- `ha-card` est toujours corrigé, même sans configuration de carte disponible.
+- Dans ce cas, la classe `type-generic-card` est ajoutée à `ha-card`.
