@@ -1,26 +1,26 @@
 ---
-title: Style custom panels loaded as iframe (Experimental)
-description: Learn how to enable the styling of custom panels loaded as iFrame with this experimental setting
+title: Styliser les panneaux personnalisés chargés dans une iframe (expérimental)
+description: Découvrez comment activer le style des panneaux personnalisés chargés dans une iframe.
 ---
-# Styling custom panels loaded as iframe
+# Styliser les panneaux personnalisés chargés dans une iframe
 
-By default, UIX does not style custom panels loaded as iframe. Use this experimental setting to enable styling of custom panels. See [Styling custom panels as iframe](../using/custom-panels.md) for more information and examples.
+Par défaut, UIX ne stylise pas les panneaux personnalisés chargés dans une iframe. Utilisez ce réglage expérimental pour activer leur style. Consultez [Styliser les panneaux personnalisés dans une iframe](../using/custom-panels.md) pour plus d'informations et d'exemples.
 
-## Setting via the integration UI
+## Réglage depuis l'interface de l'intégration
 
-The option is **unset by default**. To set the option:
+Cette option est **désactivée par défaut**. Pour l'activer :
 
-1. In Home Assistant, go to **Settings → Devices & Services → UI eXtension → Configure**.
-2. Select **Experimental settings** from the menu.
-3. Toggle **Style custom panels loaded as iFrame** on.
-4. Save.
+1. Dans Home Assistant, ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer**.
+2. Sélectionnez **Réglages expérimentaux**.
+3. Activez **Styliser les panneaux personnalisés chargés dans une iframe**.
+4. Enregistrez.
 
-The setting is available immediately across all connected browser sessions. A page reload may be required for the setting to take effect on any currently displayed custom panel.
+Le réglage est disponible immédiatement dans toutes les sessions de navigateur connectées. Un rechargement peut être nécessaire pour l'appliquer au panneau personnalisé actuellement affiché.
 
-## Behavior when set
+## Comportement lorsqu'elle est activée
 
-When this option is set:
+Lorsque cette option est activée :
 
-- custom panels are styled by a patch in `ha-panel-custom` to create a patched Home Assistant Frontend `customPanelJS` file to be used by the custom panel iframe, running standard Home Assistant Frontend `customPanelJS` and then a condensed UIX javascript module.
-- applies UIX styling to the main custom panel element.
-- if UIX detects a theme is not applied, UIX Styling is applied with the currently loaded Home Assistant Frontend theme. Some custom panels like HACS apply the theme, and in this case UIX styling will inherit the applied theme.
+- les panneaux personnalisés sont stylisés par une correction dans `ha-panel-custom`. Elle crée un fichier Frontend `customPanelJS` corrigé pour l'iframe, qui exécute le `customPanelJS` standard de Home Assistant puis un module JavaScript UIX condensé.
+- le style UIX s'applique à l'élément principal du panneau personnalisé.
+- si UIX détecte qu'aucun thème n'est appliqué, UIX Styling utilise le thème Frontend Home Assistant actuellement chargé. Certains panneaux, comme HACS, appliquent déjà le thème : le style UIX l'hérite alors.
