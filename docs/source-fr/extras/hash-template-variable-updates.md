@@ -1,29 +1,29 @@
 ---
-title: Disable hash template variable and updates
-description: Learn how to disable hash template variable updates and when to use this performance option
+title: Désactiver la variable de modèle hash et ses mises à jour
+description: Découvrez comment désactiver les mises à jour de la variable hash et quand utiliser cette option de performance.
 ---
-# Disable hash template variable and updates
+# Désactiver la variable de modèle hash et ses mises à jour
 
-By default, UIX exposes `hash` as a template variable and updates templates when the URL hash (`#...`) changes. UIX provides an option to disable this behavior to avoid hash-driven rebinds and Forge updates.
+Par défaut, UIX expose `hash` comme variable de modèle et met à jour les modèles lorsque le fragment d'URL (`#...`) change. Cette option désactive ce comportement pour éviter les nouvelles liaisons et mises à jour Forge déclenchées par le hash.
 
-## Setting via the integration UI
+## Réglage depuis l'interface de l'intégration
 
-The option is **unset by default**. To set the option:
+Cette option est **désactivée par défaut**. Pour l'activer :
 
-1. In Home Assistant, go to **Settings → Devices & Services → UI eXtension → Configure**.
-2. Select **Performance settings** from the menu.
-3. Toggle **Disable hash template variable and updates** on.
-4. Save.
+1. Dans Home Assistant, ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer**.
+2. Sélectionnez **Réglages de performance**.
+3. Activez **Désactiver la variable de modèle hash et ses mises à jour**.
+4. Enregistrez.
 
-The setting takes effect immediately across all connected browser sessions — no page reload required.
+Le réglage prend effet immédiatement dans toutes les sessions de navigateur connectées ; aucun rechargement n'est nécessaire.
 
-## Behavior when set
+## Comportement lorsqu'elle est activée
 
-When this option is set:
+Lorsque cette option est activée :
 
-- The `hash` template variable is **not available**.
-- Hash-only URL changes do **not** trigger UIX template rebinds.
-- Hash-only URL changes do **not** trigger UIX Forge updates.
+- La variable de modèle `hash` n'est **pas disponible**.
+- Les changements d'URL limités au hash ne déclenchent **pas** de nouvelle liaison des modèles UIX.
+- Les changements d'URL limités au hash ne déclenchent **pas** de mise à jour UIX Forge.
 
 !!! warning
-    Any template that references `hash` without default will error while this option is set because `hash` variable is unavailable. If you wish to have this option both set and unset you will need to set a default if you use `hash` variable in templates. e.g. `{{ hash | default("") }}` or is using in more complex templates set a local variable and then use that variable. `{% set hashWithDefault = hash | default("") %}`
+    Tout modèle qui référence `hash` sans valeur par défaut génère une erreur lorsque cette option est activée, car la variable n'est plus disponible. Si vous souhaitez pouvoir activer ou désactiver l'option, définissez une valeur par défaut, par exemple `{{ hash | default("") }}`, ou utilisez une variable locale dans les modèles plus complexes : `{% set hashWithDefault = hash | default("") %}`.

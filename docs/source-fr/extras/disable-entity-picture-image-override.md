@@ -1,25 +1,25 @@
 ---
-title: Disable entity picture image overrides
-description: Learn how to disable entity picture image overrides and when to use this performance option
+title: Désactiver les surcharges d'image des entités
+description: Découvrez comment désactiver les surcharges d'image des entités et quand utiliser cette option de performance.
 ---
-# Disable entity picture image overrides
+# Désactiver les surcharges d'image des entités
 
-By default, UIX patches standard Home Assistant badge and marker elements (`ha-entity-marker`, `ha-tile-icon`, `state-badge`, `ha-user-badge`, `ha-person-badge`) to allow custom entity picture image overrides (such as `--uix-image` or `--uix-image-for-<entity_id>`). UIX provides an option to disable this patching behavior to improve rendering performance and reduce CPU overhead on low-power devices.
+Par défaut, UIX corrige les badges et marqueurs standard de Home Assistant (`ha-entity-marker`, `ha-tile-icon`, `state-badge`, `ha-user-badge`, `ha-person-badge`) afin de permettre les surcharges d'image personnalisées comme `--uix-image` ou `--uix-image-for-<entity_id>`. Cette option désactive cette correction pour améliorer le rendu sur les appareils peu puissants.
 
-## Setting via the integration UI
+## Réglage depuis l'interface de l'intégration
 
-The option is **unset by default**. To set the option:
+Cette option est **désactivée par défaut**. Pour l'activer :
 
-1. In Home Assistant, go to **Settings → Devices & Services → UI eXtension → Configure**.
-2. Select **Performance settings** from the menu.
-3. Toggle **Disable entity picture image overrides** on.
-4. Save.
+1. Dans Home Assistant, ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer**.
+2. Sélectionnez **Réglages de performance**.
+3. Activez **Désactiver les surcharges d'image des entités**.
+4. Enregistrez.
 
-The setting takes effect immediately across all connected browser sessions — no page reload required.
+Le réglage prend effet immédiatement dans toutes les sessions de navigateur connectées ; aucun rechargement n'est nécessaire.
 
-## Behavior when set
+## Comportement lorsqu'elle est activée
 
-When this option is set:
+Lorsque cette option est activée :
 
-- Standard Home Assistant badge and marker elements are **not patched** or monitored for custom image properties.
-- Existing custom entity picture image overrides via CSS variables (e.g. `--uix-image`, `--uix-image-for-*`) will **not** be applied to badge or marker elements.
+- Les badges et marqueurs standard ne sont **pas corrigés** ni surveillés pour les propriétés d'image personnalisées.
+- Les surcharges d'image existantes via des variables CSS, par exemple `--uix-image` ou `--uix-image-for-*`, ne s'appliquent **pas** aux badges ou marqueurs.
