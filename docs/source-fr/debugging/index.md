@@ -1,7 +1,7 @@
 # Débogage
 
-- [Debugging - cards](./cards.md)
-- [Debugging - templates](./templates.md)
-- [Debugging - clearing cache](./cache.md)
+- [Débogage des cartes](./cards.md)
+- [Débogage des modèles](./templates.md)
+- [Vider le cache](./cache.md)
 
-See also [DOM inspection helpers](../concepts/dom.md#dom-inspection-helpers) for information on `uix_tree()`, `uix_style_path()` / `uix_path()`, `uix_forge_path()`, `uix_broker_path()`, and `uix_broker_absolute_path()` console helpers.
+Consultez aussi les [outils d'inspection du DOM](../concepts/dom.md#dom-inspection-helpers) pour `uix_tree()`, `uix_style_path()` / `uix_path()`, `uix_forge_path()`, `uix_broker_path()` et `uix_broker_absolute_path()`.

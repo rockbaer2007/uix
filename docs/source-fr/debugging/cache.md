@@ -3,6 +3,6 @@ title: Clearing cache
 ---
 # Vider le cache de l'interface Home Assistant
 
-If at any time you need to clear the Home Assistant Frontend Application cache, which is used in addition to Browser cache, you can use a custom action to clear the Home Assistant Application cache and reload the Browser. This can be very convenient especially for devices where the option is hidden in a debugging menu and will also clear more than just the Frontend Application cache (e.g. localStorage which clears out many stored items like Browser Mod Browser ID).
+Si vous devez vider le cache de l'application Frontend Home Assistant, utilisé en plus du cache du navigateur, utilisez une action personnalisée pour vider ce cache et recharger le navigateur. C'est particulièrement utile sur les appareils où l'option est cachée dans un menu de débogage. L'action efface aussi davantage que le cache Frontend, par exemple localStorage et des données telles que l'identifiant Browser Mod.
 
-See [`clear_cache`](../extras/uix-actions.md#clear-cache-clearing-home-assistant-frontend-cache) UIX action.
+Consultez l'action UIX [`clear_cache`](../extras/uix-actions.md#clear-cache-clearing-home-assistant-frontend-cache).
