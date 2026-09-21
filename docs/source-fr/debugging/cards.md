@@ -1,19 +1,17 @@
 # Débogage des cartes
 
-The DOM navigation can be tricky to get right the first few times, but you'll eventually get the hang of it.
+La navigation dans le DOM peut être difficile à comprendre au début, mais elle devient vite plus claire avec la pratique.
 
-To help you, you can use your browsers Element inspector to see which steps UIX takes.
+Utilisez l'inspecteur d'éléments de votre navigateur pour voir les étapes suivies par UIX.
 
-- Open up the element inspector and find the base element (e.g. `#shadow-root` or card contained by `<hui-card>` or `<ha-card>` contained by a custom card or other element. See [Concepts - application](../concepts/application.md) for more details. This should contain a `<uix-node>` element whether you specified a style or not.
-- Make sure the `<uix-node>` element is selected.
-- Open up the browser's console (in chrome you can press Esc to open the console and inspector at the same time).
-- Type in `$0.uix_input` and press enter. \
-  This is the style information that step of the chain was given. If this is a string, you're at the end of the chain. If it's an object, you can move on to the next step.
-- Type in `$0.uix_children` and press enter. \
-  This is a set of any `<uix-node>` elements in the next step of any chain. Clicking "uix" in the `value:` of the set items will bring you to that `<uix-node>` element in the inspector, and you can keep on inspecting the rest of the chain.
-- You can also use `$0.uix_parent` to find the parent of any `<uix-node>` element in a chain.
+- Ouvrez l'inspecteur et trouvez l'élément de base, par exemple `#shadow-root`, une carte dans `<hui-card>` ou un `<ha-card>` dans une carte personnalisée. Consultez [Concepts - application](../concepts/application.md). Il contient un élément `<uix-node>`, même sans style défini.
+- Vérifiez que l'élément `<uix-node>` est sélectionné.
+- Ouvrez la console du navigateur. Dans Chrome, `Esc` ouvre simultanément la console et l'inspecteur.
+- Saisissez `$0.uix_input`, puis validez. Cette propriété contient le style reçu par cette étape de la chaîne. Une chaîne indique la fin de la chaîne ; un objet permet de continuer.
+- Saisissez `$0.uix_children`, puis validez. Cet ensemble contient les `<uix-node>` de l'étape suivante. Cliquez sur « uix » dans la valeur pour sélectionner l'élément correspondant et poursuivre l'inspection.
+- Utilisez aussi `$0.uix_parent` pour trouver le parent d'un `<uix-node>` dans la chaîne.
 
-For a bit more information, you can use the following in the configuration of the card you're having problems with. It may or may not help you.
+Pour obtenir davantage d'informations, ajoutez ceci à la configuration de la carte concernée :
 
 ```yaml
 uix:
@@ -22,32 +20,32 @@ uix:
 
 ## Définir le débogage avec les variables de thème
 
-Just like you can set debug on a card with `uix:` -> `debug: true`, you can also set debug via a theme variable. This may be the only way to debug a certain type and/or class when styling a panel that is not a Lovelace dashboard or a Lovelace strategy dashboard.
+Comme `uix:` → `debug: true` sur une carte, le débogage peut aussi être activé par une variable de thème. C'est parfois la seule façon de déboguer un type ou une classe lors du style d'un panneau qui n'est pas un tableau de bord Lovelace.
 
-You can set debug via:
+Vous pouvez activer le débogage de deux façons :
 
-1. Using the theme variable `uix-<type>-debug: true` (defined in your theme YAML file, without the leading `--`) to debug all elements of type `<type>`. In CSS, this variable is referenced as `--uix-<type>-debug`.
-2. Using the theme variable `uix-<type>-<class>-debug: true` (again, without the leading `--` in YAML) to debug all elements of type `<type>` which have class `<class>`. In CSS, reference as `--uix-<type>-<class>-debug`. These include both classes that UIX sets as well as any class you included in UIX config for a card/element.
+1. Définissez `uix-<type>-debug: true` dans le YAML du thème, sans les deux tirets initiaux, pour déboguer tous les éléments de type `<type>`. En CSS, la variable est `--uix-<type>-debug`.
+2. Définissez `uix-<type>-<class>-debug: true` pour les éléments de type `<type>` ayant la classe `<class>`. En CSS, utilisez `--uix-<type>-<class>-debug`. Cela inclut les classes créées par UIX et celles définies dans la configuration d'une carte ou d'un élément.
 
-Example:
+Exemple :
 
 ```yaml
 my-awesome-theme:
   uix-theme: my-awesome-theme
 
-  uix-card-debug: true # Debug all elements of UIX type `card`
+  uix-card-debug: true # Débogue tous les éléments UIX de type `card`
 ```
 
 ```yaml
 my-awesome-theme:
   uix-theme: my-awesome-theme
 
-  uix-card-type-energy-sankey-debug: true # Debug card which has uix class 'type-energy-sankey'
-  uix-badge-my-class-debug: true # Debug badges which have my-class set by uix config
+  uix-card-type-energy-sankey-debug: true # Débogue les cartes avec la classe UIX 'type-energy-sankey'
+  uix-badge-my-class-debug: true # Débogue les badges ayant my-class dans la configuration UIX
 ```
 
-!!! warning "Set theme variables in Home Assistant theme"
-    Theme debug variables are set in the Home Assistant theme which is in context, either global or applied locally via dashboard view or card (where supported). Theme debug variables are **NOT** read from `uix-theme` theme. So if these are different, make sure to set theme debug variables on the Home Assistant theme in context.
+!!! warning "Définissez les variables dans le thème Home Assistant"
+    Les variables de débogage sont définies dans le thème Home Assistant actif, global ou appliqué localement à une vue ou une carte. Elles ne sont **pas** lues depuis le thème `uix-theme`. Si les deux thèmes sont différents, définissez les variables de débogage dans le thème Home Assistant actif.
 
     ```yaml
     theme-mods:
