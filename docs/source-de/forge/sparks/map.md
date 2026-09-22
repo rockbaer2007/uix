@@ -1,5 +1,5 @@
 ---
-description: Use the map spark to preserve zoom level and map centre when a map card is used inside UIX Forge.
+description: Verwende den Map Spark, um Kartenansicht und Mittelpunkt einer Map-Karte innerhalb von UIX Forge zu bewahren.
 icon: material/map
 ---
 
@@ -7,7 +7,7 @@ icon: material/map
 
 The `map` spark adds advanced map state management to a map card used inside a [UIX Forge](../index.md) forged element. It supports five modes:
 
-- **Memory mode** (`memory: true`): Captures the current Leaflet zoom and centre before each update and restores them afterwards, so the user's view is always preserved. Without it, every forge template update causes the map to reset to its default zoom level and centre position.
+- **Speichermodus** (`memory: true`): Erfasst vor jedem Update Zoom und Mittelpunkt der aktuellen Karte und stellt sie danach wieder her. So bleibt die gewählte Kartenansicht erhalten. Ohne diesen Modus setzt jedes Forge-Template-Update die Karte auf den Standardzoom und die Standardposition zurück.
 - **Fit map mode** (`fit_map: true`): Fits the map view when map card does not auto fit on load when used in custom cards which may hide the map initially. e.g. `custom: auto-entities`.
 - **Tour mode** (`tour: true | object`): Automatically moves the map between a list of points of interest. A pause/play button is injected into the map. When `tour: true` all defaults are used; pass an object to customise behaviour.
 - **Hours to show slider mode** (`hours_to_show: true | object`): Injects an interactive `ha-slider` overlay into the map allowing users to adjust the hours of history loaded and rendered in real-time.
@@ -47,7 +47,7 @@ element:
 | `zoom` | number | `14` | Default zoom level used when moving to a POI. |
 | `icon_pause` | string | `mdi:pause` | Icon shown on the overlay button while the tour is playing. |
 | `icon_play` | string | `mdi:play` | Icon shown on the overlay button while the tour is paused. |
-| `icon_position` | object | `{bottom: 10px, right: 10px}` | CSS position of the pause/play button. Accepts `top`, `bottom`, `left`, and `right` keys (numbers are treated as pixels). |
+| `icon_position` | object | `{bottom: 40px, right: 10px}` | CSS-Position der Pause-/Wiedergabe-Schaltfläche. Akzeptiert `top`, `bottom`, `left` und `right`; Zahlen werden als Pixel behandelt. |
 | `poi` | list | *(unset)* | List of points of interest. When omitted, the entities declared on the ha-map card are used. |
 
 Each `poi` list entry may contain:
@@ -66,14 +66,16 @@ Each `poi` list entry may contain:
 | `min` | number | `0` | Minimum hours to show on the slider. |
 | `max` | number | `24` | Maximum hours to show on the slider. |
 | `step` | number | `1` | Increment step size of the slider. |
-| `position` | object | `{bottom: 10px, right: 10px}` | CSS position of the slider capsule. Accepts `top`, `bottom`, `left`, and `right` keys (numbers are treated as pixels). |
+| `position` | object | `{bottom: 40px, right: 10px}` | CSS-Position der Reglerkapsel. Akzeptiert `top`, `bottom`, `left` und `right`; Zahlen werden als Pixel behandelt. |
 | `tooltip_distance` | number | `20` | Distance in pixels of slider tooltip away from thumb. |
+
+Bedienelemente ohne konfigurierte Position oder mit der expliziten Position `{bottom: 40px, right: 10px}` liegen gemeinsam in einer horizontalen Reihe über der Karten-Attribution. Alle anderen Positionen, auch `{bottom: 10px, right: 10px}`, verwenden ihre konfigurierten Abstände unabhängig voneinander.
 
 ### Entity Filter sub-keys
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
-| `position` | object | `{bottom: 10px, right: 10px}` | CSS position of the filter button capsule. Accepts `top`, `bottom`, `left`, and `right` keys (numbers are treated as pixels). |
+| `position` | object | `{bottom: 40px, right: 10px}` | CSS-Position der Filter-Schaltflächenkapsel. Akzeptiert `top`, `bottom`, `left` und `right`; Zahlen werden als Pixel behandelt. |
 | `size` | string | `s` | Button size (e.g. `s`, `m`, `l`). |
 | `variant` | string | `neutral` | Button variant brand/style (e.g. `brand`, `neutral`, `danger`, `warning`, `success`). |
 | `appearance` | string | `filled` | Button presentation appearance (e.g. `accent`, `filled`, `plain`). |
@@ -158,23 +160,23 @@ The entity filter dropdown can be styled using CSS variables placed on the `ha-c
 
 Each time the forged element is about to refresh due to a forge template update, the spark:
 
-1. Reads the current `zoom` and `center` from the Leaflet map instance inside `ha-map`.
+1. Liest `zoom` und `center` der aktuellen Karten-Engine innerhalb von `ha-map`.
 2. Waits for the forged element and then `ha-map` to finish their own update cycle.
-3. Calls `leafletMap.setView(center, zoom, { reset: true })` to silently restore the saved position without triggering an animation.
+3. Stellt die gespeicherte Position über die Karten-Engine von Home Assistant wieder her, ohne eine Animation auszulösen.
 
-If Leaflet has not yet initialised when the refresh fires (e.g. on initial render) the save step is skipped and no restore is attempted, so the map displays its default view on first load.
+Ist die Karten-Engine beim Aktualisieren noch nicht initialisiert, etwa beim ersten Rendern, wird das Speichern übersprungen und nichts wiederhergestellt. Beim ersten Laden zeigt die Karte dann ihre Standardansicht.
 
 **Fit map mode:**
 
-After the forged element and `ha-map` finish updating and once `ha-map` client width is non-zero and leaflet is ready, the spark will call `fitMap()` on `ha-map`.
+Sobald das geschmiedete Element und `ha-map` ihr Update beendet haben und die Karten-Engine eine nutzbare Größe hat, ruft der Spark `fitMap()` auf `ha-map` auf.
 
 **Tour mode:**
 
 After the map is ready (and after `fit_map` completes if both are configured), the spark:
 
 1. Resolves the POI list (from `poi` config, or by reading `latitude`/`longitude` from hass state attributes of the ha-map entities).
-2. Injects a `ha-icon-button` overlay into the Leaflet container with a circular SVG countdown ring around it.
-3. Moves the map to the first POI immediately, then starts a repeating timer that calls `leafletMap.setView()` to advance to the next POI every `period` seconds.
+2. Fügt ein `ha-icon-button`-Overlay mit einem kreisförmigen SVG-Countdown-Ring in den Container der Karten-Engine ein.
+3. Bewegt die Karte sofort zum ersten POI und startet dann einen wiederkehrenden Timer, der über die Karten-Engine alle `period` Sekunden zum nächsten POI wechselt.
 4. The countdown ring animates from full to empty over each `period`, giving a visual indication of time remaining at the current POI.
 5. When the user clicks the pause/play button, the timer is stopped or restarted and the countdown ring is hidden or restarted.
 
@@ -201,7 +203,7 @@ When active, the spark:
 6. If `tour` is also active, changing filtered entities will cause the map tour to restart.
 
 !!! note
-    The spark targets the `hui-map-card` element inside the forged element as well as the `ha-map` element within its shadow root. It relies on the `leafletMap` property exposed by `ha-map`. If the forged element is not a map card (or is wrapped in another element that does not expose `hui-map-card`), none of the modes have any effect.
+    Der Spark verwendet das Element `hui-map-card` innerhalb des geschmiedeten Elements sowie das Element `ha-map` in dessen Shadow Root. Er unterstützt die Karten-Engine von Home Assistant (MapLibre, wenn verfügbar, mit Leaflet-Fallback) sowie ältere Leaflet-basierte Frontends. Ist das geschmiedete Element keine Kartenkarte oder in ein Element eingebettet, das `hui-map-card` nicht bereitstellt, haben die Modi keine Wirkung.
 
 ## Examples
 
