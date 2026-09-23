@@ -28,8 +28,8 @@ La ressource JavaScript frontend contient l'essentiel du fonctionnement de UIX. 
 !!! tip "Développer le frontend"
     Si vous disposez d'un conteneur de développement Home Assistant, suivez les conseils de la section [Intégration](#integration). Sinon, procédez ainsi pour tester :
 
-    - update version in `package.json` development tag e.g. 5.0.1-mydev.1
-    - run `npm run build` which will update the version in the integration `manifest.json` and compile `uix.js`
+    - modifiez la version de développement dans `package.json`, par exemple `5.0.1-mydev.1` ;
+    - exécutez `npm run build` pour mettre à jour la version dans le `manifest.json` de l'intégration et compiler `uix.js` ;
     - copiez `uix.js` et `manifest.json` dans `custom_components/uix` ;
     - redémarrez Home Assistant.
 
