@@ -1,28 +1,28 @@
 ---
-description: Use the state-badge spark to insert a state-badge element as a sibling before or after a target element within a UIX Forge element.
+description: Insérez un élément state-badge avant ou après un élément cible avec le spark State Badge de UIX Forge.
 icon: material/shield-half-full
 ---
 
-# :shield: State Badge spark
+# :shield: Spark de badge d'état
 
-The `state-badge` spark inserts a Home Assistant [`state-badge`](https://github.com/home-assistant/frontend/blob/dev/src/components/entity/state-badge.ts) element as a DOM sibling immediately **before** or **after** a target element inside a forged element.
+Le spark `state-badge` insère un élément Home Assistant [`state-badge`](https://github.com/home-assistant/frontend/blob/dev/src/components/entity/state-badge.ts) dans le DOM, immédiatement **avant** ou **après** un élément cible de l'élément créé avec UIX Forge.
 
-The badge can display:
+Le badge peut afficher :
 
-- an entity's state icon, picture, or camera feed (via `entity`)
-- a fixed override icon (via `override_icon`)
-- a fixed override image URL (via `override_image`)
+- l'icône d'état, l'image ou le flux de caméra d'une entité (avec `entity`)
+- une icône de remplacement fixe (avec `override_icon`)
+- l'URL fixe d'une image de remplacement (avec `override_image`)
 
-## Basic usage
+## Utilisation de base
 
-Add a `state-badge` entry to `forge.sparks` with either `after` or `before` to specify the target element, and one of `entity`, `override_icon`, or `override_image` to provide the badge content.
+Ajoutez une entrée `state-badge` à `forge.sparks`. Utilisez `after` ou `before` pour désigner l'élément cible, puis `entity`, `override_icon` ou `override_image` pour définir le contenu du badge.
 
-The `after`/`before` value is a selector that locates the target element within the forged element. It supports the same [DOM navigation syntax](../../concepts/dom.md) as UIX styles, including `$` to cross shadow-root boundaries.
+La valeur de `after` ou `before` est un sélecteur qui repère l'élément cible dans l'élément créé. Elle accepte la même [syntaxe de navigation dans le DOM](../../concepts/dom.md) que les styles UIX, y compris `$` pour traverser les limites d'une racine Shadow DOM.
 
-Since `state-badge` is most commonly found inside entity rows, the typical use case is with `mold: row`. The row element itself has a shadow root, so use `$` to cross into it and target the `state-badge` inside.
+Comme `state-badge` se trouve le plus souvent dans une ligne d'entité, le cas d'usage habituel utilise `mold: row`. L'élément de ligne possède sa propre racine Shadow DOM : utilisez `$` pour y accéder et cibler le `state-badge` qu'elle contient.
 
 !!! tip
-    If you are inserting a state badge **before** another state badge you will need to be specific in your selector so as to not select the inserted icon on updates. State badges added by this spark have an attribute `data-uix-forge-state-badge-id` so you can use this with your selector. e.g. `hui-tile-card $ ha-tile-icon:not([data-uix-forge-state-badge-id])`
+    Si vous insérez un badge d'état **avant** un autre badge d'état, précisez le sélecteur afin qu'il ne cible pas l'icône ajoutée lors des mises à jour. Les badges créés par ce spark possèdent l'attribut `data-uix-forge-state-badge-id`, que vous pouvez exclure avec le sélecteur, par exemple `hui-tile-card $ ha-tile-icon:not([data-uix-forge-state-badge-id])`.
 
 ```yaml
 type: entities
@@ -38,32 +38,32 @@ entities:
       entity: light.bed_light
 ```
 
-![State-badge spark basic example](../../assets/page-assets/forge/sparks/state-badge-basic.png)
+![Exemple de base du spark State Badge](../../assets/page-assets/forge/sparks/state-badge-basic.png)
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
 | --- | ---- | -------- | ------- | ----------- |
-| `type` | `string` | ✅ | — | Must be `state-badge`. |
-| `after` | `string` | one of `after`/`before` ✅ | — | UIX selector for the reference element. The badge is inserted as a sibling **after** the matched element. When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, `""`. If you wish to target `before` using Blank card config, set explicitly to `""`. |
-| `before` | `string` | one of `after`/`before` ✅ | — | UIX selector for the reference element. The badge is inserted as a sibling **before** the matched element. |
-| `entity` | `string` | ✅ | — | Entity ID whose current state object is passed to `state-badge`, displaying the entity's native state icon, picture, or camera feed. |
-| `override_icon` | `string` | | — | MDI icon string (e.g. `mdi:star`) that overrides the entity's default icon. Can be combined with `entity`. |
-| `override_image` | `string` | | — | URL of an image that replaces the icon entirely. Can be combined with `entity`. |
-| `color` | string | | — | Set the icon color when the entity is active for the state badge. By default, the color is based on the `state`, `domain`, and `device_class` of the entity. To disable coloring, set to `none`. It accepts `state`, `none`, a Home Assistant [color token](https://www.home-assistant.io/dashboards/tile/#available-colors), or a hex color code. |
+| `type` | `string` | ✅ | — | Doit être défini sur `state-badge`. |
+| `after` | `string` | l'un de `after`/`before` ✅ | — | Sélecteur UIX de l'élément de référence. Le badge est inséré comme élément frère **après** l'élément correspondant. Avec la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, elle est `""`. Pour cibler un élément avec `before` dans cette configuration, définissez explicitement `after: ""`. |
+| `before` | `string` | l'un de `after`/`before` ✅ | — | Sélecteur UIX de l'élément de référence. Le badge est inséré comme élément frère **avant** l'élément correspondant. |
+| `entity` | `string` | ✅ | — | ID de l'entité dont l'objet d'état actuel est transmis à `state-badge`. Le badge affiche ainsi son icône d'état native, son image ou son flux de caméra. |
+| `override_icon` | `string` | | — | Icône MDI, par exemple `mdi:star`, qui remplace l'icône par défaut de l'entité. Peut être utilisée avec `entity`. |
+| `override_image` | `string` | | — | URL d'une image qui remplace entièrement l'icône. Peut être utilisée avec `entity`. |
+| `color` | string | | — | Couleur de l'icône lorsque le badge représente une entité active. Par défaut, elle dépend de `state`, `domain` et `device_class`. Définissez `none` pour désactiver la coloration. Valeurs acceptées : `state`, `none`, un [jeton de couleur Home Assistant](https://www.home-assistant.io/dashboards/tile/#available-colors) ou un code couleur hexadécimal. |
 
 !!! note
-    - Exactly one of `after` or `before` must be provided.
-    - The spark targets the **first** element matched by `after`/`before`.
-    - The inserted `state-badge` element is placed in the same parent as the target element — it is a sibling, not a child.
-    - If you are inserting a state badge **before** another state badge, be specific in your selector to avoid re-selecting the inserted badge on updates. State badges added by this spark have a `data-uix-forge-state-badge-id` attribute you can use for exclusion, e.g. `state-badge:not([data-uix-forge-state-badge-id])`.
+    - Définissez exactement l'une des options `after` ou `before`.
+    - Le spark cible le **premier** élément correspondant à `after` ou `before`.
+    - L'élément `state-badge` inséré est placé dans le même parent que la cible : c'est un élément frère, pas un enfant.
+    - Pour insérer un badge d'état **avant** un autre badge, précisez le sélecteur afin de ne pas sélectionner à nouveau le badge inséré lors des mises à jour. Les badges ajoutés par ce spark possèdent l'attribut `data-uix-forge-state-badge-id`, que vous pouvez exclure, par exemple avec `state-badge:not([data-uix-forge-state-badge-id])`.
   
 !!! tip
-    You can use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) DOM helper to take the guesswork out of finding the right path for `before/after`.
+    Le helper DOM [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) vous aide à déterminer le chemin à utiliser pour `before` ou `after`.
 
-## Examples
+## Exemples
 
-??? example "Insert an entity state badge after the existing badge"
+??? example "Insérer le badge d'état d'une entité après le badge existant"
     ```yaml
     type: entities
     entities:
@@ -78,9 +78,9 @@ entities:
           entity: light.bed_light
     ```
 
-    ![State-badge spark after example](../../assets/page-assets/forge/sparks/state-badge-after.png)
+    ![Exemple de badge d'état inséré après le badge existant](../../assets/page-assets/forge/sparks/state-badge-after.png)
 
-??? example "Insert a state badge with a fixed color"
+??? example "Insérer un badge d'état avec une couleur fixe"
     ```yaml
     type: entities
     entities:
@@ -96,9 +96,9 @@ entities:
           entity: light.bed_light
     ```
 
-    ![State-badge spark fixed color example](../../assets/page-assets/forge/sparks/state-badge-fixed-color.png)
+    ![Exemple de badge d'état avec une couleur fixe](../../assets/page-assets/forge/sparks/state-badge-fixed-color.png)
 
-??? example "Insert a badge with an override icon and no state coloring"
+??? example "Insérer un badge avec une icône de remplacement et sans coloration d'état"
     ```yaml
     type: entities
     entities:
@@ -115,9 +115,9 @@ entities:
           entity: light.bed_light
     ```
 
-    ![State-badge spark icon example](../../assets/page-assets/forge/sparks/state-badge-icon.png)
+    ![Exemple de badge d'état avec une icône de remplacement](../../assets/page-assets/forge/sparks/state-badge-icon.png)
 
-??? example "Insert a badge with an image override"
+??? example "Insérer un badge avec une image de remplacement"
     ```yaml
     type: entities
     entities:
@@ -132,10 +132,10 @@ entities:
           entity: light.bed_light
     ```
 
-    ![State-badge spark image example](../../assets/page-assets/forge/sparks/state-badge-image.png)
+    ![Exemple de badge d'état avec une image de remplacement](../../assets/page-assets/forge/sparks/state-badge-image.png)
 
-??? example "Adding a tooltip spark to the added state-badge"
-    The tooltip spark will retry attaching the tooltip so will find the added state badge on retry
+??? example "Ajouter une infobulle au badge d'état inséré"
+    Le spark `tooltip` réessaie d'ajouter l'infobulle et trouve ainsi le badge d'état lors d'une nouvelle tentative.
     ```yaml
     type: entities
     entities:
@@ -157,4 +157,4 @@ entities:
           entity: light.bed_light
     ```
 
-    ![State-badge spark tooltip example](../../assets/page-assets/forge/sparks/state-badge-tooltip.gif)
+    ![Exemple d'infobulle sur un badge d'état](../../assets/page-assets/forge/sparks/state-badge-tooltip.gif)
