@@ -1,27 +1,27 @@
 ---
-description: Learn about the background spark for UIX Forge — inject a rich background layer (colour, image, video, or live camera feed) behind any element inside a UIX Forge element.
+description: Découvrez le spark background de UIX Forge : ajoutez derrière un élément une couleur, une image, une vidéo ou un flux vidéo en direct.
 icon: material/image-outline
 ---
-# :material-image-outline: Background spark
+# :material-image-outline: Spark Background
 
-The `background` spark places a styled background layer behind a target element inside a [UIX Forge](../index.md) forged element. The background container sits at `z-index: -1` so it is rendered below all sibling content without disrupting layout.
+Le spark `background` ajoute un arrière-plan stylisé derrière un élément cible créé avec [UIX Forge](../index.md). Le conteneur d'arrière-plan utilise `z-index: -1` pour s'afficher sous les éléments frères sans modifier la mise en page.
 
-Supported background sources (first non-empty value wins):
+Sources d'arrière-plan prises en charge (la première valeur non vide est utilisée) :
 
-| Source | Key | Description |
+| Source | Clé | Description |
 | ------ | --- | ----------- |
-| Camera | `camera_entity` | Live `ha-camera-stream` stream. Supports zoom, pan, and position. Shows a spinner while loading. |
-| Entity picture | `image_entity` | Reads `entity_picture` from any entity and signs the URL. Shows a spinner while loading. |
-| Video | `video_url` | `<video>` element (autoplay, muted, loop). Supports `media-source://` URIs. |
-| Image URL | `image_url` | Static image applied as `background-image`. Shows a spinner while loading. Supports `media-source://` URIs. |
-| Solid colour or CSS shorthand | `background` | Any CSS `background` value, or a mapping of sub-properties. |
+| Caméra | `camera_entity` | Flux `ha-camera-stream` en direct. Prend en charge le zoom, le panoramique et le positionnement. Un indicateur de chargement apparaît pendant le chargement. |
+| Image d'entité | `image_entity` | Récupère l'attribut `entity_picture` d'une entité et signe l'URL. Un indicateur apparaît pendant le chargement. |
+| Vidéo | `video_url` | Élément `<video>` avec lecture automatique, son coupé et boucle. Prend en charge les URI `media-source://`. |
+| URL d'image | `image_url` | Image statique appliquée avec `background-image`. Un indicateur apparaît pendant le chargement. Prend en charge les URI `media-source://`. |
+| Couleur unie ou raccourci CSS | `background` | Toute valeur CSS `background` ou une correspondance de sous-propriétés. |
 
 !!! tip
-    When the background spark targets a `hui-section` (i.e. `mold: section`), UIX automatically zeros out the `div.section-container` padding so there is no double-padding effect if a standard HA section background is also active. You can use a standard Home Assistant section background to add a color behind the spark background and set the spark `opacity` to less than 1 to let the color show through.
+    Lorsque le spark cible un `hui-section` (c'est-à-dire avec `mold: section`), UIX annule automatiquement le padding de `div.section-container` pour éviter un double espacement si l'arrière-plan standard d'une section HA est également actif. Vous pouvez utiliser cet arrière-plan Home Assistant pour ajouter une couleur derrière celle du spark, puis régler son `opacity` à moins de 1 pour laisser apparaître cette couleur.
 
 ---
 
-## Basic usage
+## Utilisation de base
 
 ```yaml
 type: custom:uix-forge
@@ -37,38 +37,38 @@ element:
   entity: light.bed_light
 ```
 
-![Background spark basic](../../assets/page-assets/forge/sparks/background-basic.png)
+![Exemple de base du spark Background](../../assets/page-assets/forge/sparks/background-basic.png)
 
-The `for` value accepts the same [DOM navigation syntax](../../concepts/dom.md) as UIX styles, including `$` for shadow-root crossings. Use `hui-tile-card $ ha-card` to target the card surface inside a tile card — the [ha-card adapter](#card-ha-card-adapter) then automatically applies matching `border-radius` and `margin` so the background follows the card's rounded corners.
+La valeur `for` accepte la même [syntaxe de navigation dans le DOM](../../concepts/dom.md) que les styles UIX, y compris `$` pour traverser les limites d'un shadowRoot. Utilisez `hui-tile-card $ ha-card` pour cibler la surface de la carte dans une carte Tile : l'[adaptateur ha-card](#card-ha-card-adapter) applique automatiquement un `border-radius` et une `margin` adaptés aux coins arrondis de la carte.
 
 ---
 
 ## Configuration
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | ---- | ------- | ----------- |
-| `type` | string | — | Must be `background`. |
-| `for` | string | When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, the default of `element` refers to the root of the forged element. | UIX selector for the target element. |
-| `camera_entity` | string | — | Entity ID of a `camera.*` entity to stream live as the background. |
-| `camera_zoom` | string or number | — | CSS zoom/scale value applied to the stream (e.g. `1.5`, `"150%"`). |
-| `camera_pan_x` | string or number | — | CSS translate X applied to the stream (e.g. `"10%"`, `"-20px"`). |
-| `camera_pan_y` | string or number | — | CSS translate Y applied to the stream. |
-| `camera_position` | string | `center` | Alignment of the stream inside the container. One of `center`, `top`, `bottom`, `left`, `right`, `top-left`, `top-right`, `bottom-left`, `bottom-right`. |
-| `camera_stream_cache_ms` | number | `20000` | How long (ms) to keep a `ha-camera-stream` element in the cache after it is removed from the background container. While cached, the element remains **connected** to an off-screen holder so its internal stream (MPEG/HLS/WebRTC session and auth tokens) stays alive. On the next rebuild with the same entity at the same dimensions the cached element is moved directly into the new background container without re-negotiating the stream. |
-| `image_entity` | string | — | Entity ID whose `entity_picture` attribute provides the background image. |
-| `video_url` | string | — | URL of a video to autoplay muted as the background. Accepts `media-source://` URIs (see [Media source URIs](#media-source-uris)). |
-| `image_url` | string | — | URL of a static background image. Accepts `media-source://` URIs (see [Media source URIs](#media-source-uris)). |
-| `background` | string or object | — | CSS `background` shorthand string, or a mapping of sub-properties (see below). When used alongside `image_entity` or `image_url`, object sub-properties (e.g. `position`, `size`) are applied as overrides on top of the image — this lets you control how the image is positioned or sized. A plain string value replaces the entire `background` shorthand (including `background-image`). |
-| `opacity` | number | — | CSS `opacity` applied to the background container (0–1). Use this to dim the background without affecting the foreground element. |
-| `dissolve_target` | string or list | — | Make the `for` element transparent so the background shows through (see below). |
-| `class` | string | — | Extra CSS class(es) added to the background container `<div>`. |
+| `type` | string | — | Doit être défini sur `background`. |
+| `for` | string | Avec la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, `element` désigne la racine de l'élément créé avec Forge. | Sélecteur UIX de l'élément cible. |
+| `camera_entity` | string | — | ID d'une entité `camera.*` diffusée en direct comme arrière-plan. |
+| `camera_zoom` | chaîne ou nombre | — | Valeur CSS de zoom ou d'échelle appliquée au flux, par exemple `1.5` ou `"150%"`. |
+| `camera_pan_x` | chaîne ou nombre | — | Translation CSS sur l'axe X, par exemple `"10%"` ou `"-20px"`. |
+| `camera_pan_y` | chaîne ou nombre | — | Translation CSS sur l'axe Y du flux. |
+| `camera_position` | string | `center` | Alignement du flux dans le conteneur : `center`, `top`, `bottom`, `left`, `right`, `top-left`, `top-right`, `bottom-left` ou `bottom-right`. |
+| `camera_stream_cache_ms` | number | `20000` | Durée (ms) de conservation en cache d'un élément `ha-camera-stream` après son retrait du conteneur. Pendant cette période, l'élément reste **connecté** à un conteneur hors écran pour maintenir son flux (session MPEG/HLS/WebRTC et jetons d'authentification). Lors de la prochaine reconstruction avec la même entité et les mêmes dimensions, l'élément est déplacé directement dans le nouveau conteneur sans renégocier le flux. |
+| `image_entity` | string | — | ID de l'entité dont l'attribut `entity_picture` fournit l'image d'arrière-plan. |
+| `video_url` | string | — | URL d'une vidéo lue automatiquement sans son comme arrière-plan. Accepte les URI `media-source://` (voir [URI de sources multimédias](#media-source-uris)). |
+| `image_url` | string | — | URL d'une image d'arrière-plan statique. Accepte les URI `media-source://` (voir [URI de sources multimédias](#media-source-uris)). |
+| `background` | chaîne ou objet | — | Raccourci CSS `background` ou correspondance de sous-propriétés (voir ci-dessous). Avec `image_entity` ou `image_url`, les sous-propriétés de l'objet, comme `position` ou `size`, remplacent les valeurs correspondantes de l'image. Une chaîne simple remplace tout le raccourci `background`, y compris `background-image`. |
+| `opacity` | nombre | — | Opacité CSS du conteneur d'arrière-plan, de 0 à 1. Permet d'assombrir l'arrière-plan sans affecter l'élément au premier plan. |
+| `dissolve_target` | chaîne ou liste | — | Rend l'élément `for` transparent pour laisser apparaître l'arrière-plan (voir ci-dessous). |
+| `class` | string | — | Classe(s) CSS supplémentaire(s) ajoutée(s) à la `div` du conteneur d'arrière-plan. |
 
 !!! tip
-    Use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) browser console helper to find the exact `for` selector path to any element inside the forged element.
+    Utilisez le helper [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) dans la console du navigateur pour trouver le sélecteur `for` exact de tout élément créé avec Forge.
 
-### `background` sub-property mapping
+### Correspondance des sous-propriétés de `background`
 
-When `background` is a mapping, each key is translated to its CSS property counterpart:
+Lorsque `background` est une correspondance, chaque clé est convertie en propriété CSS correspondante :
 
 | Key | CSS property |
 | --- | ------------ |
@@ -83,12 +83,12 @@ When `background` is a mapping, each key is translated to its CSS property count
 
 ### `dissolve_target`
 
-`dissolve_target` modifies the `for` element so that the background behind it becomes visible. Two forms are supported:
+`dissolve_target` modifie l'élément `for` afin de rendre visible l'arrière-plan placé derrière. Deux formats sont acceptés :
 
-- **String `opacity_<0-100>`** — sets `opacity` on the `for` element (e.g. `opacity_50` for 50% opacity).
-- **List of CSS property objects** — each object's key/value pair is applied as an inline style on the `for` element. Property names may use underscores in place of hyphens.
+- **Chaîne `opacity_<0-100>`** — définit l'opacité de l'élément `for`, par exemple `opacity_50` pour 50 %.
+- **Liste d'objets de propriétés CSS** — chaque paire clé/valeur est appliquée comme style en ligne à l'élément `for`. Les noms de propriété peuvent utiliser des traits de soulignement à la place des tirets.
 
-`dissolve_target` is made available for use cases where an element background is set on the target. In many cases it is not required and is not used in any example shown here.
+`dissolve_target` est prévu pour les cas où l'élément cible possède son propre arrière-plan. Cette option n'est souvent pas nécessaire et n'est utilisée dans aucun des exemples ci-dessous.
 
 ```yaml
 # Remove the card's own background using a CSS property list
@@ -99,11 +99,11 @@ dissolve_target:
 dissolve_target: opacity_50
 ```
 
-### Media source URIs
+### URI de sources multimédias
 
-`video_url` and `image_url` accept Home Assistant [media source](https://www.home-assistant.io/integrations/media_source/) URIs in the form `media-source://media_source/local/<filename>`. UIX resolves these automatically before setting the background using the HA WebSocket `media_source/resolve_media` command — no manual URL signing is needed.
+`video_url` et `image_url` acceptent les URI de [source multimédia](https://www.home-assistant.io/integrations/media_source/) Home Assistant au format `media-source://media_source/local/<filename>`. UIX les résout automatiquement avant de définir l'arrière-plan à l'aide de la commande WebSocket HA `media_source/resolve_media` : aucune signature manuelle de l'URL n'est nécessaire.
 
-Files placed in the `/media` directory of your HA instance are accessible as `media-source://media_source/local/<filename>`.
+Les fichiers du répertoire `/media` de votre instance HA sont accessibles à l'adresse `media-source://media_source/local/<filename>`.
 
 ```yaml
 # Image from the local media library
@@ -119,26 +119,26 @@ Files placed in the `/media` directory of your HA instance are accessible as `me
 
 ---
 
-## Card (ha-card) adapter
+## Adaptateur Card (ha-card)
 
-When `for` resolves to an `ha-card` element, UIX automatically activates the **ha-card adapter**, which:
+Lorsque `for` désigne un élément `ha-card`, UIX active automatiquement l'**adaptateur ha-card**, qui :
 
-- Sets `border-radius: var(--ha-card-border-radius, var(--ha-border-radius-lg))` on the background container so it follows the card's rounded corners.
-- Sets `margin: calc(-1 * var(--ha-card-border-width, 1px))` to compensate for the card border and ensure the background fills the full card area.
-- Inserts the container into `ha-card`'s shadow root so it participates in the correct stacking context.
+- définit `border-radius: var(--ha-card-border-radius, var(--ha-border-radius-lg))` sur le conteneur pour suivre les coins arrondis de la carte ;
+- définit `margin: calc(-1 * var(--ha-card-border-width, 1px))` pour compenser la bordure et couvrir toute la carte ;
+- insère le conteneur dans le shadowRoot de `ha-card` afin qu'il respecte le bon contexte d'empilement.
 
-No extra configuration is needed — the adapter activates automatically when the resolved `for` element is `ha-card`.
+Aucune configuration supplémentaire n'est nécessaire : l'adaptateur s'active automatiquement lorsque l'élément `for` résolu est `ha-card`.
 
 ---
 
-## Section (hui-section) adapter
+## Adaptateur Section (hui-section)
 
-When `for` resolves to a `hui-section` element — which happens automatically when `mold: section` is used with no explicit `for` — UIX activates the **hui-section adapter**, which:
+Lorsque `for` désigne un élément `hui-section` — ce qui se produit automatiquement si `mold: section` est utilisé sans `for` explicite — UIX active l'**adaptateur hui-section**, qui :
 
-- Sets `border-radius: var(--ha-section-border-radius, var(--ha-border-radius-xl))` on the background container so it follows the section's rounded corners.
-- Sets `padding: var(--ha-space-2)` on the `hui-grid-section` child element (light DOM of `hui-section`) to inset the cards from the section edges, matching the same padding given if you use Frontend color background settings.  The previous padding is restored when the spark disconnects.
-- Applies `--ha-card-background: none` to the section element itself so that all cards within the section inherit a transparent card background, allowing the section background to show through.
-- Sets `padding: 0` on the nearest `div.section-container` ancestor (Home Assistant's own section wrapper element) to neutralise any padding it carries, preventing a double-padding effect when a Home Assistant section background is also active.  The previous padding is restored when the spark disconnects.
+- définit `border-radius: var(--ha-section-border-radius, var(--ha-border-radius-xl))` sur le conteneur pour suivre les coins arrondis de la section ;
+- définit `padding: var(--ha-space-2)` sur l'élément enfant `hui-grid-section` (DOM léger de `hui-section`) pour éloigner les cartes des bords, comme avec les paramètres de couleur d'arrière-plan du frontend. Le padding précédent est restauré à la déconnexion du spark ;
+- applique `--ha-card-background: none` à la section afin que ses cartes héritent d'un arrière-plan transparent et laissent apparaître celui de la section ;
+- définit `padding: 0` sur l'ancêtre `div.section-container` le plus proche, le conteneur de section Home Assistant, afin d'éviter un double espacement si un arrière-plan de section HA est aussi actif. Le padding précédent est restauré à la déconnexion du spark.
 
 ```yaml
 type: custom:uix-forge
@@ -151,16 +151,16 @@ forge:
 cards: []
 ```
 
-No `for` is needed — when `mold: section` the default `for: element` resolves to the `hui-section` element and the adapter activates automatically.
+Aucun `for` n'est nécessaire : avec `mold: section`, la valeur par défaut `for: element` désigne l'élément `hui-section` et active automatiquement l'adaptateur.
 
 ---
 
-## Examples
+## Exemples
 
-### Live camera background
+### Arrière-plan de caméra en direct
 
 !!! tip
-    As `for` target is `ha-card`, the `ha-card` adapter will be used applying card radius and margin to styling to the live camera background.
+    Comme la cible `for` est `ha-card`, l'adaptateur correspondant applique au flux vidéo en direct le rayon et la marge de la carte.
 
 ```yaml
 type: custom:uix-forge
@@ -180,12 +180,12 @@ element:
   entity: light.bed_light
 ```
 
-![Background spark camera entity](../../assets/page-assets/forge/sparks/background-camera.png)
+![Caméra comme arrière-plan avec le spark Background](../../assets/page-assets/forge/sparks/background-camera.png)
 
-### Entity picture as background
+### Image d'entité en arrière-plan
 
 !!! tip
-    As `for` target is `ha-card`, the `ha-card` adapter will be used applying card radius and margin to styling to the entity picture background.
+    Comme la cible `for` est `ha-card`, l'adaptateur correspondant applique à l'image d'entité le rayon et la marge de la carte.
 
 ```yaml
 type: custom:uix-forge
@@ -204,12 +204,12 @@ element:
   icon: mdi:glass-cocktail
 ```
 
-![Background spark entity](../../assets/page-assets/forge/sparks/background-entity.png)
+![Image d'entité en arrière-plan avec le spark Background](../../assets/page-assets/forge/sparks/background-entity.png)
 
-### Video background
+### Arrière-plan vidéo
 
 !!! tip
-    As `for` target is `ha-card`, the `ha-card` adapter will be used applying card radius and margin to styling to the video background.
+    Comme la cible `for` est `ha-card`, l'adaptateur correspondant applique à la vidéo le rayon et la marge de la carte.
 
 ```yaml
 type: custom:uix-forge
@@ -248,12 +248,12 @@ element:
       }
 ```
 
-![Background spark video url](../../assets/page-assets/forge/sparks/background-video.png)
+![URL vidéo utilisée par le spark Background](../../assets/page-assets/forge/sparks/background-video.png)
 
-### Static image background
+### Arrière-plan avec image statique
 
 !!! tip
-    As `for` target is `ha-card`, the `ha-card` adapter will be used applying card radius and margin to styling to the static image background.
+    Comme la cible `for` est `ha-card`, l'adaptateur correspondant applique à l'image statique le rayon et la marge de la carte.
 
 ```yaml
 type: custom:uix-forge
@@ -278,11 +278,11 @@ element:
       }
 ```
 
-![Background spark image url](../../assets/page-assets/forge/sparks/background-image.png)
+![URL d'image utilisée par le spark Background](../../assets/page-assets/forge/sparks/background-image.png)
 
-#### Controlling image position and size
+#### Régler la position et la taille de l'image
 
-The `background` key can be combined with `image_url` (or `image_entity`) to override how the image is rendered. Use an object with sub-properties to adjust positioning, sizing, and other CSS background properties while keeping the image intact:
+La clé `background` peut être combinée à `image_url` ou `image_entity` pour modifier le rendu de l'image. Utilisez un objet avec des sous-propriétés pour régler sa position, sa taille et les autres propriétés CSS d'arrière-plan sans remplacer l'image :
 
 ```yaml
 type: custom:uix-forge
@@ -302,12 +302,12 @@ element:
 ```
 
 !!! note
-    When `background` is used alongside `image_url` or `image_entity`, only **object sub-properties** (e.g. `position`, `size`) are applied as overrides on top of the image. Using a plain string value (e.g. `background: red`) will replace the entire `background` shorthand, which also removes `background-image`. Use a plain string only when you want to completely replace the image with a different background, such as a solid color or gradient.
+    Avec `image_url` ou `image_entity`, seules les **sous-propriétés d'un objet** (par exemple `position` ou `size`) remplacent les valeurs de l'image. Une chaîne simple, comme `background: red`, remplace tout le raccourci `background` et supprime aussi `background-image`. Utilisez une chaîne uniquement pour remplacer entièrement l'image par un autre arrière-plan, comme une couleur unie ou un dégradé.
 
-### Background using full CSS background
+### Arrière-plan avec une règle CSS complète
 
 !!! tip
-    As `for` target is `ha-card`, the `ha-card` adapter will be used applying card radius and margin to styling to the full CSS background.
+    Comme la cible `for` est `ha-card`, l'adaptateur correspondant applique au fond CSS complet le rayon et la marge de la carte.
 
 ```yaml
 type: custom:uix-forge
@@ -327,12 +327,12 @@ element:
       }
 ```
 
-![Background spark css](../../assets/page-assets/forge/sparks/background-css.png)
+![Arrière-plan CSS du spark Background](../../assets/page-assets/forge/sparks/background-css.png)
 
-### Image from media library
+### Image de la bibliothèque multimédia
 
 !!! tip
-    As `for` target is `ha-card`, the `ha-card` adapter will be used applying card radius and margin to styling to the full CSS background. Here also the `background:` has `position: top` set to move the background image to top.
+    Comme la cible `for` est `ha-card`, l'adaptateur correspondant applique au fond CSS le rayon et la marge de la carte. Ici, `background` définit également `position: top` pour placer l'image en haut.
 
 ```yaml
 type: custom:uix-forge
@@ -352,11 +352,11 @@ element:
   entity: light.kitchen_lights
 ```
 
-![Background spark image media source](../../assets/page-assets/forge/sparks/background-media-source-image.png)
+![Image de source multimédia en arrière-plan](../../assets/page-assets/forge/sparks/background-media-source-image.png)
 
-### State-driven background color using a template
+### Couleur d'arrière-plan dynamique à l'aide d'un modèle
 
-All `forge` config values support Jinja2 templates. Use the `background` key together with a template to drive the color from entity state:
+Toutes les valeurs de configuration `forge` acceptent les modèles Jinja2. Utilisez la clé `background` avec un modèle pour faire dépendre la couleur de l'état d'une entité :
 
 ```yaml
 type: custom:uix-forge
@@ -377,14 +377,14 @@ element:
   entity: light.bed_light
 ```
 
-![Background spark template](../../assets/page-assets/forge/sparks/background-template.gif)
+![Modèle d'arrière-plan du spark Background](../../assets/page-assets/forge/sparks/background-template.gif)
 
-### Section background
+### Arrière-plan d'une section
 
-Here the standard section background is used to give a stronger light-blue background to the video. The section (hui-section) adapter automatically zeros out the `section-container` padding so there is no double-padding effect.
+Cet exemple utilise l'arrière-plan standard de la section pour donner une teinte bleu clair plus soutenue à la vidéo. L'adaptateur de section (`hui-section`) annule automatiquement le padding de `section-container` afin d'éviter un double espacement.
 
 !!! tip
-    The YAML is for a complete section of a sections dashboard. You can edit a section's YAML directly by editing the section, the using `Edit in YAML` from the three dots menu.
+    Ce YAML décrit une section complète d'un tableau de bord Sections. Pour modifier son YAML, éditez la section puis choisissez `Modifier en YAML` dans le menu à trois points.
 
 ```yaml
 type: custom:uix-forge
@@ -414,11 +414,11 @@ background:
   opacity: 100
 ```
 
-![Background spark section](../../assets/page-assets/forge/sparks/background-section.png)
+![Arrière-plan de section avec le spark Background](../../assets/page-assets/forge/sparks/background-section.png)
 
-### Styling the background container with UIX Styling
+### Styliser le conteneur d'arrière-plan avec UIX Styling
 
-Use the `class` key to add a CSS class to the background container, then target the background div within the background container with a UIX style path:
+Utilisez la clé `class` pour ajouter une classe CSS au conteneur d'arrière-plan, puis ciblez sa `div` d'arrière-plan avec un chemin de style UIX :
 
 ```yaml
 type: custom:uix-forge
@@ -446,15 +446,15 @@ element:
   entity: light.bed_light
 ```
 
-![Background spark uix styling](../../assets/page-assets/forge/sparks/background-uix-styling.png)
+![Style UIX du conteneur d'arrière-plan](../../assets/page-assets/forge/sparks/background-uix-styling.png)
 
-### Adding background to a dashboard header
+### Ajouter un arrière-plan à l'en-tête du tableau de bord
 
-A sections dashboard header in its entirety (title and badges) cannot be forged with UIX Forge. However the markdown `card` used the in header can be replaced with a forged card. Using cards of your choice along with `custom:badge-horizontal-container-card` in a vertical stack, you can simulate a full header including badges and use the background spark to inject a background behind the 'full' header.
+L'en-tête complet d'un tableau de bord Sections (titre et badges) ne peut pas être créé avec UIX Forge. Cependant, la carte Markdown utilisée dans l'en-tête peut être remplacée par une carte Forge. En plaçant les cartes de votre choix et `custom:badge-horizontal-container-card` dans une pile verticale, vous pouvez recréer un en-tête complet avec badges et utiliser le spark Background pour lui ajouter un arrière-plan.
 
-You can replace the heading markdown card by simply using `Show code editor` after clicking the `+ Add title` button in the header area of the dashboard in edit mode.
+En mode édition du tableau de bord, cliquez sur `+ Ajouter un titre` dans l'en-tête, puis sur `Afficher l'éditeur de code` pour remplacer la carte Markdown du titre.
 
-Border radius needs to be applied to the background as there is no adapter doing this automatically. Likewise, padding needs to be applied to the included vertical stack root.
+Le rayon de bordure doit être appliqué à l'arrière-plan, car aucun adaptateur ne le fait automatiquement. De même, appliquez le padding à la racine de la pile verticale intégrée.
 
 ```yaml
 type: custom:uix-forge
@@ -492,8 +492,8 @@ element:
       }
 ```
 
-??? example "As full raw dashboard config"
-    Place the forged header card under `card:` within `header:`
+??? example "Configuration YAML complète du tableau de bord"
+    Placez la carte d'en-tête Forge sous `card:` dans `header:`.
     ```yaml
     views:
       - type: sections
@@ -537,4 +537,4 @@ element:
                   }
     ```
 
-![Background spark dashboard header](../../assets/page-assets/forge/sparks/background-dashboard-header.png)
+![En-tête de tableau de bord avec le spark Background](../../assets/page-assets/forge/sparks/background-dashboard-header.png)
