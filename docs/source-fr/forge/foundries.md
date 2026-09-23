@@ -1,50 +1,51 @@
 ---
-title: Foundries
-description: Foundries are server-stored UIX Forge configurations that let you define reusable forge and element configurations once and apply them to many elements.
+title: Fonderies
+description: Les fonderies sont des configurations UIX Forge enregistrées sur le serveur. Elles permettent de définir une configuration Forge et élément réutilisable, puis de l'appliquer à plusieurs éléments.
 ---
-# Foundries
+# Fonderies
 
-A **foundry** is a named UIX Forge configuration stored in Home Assistant. It acts as a reusable base configuration: define a `forge` and `element` config once, give it a name, and reference it in any number of elements with a single `foundry:` key. Local element config is merged on top, so you can still override any value per element.
+Une **fonderie** est une configuration UIX Forge nommée et enregistrée dans Home Assistant. Elle sert de base réutilisable : définissez une fois les configurations `forge` et `element`, attribuez-leur un nom, puis référencez-les dans autant d'éléments que nécessaire avec la clé `foundry:`. La configuration locale de l'élément est fusionnée avec cette base ; vous pouvez donc remplacer chaque valeur pour une instance donnée.
 
-## Global foundries
+<a id="global-foundries"></a>
+## Fonderies globales
 
-There are two special reserved foundry names which, if defined, are automatically merged into *every* forge configuration across your dashboard, whether they explicitly request a foundry or not.
+Deux noms de fonderie réservés sont fusionnés automatiquement dans **toutes** les configurations Forge du tableau de bord, qu'elles demandent explicitement une fonderie ou non.
 
-- `global` — if a foundry with this exact name exists, it is merged as the absolute base configuration for all forges.
-- `global_<mold-type>` — if a foundry with this exact name exists (e.g. `global_card`, `global_badge`, `global_row`), it is merged immediately after `global` for all forges of that mold. The mold is determined either from the local config or from an explicitly referenced foundry.
+- `global` — si une fonderie porte exactement ce nom, elle est fusionnée comme configuration de base de toutes les instances Forge.
+- `global_<mold-type>` — si une fonderie porte ce nom (par exemple `global_card`, `global_badge` ou `global_row`), elle est fusionnée juste après `global` pour toutes les instances utilisant ce type de `mold`. Celui-ci est déterminé à partir de la configuration locale ou d'une fonderie explicitement référencée.
 
-These are useful for defining a consistent base set of macros, sparks, or default styles without needing to add `foundry: my_base_foundry` to every element.
+Ces fonderies permettent de définir un ensemble cohérent de macros, de sparks ou de styles par défaut sans ajouter `foundry: ma_fonderie_de_base` à chaque élément.
 
-See [Example Global foundry using macro](#example-global-foundry-using-macro) for an example of a global foundry in use.
+Consultez l'[exemple de fonderie globale utilisant une macro](#example-global-foundry-using-macro).
 
-## Managing foundries
+## Gérer les fonderies
 
-Foundries can be managed in two ways: as **UI Foundries** configured directly in the Home Assistant UI (suitable for small numbers of foundries), or as **YAML File Foundries** stored on disk (better for larger sets, bulk authoring, and version control).
+Les fonderies se gèrent de deux façons : comme **fonderies via l'interface**, configurées dans Home Assistant (adaptées à un petit nombre de fonderies), ou comme **fonderies dans des fichiers YAML**, enregistrées sur le disque (plus pratiques pour les grandes collections, la création en série et le contrôle de version).
 
-### UI Foundries
+### Fonderies via l'interface
 
-UI Foundries are configured directly through the Home Assistant integration UI and managed by the integration.
+Les fonderies via l'interface se configurent dans l'interface de l'intégration Home Assistant et sont gérées par celle-ci.
 
-1. Go to **Settings → Devices & Services → UI eXtension → Configure (cog)**.
-2. Choose **Manage UI foundries**, then one of the options:
-   - **Add a foundry** — enter a name and a YAML config object.
-   - **Edit a foundry** — select an existing foundry from the dropdown, then update its config.
-   - **Delete a foundry** — select an existing foundry from the dropdown and confirm.
+1. Ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer (roue dentée)**.
+2. Choisissez **Gérer les fonderies de l'interface**, puis l'une des options :
+   - **Ajouter une fonderie** — saisissez un nom et un objet de configuration YAML.
+   - **Modifier une fonderie** — sélectionnez une fonderie dans la liste, puis modifiez sa configuration.
+   - **Supprimer une fonderie** — sélectionnez une fonderie dans la liste et confirmez.
 
-The foundry name must be unique. It is used as the `foundry:` key in your element config.
+Le nom de la fonderie doit être unique. Il est utilisé avec la clé `foundry:` dans la configuration de l'élément.
 
-### YAML File Foundries
+### Fonderies dans des fichiers YAML
 
-You can store foundries in ordinary YAML files anywhere inside (or accessible from) your HA config directory and register those files with UIX. This approach:
+Vous pouvez enregistrer les fonderies dans des fichiers YAML ordinaires situés dans le dossier de configuration Home Assistant, ou accessibles depuis celui-ci, puis déclarer ces fichiers dans UIX. Cette méthode :
 
-- supports version control (git, etc.)
-- lets you use any text editor
-- supports YAML anchors (`&`) and merge keys (`<<: *`) for DRY configurations
-- supports `!include` and `!secret` directives (no quoting required — the file is loaded by HA's native YAML loader)
+- permet le contrôle de version (Git, par exemple) ;
+- permet d'utiliser l'éditeur de texte de votre choix ;
+- prend en charge les ancres YAML (`&`) et les clés de fusion (`<<: *`) pour éviter les répétitions ;
+- prend en charge `!include` et `!secret` sans guillemets, car Home Assistant charge le fichier avec son chargeur YAML natif.
 
-#### File format
+#### Format du fichier
 
-Each file must have a top-level `uix_foundries` key whose value is a mapping of foundry names to foundry configs:
+Chaque fichier doit contenir à la racine la clé `uix_foundries`, associée à une table reliant les noms des fonderies à leurs configurations :
 
 ```yaml
 uix_foundries:
@@ -63,9 +64,9 @@ uix_foundries:
       entity: switch.living_room
 ```
 
-#### YAML anchors
+#### Ancres YAML
 
-YAML anchors and merge keys work well for sharing repeated values at the same level of a config. A common use-case is reusing formatting options across multiple entities in a `custom:multiple-entity-row` card:
+Les ancres YAML et les clés de fusion facilitent le partage de valeurs répétées au même niveau de configuration. Par exemple, elles permettent de réutiliser des options de mise en forme pour plusieurs entités d'une carte `custom:multiple-entity-row` :
 
 ```yaml
 uix_foundries:
@@ -79,59 +80,60 @@ uix_foundries:
       entity: binary_sensor.{{ id }}
       entities:
         - entity: sensor.{{ id }}_browser_battery
-          <<: &width                    # define anchor inline on first use
+          <<: &width                    # définir l'ancre dès sa première utilisation
             format: precision2
             styles:
               text-align: center
         - entity: sensor.{{ id }}_browser_height
-          <<: *width                    # reuse the same formatting options
+          <<: *width                    # réutiliser les mêmes options de mise en forme
 ```
 
-!!! warning "YAML merge keys are shallow"
-    YAML merge keys (`<<: *anchor`) perform a **shallow** merge — they only copy top-level keys. This means they are not suitable for sharing a common `forge` + `element` base across multiple foundries, because merging at the foundry root level would replace the entire `element` object rather than merging its contents. Use [nested foundries](foundries.md#nested-foundries) instead, which performs a deep recursive merge.
+!!! warning "Les clés de fusion YAML sont superficielles"
+    Les clés de fusion YAML (`<<: *anchor`) effectuent une fusion **superficielle** : elles ne copient que les clés de premier niveau. Elles ne conviennent donc pas au partage d'une base commune `forge` et `element` entre plusieurs fonderies, car une fusion à la racine remplacerait tout l'objet `element` au lieu d'en fusionner le contenu. Utilisez plutôt les [fonderies imbriquées](#nested-foundries), qui effectuent une fusion récursive en profondeur.
 
-#### Registering a file
+#### Déclarer un fichier
 
-1. Go to **Settings → Devices & Services → UI eXtension → Configure (cog)**.
-2. Choose **Manage foundry files**, then **Register a foundry file**.
-3. Enter the path to the file — either absolute or relative to the HA config directory (e.g. `uix/my_foundries.yaml`).
+1. Ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer (roue dentée)**.
+2. Choisissez **Gérer les fichiers de fonderies**, puis **Déclarer un fichier de fonderies**.
+3. Saisissez le chemin du fichier, absolu ou relatif au dossier de configuration Home Assistant (par exemple `uix/mes_fonderies.yaml`).
 
-UIX validates the file before saving the registration. If the file cannot be found, fails to parse, or is missing the required `uix_foundries` key, an error is shown.
+UIX vérifie le fichier avant d'enregistrer sa déclaration. Une erreur s'affiche si le fichier est introuvable, illisible ou dépourvu de la clé obligatoire `uix_foundries`.
 
-#### Reloading files
+#### Recharger les fichiers
 
-File contents are read when foundries are first requested by the browser and whenever foundries are updated. To force all connected browser sessions to reload the latest file contents without restarting Home Assistant:
+Le contenu des fichiers est lu à la première demande de fonderies par le navigateur, puis à chaque mise à jour des fonderies. Pour forcer toutes les sessions connectées à recharger les derniers fichiers sans redémarrer Home Assistant :
 
-1. Go to **Settings → Devices & Services → UI eXtension → Configure (cog)**.
-2. Choose **Manage foundry files**, then **Reload foundry files**.
+1. Ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer (roue dentée)**.
+2. Choisissez **Gérer les fichiers de fonderies**, puis **Recharger les fichiers de fonderies**.
 
-If your dashboard is in **YAML mode**, you can also use the dashboard's built-in **Refresh** button — UIX listens for the `config-refresh` event that the refresh button dispatches and automatically re-reads all registered foundry files.
+Si votre tableau de bord est en **mode YAML**, vous pouvez aussi utiliser le bouton **Actualiser** intégré au tableau de bord. UIX écoute l'événement `config-refresh` envoyé par ce bouton et relit automatiquement tous les fichiers de fonderies déclarés.
 
-Home Assistant Tools YAML tab also has a `UIX Foundries` reload button which will show any errors in file foundries.
+L'onglet YAML des outils Home Assistant comporte également un bouton `UIX Foundries` pour recharger les fichiers et afficher les éventuelles erreurs.
 
-#### Removing a file registration
+#### Supprimer la déclaration d'un fichier
 
-1. Go to **Settings → Devices & Services → UI eXtension → Configure (cog)**.
-2. Choose **Manage foundry files**, then **Deregister a foundry file** and select the file from the dropdown.
+1. Ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer (roue dentée)**.
+2. Choisissez **Gérer les fichiers de fonderies**, puis **Retirer la déclaration d'un fichier** et sélectionnez le fichier dans la liste.
 
-This removes the registration only — the file itself is not deleted.
+Seule la déclaration est supprimée ; le fichier lui-même n'est pas effacé.
 
-#### Precedence
+#### Priorité
 
-When a foundry name appears in both a YAML file and a UI foundry, the **UI foundry takes precedence**. When the same name appears in multiple files, the **last registered file wins**. This includes the special Global foundry names of `global` and `global_<mold-type>`.
+Lorsqu'un même nom de fonderie apparaît dans un fichier YAML et dans l'interface, la **fonderie de l'interface est prioritaire**. Si le nom apparaît dans plusieurs fichiers, le **dernier fichier déclaré l'emporte**. Cette règle s'applique aussi aux noms réservés `global` et `global_<mold-type>`.
 
-## Using a foundry
+<a id="using-a-foundry"></a>
+## Utiliser une fonderie
 
-Reference a foundry by name using the `foundry:` key:
+Référencez une fonderie par son nom avec la clé `foundry:` :
 
 ```yaml
 type: custom:uix-forge
 foundry: my_tile
 ```
 
-The foundry's `forge` and `element` configs are applied as if they were written directly on the UIX Forge config.
+Les configurations `forge` et `element` de la fonderie sont appliquées comme si elles figuraient directement dans la configuration UIX Forge.
 
-You can add or override any key locally — local values take precedence over the foundry:
+Vous pouvez ajouter ou remplacer localement n'importe quelle clé ; les valeurs locales sont prioritaires sur celles de la fonderie :
 
 ```yaml
 type: custom:uix-forge
@@ -140,9 +142,9 @@ element:
   entity: light.kitchen
 ```
 
-## Foundry config structure
+## Structure de la configuration d'une fonderie
 
-A foundry is a YAML object that can contain any combination of `forge` and `element` keys:
+Une fonderie est un objet YAML qui peut contenir les clés `forge` et `element`, seules ou ensemble :
 
 ```yaml
 forge:
@@ -158,23 +160,23 @@ element:
   entity: "{{ 'sun.sun' }}"
 ```
 
-The same keys are valid here as on a normal `uix-forge` element. See the [UIX Forge](./index.md) for details on `forge` and `element` options.
+Les mêmes clés sont disponibles que dans un élément `uix-forge` classique. Consultez la page [UIX Forge](./index.md) pour connaître les options `forge` et `element`.
 
-## Including external files and secrets
+## Inclure des fichiers externes et des secrets
 
-Foundry configs support HA YAML directives such as `!include` and `!secret`. The behaviour differs slightly depending on whether the foundry is a UI Foundry or a YAML File Foundry.
+Les configurations de fonderies prennent en charge les directives YAML de Home Assistant, comme `!include` et `!secret`. Leur fonctionnement diffère légèrement selon que la fonderie est configurée dans l'interface ou dans un fichier YAML.
 
-- **In a YAML File Foundry** — the file is loaded by HA's native YAML loader, so `!include` and `!secret` work exactly as they do in `configuration.yaml`. No quoting is required.
-- **In a UI Foundry** — foundries are entered as plain text in the browser. The browser's YAML parser does not understand `!` tags, so they must be quoted as string literals and are resolved by UIX at serve time.
+- **Dans une fonderie de fichier YAML** — Home Assistant charge le fichier avec son chargeur YAML natif ; `!include` et `!secret` fonctionnent comme dans `configuration.yaml`, sans guillemets.
+- **Dans une fonderie via l'interface** — la configuration est saisie comme texte brut dans le navigateur. Son analyseur YAML ne reconnaît pas les balises `!` ; elles doivent donc être entre guillemets comme chaînes de caractères. UIX les résout lors de l'envoi au navigateur.
 
-!!! warning "Quoting required in UI Foundries"
-    In the ObjectSelector / YAML editor in the HA UI, `!include` and `!secret` **must be quoted**. Write them as `"!include path/to/file.yaml"` or `"!secret my_key"`.
+!!! warning "Les guillemets sont obligatoires dans les fonderies via l'interface"
+    Dans l'éditeur YAML de l'interface Home Assistant, `!include` et `!secret` **doivent être entre guillemets**. Écrivez par exemple `"!include chemin/vers/fichier.yaml"` ou `"!secret ma_cle"`.
 
-    In YAML File Foundries on disk they are unquoted, as in any other HA YAML file.
+    Dans les fonderies enregistrées dans des fichiers YAML, utilisez-les sans guillemets, comme dans tout autre fichier YAML Home Assistant.
 
 ### `!include`
 
-Use `!include` to replace any value with the contents of an external YAML file. The path is relative to the HA config directory.
+Utilisez `!include` pour remplacer une valeur par le contenu d'un fichier YAML externe. Le chemin est relatif au dossier de configuration Home Assistant.
 
 ```yaml
 # /config/uix/my_forge_styles.yaml
@@ -182,7 +184,7 @@ style: "ha-card { background: teal; }"
 ```
 
 ```yaml
-# In a YAML File Foundry — no quoting needed
+# Fonderie de fichier YAML — guillemets inutiles
 uix_foundries:
   my_tile:
     forge:
@@ -194,7 +196,7 @@ uix_foundries:
 ```
 
 ```yaml
-# In a UI Foundry — must be quoted
+# Fonderie via l'interface — guillemets obligatoires
 forge:
   mold: card
 element:
@@ -203,11 +205,11 @@ element:
   uix: "!include uix/my_forge_styles.yaml"
 ```
 
-The included file must contain the full value for the key it replaces. In the example above `my_forge_styles.yaml` contains a `uix` config dict (with a `style` key), so the `uix:` key of the element ends up as that dict after resolution.
+Le fichier inclus doit contenir la valeur complète de la clé qu'il remplace. Dans l'exemple, `my_forge_styles.yaml` contient un objet de configuration `uix` (avec une clé `style`) ; après résolution, la clé `uix:` de l'élément reçoit cet objet.
 
 ### `!secret`
 
-Use `!secret` to pull a value from `secrets.yaml` in the HA config directory.
+Utilisez `!secret` pour récupérer une valeur de `secrets.yaml`, dans le dossier de configuration Home Assistant.
 
 ```yaml
 # /config/secrets.yaml
@@ -216,7 +218,7 @@ lock_pin: "1234"
 ```
 
 ```yaml
-# In a YAML File Foundry — no quoting needed
+# Fonderie de fichier YAML — guillemets inutiles
 uix_foundries:
   my_tile:
     forge:
@@ -229,7 +231,7 @@ uix_foundries:
 ```
 
 ```yaml
-# In a UI Foundry — must be quoted
+# Fonderie via l'interface — guillemets obligatoires
 forge:
   mold: card
   billets:
@@ -239,28 +241,28 @@ element:
   entity: "{{ config.entity }}"
 ```
 
-For more information on HA secrets see <https://www.home-assistant.io/docs/configuration/secrets/>.
+Pour en savoir plus sur les secrets Home Assistant, consultez <https://www.home-assistant.io/docs/configuration/secrets/>.
 
-## Merge behaviour
+## Fonctionnement de la fusion
 
-When a forge configuration is resolved, it merges settings from several sources. Keys are merged in this order — later entries win:
+Lorsqu'une configuration Forge est résolue, ses paramètres sont fusionnés à partir de plusieurs sources. L'ordre de fusion est le suivant ; chaque source remplace les précédentes :
 
-1. **Global** — the `global` foundry config (if it exists).
-2. **Global Mold** — the `global_<mold-type>` foundry config (if it exists for the resolved mold type).
-3. **Foundry Base(s)** — if the named foundry itself has a `foundry:` key, its bases are resolved recursively.
-4. **Foundry** — the explicitly named foundry config.
-5. **Local** — keys defined directly on the forge config.
+1. **Globale** — la configuration de la fonderie `global`, si elle existe.
+2. **Moule global** — la configuration `global_<mold-type>`, si elle existe pour le type de moule résolu.
+3. **Fonderie(s) de base** — si la fonderie nommée contient elle-même une clé `foundry:`, ses bases sont résolues récursivement.
+4. **Fonderie** — la configuration de la fonderie explicitement nommée.
+5. **Locale** — les clés définies directement dans la configuration Forge.
 
-For **object values** (e.g. `forge`, `element`), merging is recursive: nested keys are merged individually rather than the whole object being replaced. For **array and scalar values**, the local value replaces the foundry value entirely, with one exception for `forge.sparks`:
+Pour les **objets** (par exemple `forge` et `element`), la fusion est récursive : les clés imbriquées sont fusionnées individuellement au lieu de remplacer l'objet entier. Pour les **tableaux et les valeurs simples**, la valeur locale remplace entièrement celle de la fonderie. `forge.sparks` fait exception :
 
-- Local spark entries are **appended** by default.
-- To override/merge a spark, give both entries the same `id` (or `spark_id`).
-- Spark override matching requires both the same identifier and the same spark `type`.
-- Set `forge.sparks: []` locally to explicitly clear inherited sparks.
+- Par défaut, les sparks locaux sont **ajoutés** à la liste héritée.
+- Pour remplacer ou fusionner un spark, attribuez le même `id` (ou `spark_id`) aux deux entrées.
+- Le remplacement exige que l'identifiant et le `type` du spark soient identiques.
+- Définissez localement `forge.sparks: []` pour supprimer explicitement les sparks hérités.
 
-### Merge example
+### Exemple de fusion
 
-Foundry `weather_tile`:
+Fonderie `weather_tile` :
 
 ```yaml
 forge:
@@ -273,7 +275,7 @@ element:
   show_forecast: false
 ```
 
-Element config:
+Configuration de l'élément :
 
 ```yaml
 type: custom:uix-forge
@@ -283,7 +285,7 @@ element:
   show_forecast: true
 ```
 
-Resolved config:
+Configuration obtenue :
 
 ```yaml
 forge:
@@ -293,15 +295,16 @@ forge:
 element:
   type: weather-forecast
   entity: weather.home        # from element
-  show_current: true          # from foundry
-  show_forecast: true         # overridden by element
+  show_current: true          # valeur provenant de la fonderie
+  show_forecast: true         # valeur remplacée par l'élément
 ```
 
-## Nested foundries
+<a id="nested-foundries"></a>
+## Fonderies imbriquées
 
-A foundry can itself reference another foundry using the `foundry` key. This lets you build a hierarchy of shared configs.
+Une fonderie peut elle-même référencer une autre fonderie avec la clé `foundry`. Vous pouvez ainsi créer une hiérarchie de configurations partagées.
 
-Foundry `base_tile`:
+Fonderie `base_tile` :
 
 ```yaml
 forge:
@@ -316,7 +319,7 @@ element:
   type: tile
 ```
 
-Foundry `light_tile` (extends `base_tile`):
+Fonderie `light_tile` (qui étend `base_tile`) :
 
 ```yaml
 foundry: base_tile
@@ -327,7 +330,7 @@ element:
     - type: light-brightness
 ```
 
-Forge:
+Configuration Forge :
 
 ```yaml
 type: custom:uix-forge
@@ -336,22 +339,23 @@ element:
   entity: light.living_room
 ```
 
-The resolved config merges all three layers: `base_tile` → `light_tile` → forge config.
+La configuration obtenue fusionne les trois niveaux : `base_tile` → `light_tile` → configuration Forge.
 
-!!! warning "Circular references"
-    If a chain of foundry references loops back to a foundry already in the chain, UIX detects the cycle and throws an error. Always ensure your foundry hierarchy is acyclic.
+!!! warning "Références circulaires"
+    Si une chaîne de références revient vers une fonderie déjà parcourue, UIX détecte la boucle et renvoie une erreur. Veillez toujours à ce que la hiérarchie de vos fonderies ne contienne aucun cycle.
 
-## Billets in foundries
+<a id="billets-in-foundries"></a>
+## Billets dans les fonderies
 
-[Billets](../forge/forge.md#billets) are a good fit for foundries because they act as named slots that individual forge instances can fill or override without touching the foundry templates.
+Les [billets](./forge.md#billets) conviennent bien aux fonderies : ils servent d'emplacements nommés que chaque instance Forge peut renseigner ou remplacer sans modifier les modèles de la fonderie.
 
-There are two complementary patterns:
+Deux méthodes complémentaires sont possibles :
 
-### Pattern 1 — define defaults in the foundry, override per instance
+### Méthode 1 — définir des valeurs par défaut et les remplacer pour chaque instance
 
-Define the billet with a sensible default in the foundry. Each instance can leave it as-is or override it with a local value. Templates in the foundry use the billet directly without needing any fallback logic.
+Définissez une valeur par défaut pertinente dans la fonderie. Chaque instance peut la conserver ou la remplacer par une valeur locale. Les modèles de la fonderie utilisent directement le billet, sans logique de repli supplémentaire.
 
-Foundry `accent_tile`:
+Fonderie `accent_tile` :
 
 ```yaml
 forge:
@@ -368,7 +372,7 @@ element:
       }
 ```
 
-Instance — accepts the foundry default:
+Instance — conserve la valeur par défaut de la fonderie :
 
 ```yaml
 type: custom:uix-forge
@@ -376,9 +380,9 @@ foundry: accent_tile
 entity: light.bed_light
 ```
 
-![Foundry billets example](../assets/page-assets/forge/foundries-billets.png)
+![Exemple de billets dans une fonderie](../assets/page-assets/forge/foundries-billets.png)
 
-Instance — overrides the accent color:
+Instance — remplace la couleur d'accentuation :
 
 ```yaml
 type: custom:uix-forge
@@ -389,20 +393,20 @@ forge:
     accent: blue
 ```
 
-![Foundry billets override example](../assets/page-assets/forge/foundries-billets-override.png)
+![Exemple de remplacement d'un billet de fonderie](../assets/page-assets/forge/foundries-billets-override.png)
 
-### Pattern 2 — define empty billet slots in the foundry
+### Méthode 2 — définir des emplacements de billets vides
 
-When the foundry should not impose any value and the billet is expected to be supplied by the instance, define the billet as `~` (null). The foundry templates must then handle the `none` case gracefully, either by providing a fallback using `or` or `default()`, or by guarding with `{% if %}`.
+Si la fonderie ne doit imposer aucune valeur et que l'instance doit fournir le billet, définissez-le avec `~` (valeur nulle). Les modèles de la fonderie doivent alors gérer le cas `none`, soit avec une valeur de repli (`or` ou `default()`), soit avec une condition `{% if %}`.
 
-Foundry `flexible_tile`:
+Fonderie `flexible_tile` :
 
 ```yaml
 forge:
   mold: card
   billets:
-    accent: ~          # empty slot — instance is expected to override this
-    label: ~           # optional label, templates handle none gracefully
+    accent: ~          # emplacement vide, à renseigner dans l'instance
+    label: ~           # libellé facultatif ; les modèles gèrent la valeur nulle
 element:
   type: tile
   entity: "{{ config.entity }}"
@@ -416,7 +420,7 @@ element:
       }
 ```
 
-Instance — supplies the accent, leaves label empty:
+Instance — renseigne la couleur et laisse le libellé vide :
 
 ```yaml
 type: custom:uix-forge
@@ -427,9 +431,9 @@ forge:
     accent: teal
 ```
 
-![Foundry billets empty example](../assets/page-assets/forge/foundries-billets-empty.png)
+![Exemple d'emplacements de billets vides](../assets/page-assets/forge/foundries-billets-empty.png)
 
-Instance — supplies both billets:
+Instance — renseigne les deux billets :
 
 ```yaml
 type: custom:uix-forge
@@ -438,23 +442,23 @@ entity: light.bed_light
 forge:
   billets:
     accent: pink
-    label: Bed sconce
+    label: Applique de chambre
 ```
 
-![Foundry billets empty example](../assets/page-assets/forge/foundries-billets-empty2.png)
+![Exemple avec les deux billets renseignés](../assets/page-assets/forge/foundries-billets-empty2.png)
 
-!!! note "UI Foundries: comments are stripped"
-    Home Assistant stores UI foundry configs as JSON, so YAML comments are not preserved. Use descriptive billet names (e.g. `accent_color`, `card_label`) to make the purpose of each slot self-evident to anyone editing instances. YAML File Foundries stored on disk are not affected — comments in those files are preserved as usual.
+!!! note "Les commentaires sont supprimés dans les fonderies via l'interface"
+    Home Assistant enregistre ces configurations au format JSON ; les commentaires YAML ne sont donc pas conservés. Utilisez des noms de billets explicites (par exemple `accent_color` ou `card_label`) afin que leur rôle soit clair pour toute personne qui modifie les instances. Les fonderies enregistrées dans des fichiers YAML ne sont pas concernées : leurs commentaires sont conservés.
 
-## UIX styling from a foundry
+## Appliquer UIX Styling depuis une fonderie
 
-A foundry can include a `uix` key under `forge` that applies [UIX styling](../using/index.md) to the forged element wrapper. Foundry styles are merged with any `uix` key in the local `forge` config, with the local forge config taking precedence.
+Une fonderie peut inclure une clé `uix` sous `forge` pour appliquer [UIX Styling](../using/index.md) à l'enveloppe de l'élément généré. Les styles de la fonderie sont fusionnés avec la clé `uix` de la configuration Forge locale, qui reste prioritaire.
 
-!!! tip "Combining styles"
-    If you need to have root styling and shadow root styling, use YAML selectors placing your root styling in the root key `.:`. If you use text only for `style:` on element you will override all yaml styles in foundries.
+!!! tip "Combiner les styles"
+    Pour appliquer des styles à la racine et dans une racine Shadow DOM, utilisez des sélecteurs YAML et placez les styles de racine dans la clé `.:`. Si vous définissez uniquement du texte dans `style:` de l'élément, vous remplacerez tous les styles YAML des fonderies.
 
 ```yaml
-# Foundry: "styled_tile"
+# Fonderie : "styled_tile"
 forge:
   mold: card
   uix:
@@ -468,7 +472,7 @@ element:
 ```
 
 ```yaml
-# Forge — adds its own uix style on top
+# Forge — ajoute son propre style uix par-dessus
 type: custom:uix-forge
 foundry: styled_tile
 forge:
@@ -482,14 +486,15 @@ element:
   entity: light.bed_light
 ```
 
-![Foundry UIX styling](../assets/page-assets/forge/foundries-uix-styling.png)
+![Style UIX défini dans une fonderie](../assets/page-assets/forge/foundries-uix-styling.png)
 
-## Example Global foundry using macro
+<a id="example-global-foundry-using-macro"></a>
+## Exemple de fonderie globale utilisant une macro
 
 !!! tip
-    If you need to use a macro as a boolean it needs to use the `returns` format. Otherwise the macro will return a string and you will get unexpected results.
+    Pour utiliser une macro comme valeur booléenne, elle doit employer le format `returns`. Sinon, elle renverra une chaîne et le résultat risque d'être inattendu.
 
-Foundry named `global`
+Fonderie nommée `global` :
 
 ```yaml
 forge:
@@ -499,7 +504,7 @@ forge:
       template: "{% do returns(is_state('input_boolean.festive_day','on')) %}"
 ```
 
-UIX Forge picture card:
+Carte Picture créée avec UIX Forge :
 
 ```yaml
 type: custom:uix-forge
@@ -515,4 +520,4 @@ element:
       media-source://media_source/local/{{ 'birthday.jpg' if is_festive_day() else 'kitchen.jpg' }}
 ```
 
-![Example global foundry using macro](../assets/page-assets/forge/foundries-global-macro.gif)
+![Exemple de fonderie globale utilisant une macro](../assets/page-assets/forge/foundries-global-macro.gif)
