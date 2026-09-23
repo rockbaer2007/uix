@@ -1,36 +1,36 @@
 ---
-description: Use the event spark to receive DOM events from `fire-dom-event` actions and expose their data as template variables in a UIX Forge element.
+description: Recevez les événements DOM des actions `fire-dom-event` et exposez leurs données comme variables de modèle dans un élément UIX Forge.
 icon: material/lightning-bolt-outline
 ---
 
-# :zap: Event spark
+# :zap: Spark Event
 
-The `event` spark receives events fired with Home Assistant action `fire-dom-event` and exposes the received data as template variables inside forged element. Use it to build cards that react to user interactions or automation-triggered events elsewhere in the dashboard.
+Le spark `event` reçoit les événements déclenchés avec l'action Home Assistant `fire-dom-event` et expose leurs données sous forme de variables de modèle dans l'élément créé avec UIX Forge. Utilisez-le pour créer des cartes qui réagissent aux interactions ou aux événements d'automatisation provenant du tableau de bord.
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
 | --- | ---- | -------- | ------- | ----------- |
-| `type` | `string` | ✅ | — | Must be `event`. |
-| `forge_id` | `string` | | — | ID for this forge element. Data from `fire-dom-event` events whose `forge_id` matches is spread directly into `uixForge.event`. |
-| `other_forge_ids` | list of strings | | — | IDs of other forge elements to listen to. Data for each ID is available as `uixForge.event.<id>`. |
+| `type` | `string` | ✅ | — | Doit être défini sur `event`. |
+| `forge_id` | `string` | | — | Identifiant de cet élément Forge. Les données des événements `fire-dom-event` dont le `forge_id` correspond sont directement ajoutées à `uixForge.event`. |
+| `other_forge_ids` | liste de chaînes | | — | Identifiants des autres éléments Forge à écouter. Les données de chaque identifiant sont accessibles sous `uixForge.event.<id>`. |
 
-At least one of `forge_id` or `other_forge_ids` should be set for the spark to receive anything.
+Définissez `forge_id` ou `other_forge_ids` pour que le spark puisse recevoir des événements.
 
-## Template variables
+## Variables de modèle
 
-When the event spark is active, an `event` key is added to the `uixForge` template variable:
+Lorsque le spark `event` est actif, une clé `event` est ajoutée à la variable de modèle `uixForge` :
 
 | Variable | Description |
 | -------- | ----------- |
-| `uixForge.event.<key>` | Data keys from events matching `forge_id`, spread directly into `uixForge.event`. |
-| `uixForge.event.<other_id>.<key>` | Data from events matching an ID listed in `other_forge_ids`, nested under that ID. |
+| `uixForge.event.<key>` | Clés de données des événements correspondant à `forge_id`, ajoutées directement à `uixForge.event`. |
+| `uixForge.event.<other_id>.<key>` | Données des événements correspondant à un identifiant de `other_forge_ids`, imbriquées sous cet identifiant. |
 
-By default, data accumulates across events — each new event is deep-merged into the existing state. To have the event data replaced use `replace: true`.
+Par défaut, les données s'accumulent d'un événement à l'autre : chaque nouvel événement est fusionné en profondeur avec l'état existant. Pour remplacer les données, utilisez `replace: true`.
 
-## Firing an event
+## Déclencher un événement
 
-Any Home Assistant element that supports `tap_action` can fire an event using `action: fire-dom-event`. Add a `uix_forge` key alongside `action` containing a list of forge event objects.
+Tout élément Home Assistant prenant en charge `tap_action` peut déclencher un événement avec `action: fire-dom-event`. Ajoutez une clé `uix_forge` à côté de `action`, contenant une liste d'objets d'événement Forge.
 
 ```yaml
 tap_action:
@@ -42,11 +42,11 @@ tap_action:
         selected: living_room
 ```
 
-## Usage
+## Utilisation
 
-### Basic example — a button that updates a card
+### Exemple de base : un bouton qui met à jour une carte
 
-Two button cards fire DOM events; a UIX forge receives it and updates its template:
+Deux cartes bouton déclenchent des événements DOM. Un élément UIX Forge les reçoit et met à jour son modèle :
 
 ```yaml
 type: button
@@ -70,7 +70,7 @@ tap_action:
         entity: light.bed_light
 ```
 
-Forged tile that receives and changes tile entity based on event data, with a default which will be used initially as there will be no event data.
+Tuile créée avec UIX Forge qui reçoit les événements et modifie l'entité affichée selon leurs données. Une valeur par défaut est utilisée tant qu'aucun événement n'a été reçu.
 
 ```yaml
 type: custom:uix-forge
@@ -87,16 +87,16 @@ element:
   entity: "{{ uixForge.event.entity | default('light.bed_light') }}"
 ```
 
-![Event spark example](../../assets/page-assets/forge/sparks/event_tile.gif)
+![Exemple du spark Event](../../assets/page-assets/forge/sparks/event_tile.gif)
 
-### Listening to another forged element's events
+### Écouter les événements d'un autre élément Forge
 
-Use `other_forge_ids` to receive events intended for a different forged element. The data is then available under `uixForge.event.<forge_id>`:
+Utilisez `other_forge_ids` pour recevoir les événements destinés à un autre élément Forge. Les données sont alors accessibles sous `uixForge.event.<forge_id>` :
 
 !!! tip
-    While `uixForge.event` will always exist as a template variable, `uixForge.event.<forge_id>` will not so you need to check for its existence in the dict prior to accessing, otherwise your template will error. If you are unsure of why a template is not working as expected, you can always use [template debugging](../../debugging/templates.md) with `{# uix.debug #}`.
+    `uixForge.event` existe toujours comme variable de modèle, mais `uixForge.event.<forge_id>` peut être absent. Vérifiez donc sa présence dans le dictionnaire avant d'y accéder, sinon le modèle générera une erreur. En cas de doute, utilisez le [débogage des modèles](../../debugging/templates.md) avec `{# uix.debug #}`.
 
-Two button cards fire DOM events; a UIX forge receives as `other_forge_ids`:
+Deux cartes bouton déclenchent des événements DOM qu'un élément UIX Forge reçoit grâce à `other_forge_ids` :
 
 ```yaml
 type: button
@@ -138,13 +138,13 @@ element:
     uixForge.event else 'none' | default('none') }}
 ```
 
-![Event spark other_forge_ids example](../../assets/page-assets/forge/sparks/event_other_forge_ids.gif)
+![Exemple du spark Event avec other_forge_ids](../../assets/page-assets/forge/sparks/event_other_forge_ids.gif)
 
-### Combining own ID and other IDs
+### Combiner son propre identifiant avec d'autres identifiants
 
-You can set both `forge_id` and `other_forge_ids` simultaneously.
+Vous pouvez définir simultanément `forge_id` et `other_forge_ids`.
 
-Two button cards fire DOM events; a UIX forge receives as `forge_id` and `other_forge_ids`:
+Deux cartes bouton déclenchent des événements DOM qu'un élément UIX Forge reçoit via `forge_id` et `other_forge_ids` :
 
 ```yaml
 type: button
@@ -186,13 +186,13 @@ element:
     uixForge.event else 'none' | default('none') }}
 ```
 
-![Event spark mixed ids example](../../assets/page-assets/forge/sparks/event_mixed_forge_ids.gif)
+![Exemple du spark Event avec des identifiants combinés](../../assets/page-assets/forge/sparks/event_mixed_forge_ids.gif)
 
-### Sending event data to more than one forged element
+### Envoyer des données à plusieurs éléments Forge
 
-You can send event data to multiple forged elements at the same time.
+Vous pouvez envoyer les données d'un événement à plusieurs éléments Forge simultanément.
 
-Button card sends forge event data to two forged elements:
+Une carte bouton envoie les données de l'événement à deux éléments Forge :
 
 ```yaml
 type: button
@@ -210,7 +210,7 @@ tap_action:
         selected: Selected B
 ```
 
-Two forged elements receiving event data:
+Deux éléments Forge reçoivent les données de l'événement :
 
 ```yaml
 type: custom:uix-forge
@@ -244,11 +244,11 @@ element:
     My data: {{ uixForge.event.selected | default('none') }}
 ```
 
-![Event spark fire multiple example](../../assets/page-assets/forge/sparks//event_fire_multiple.gif)
+![Exemple du spark Event envoyant des données à plusieurs éléments](../../assets/page-assets/forge/sparks//event_fire_multiple.gif)
 
-### Using a shortcut badge to control expander-card states
+### Utiliser un badge raccourci pour contrôler les cartes expander-card
 
-This example is used as a badge in dashboard header and will toggle all `custom:expander-card` cards which have `expander-card-id` of `id_of_target_cards`.
+Cet exemple ajoute un badge à l'en-tête du tableau de bord. Il ouvre ou ferme toutes les cartes `custom:expander-card` dont la valeur `expander-card-id` correspond à `id_of_target_cards`.
 
 ```yaml
   - type: custom:uix-forge
@@ -285,10 +285,10 @@ This example is used as a badge in dashboard header and will toggle all `custom:
               details: "{{ not expanded() }}"
 ```
 
-![Badge using event spark to toggle expander-cards](../../assets/page-assets/forge/sparks/event_badge_example.gif)
+![Badge utilisant le spark Event pour ouvrir ou fermer les cartes expander-card](../../assets/page-assets/forge/sparks/event_badge_example.gif)
 
 !!! note
-    - The event spark is active as soon as the forge element is connected to the DOM and stops listening when it is removed.
-    - All string values in the `element` config are processed as templates, so `uixForge.event` is available throughout the element config.
-    - If no matching event has been received yet, `uixForge.event` will be empty (or absent) — use `| default(...)` in your templates to handle this gracefully.
-    - Data from successive events is **deep-merged**, not replaced. Sending a second event with `{ forge_id: "my_card", data: { count: 2 } }` after a first one with `{ score: 10 }` results in `uixForge.event` containing both `count` and `score`.
+    - Le spark `event` s'active dès que l'élément Forge est ajouté au DOM et cesse d'écouter lorsqu'il en est retiré.
+    - Toutes les chaînes de la configuration `element` sont traitées comme des modèles. `uixForge.event` est donc disponible dans toute cette configuration.
+    - Si aucun événement correspondant n'a encore été reçu, `uixForge.event` est vide ou absent. Utilisez `| default(...)` dans vos modèles pour gérer ce cas.
+    - Les données des événements successifs sont **fusionnées en profondeur**, et non remplacées. Après un premier événement `{ forge_id: "my_card", data: { score: 10 } }`, l'envoi de `{ forge_id: "my_card", data: { count: 2 } }` laisse `count` et `score` dans `uixForge.event`.
