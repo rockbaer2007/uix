@@ -1,6 +1,6 @@
 ---
-titre : Directives
-description: Appliquer des opérations déclaratives UIX Broker à un élément sélectionné.
+title: Directives
+description: "Appliquer des opérations déclaratives UIX Broker à un élément sélectionné."
 ---
 # Directives
 
