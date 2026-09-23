@@ -1,27 +1,27 @@
 ---
-description: Apply a frontend theme to a forged element or one of its descendants.
+description: Appliquez un thème frontend à un élément créé avec UIX Forge ou à l'un de ses descendants.
 icon: material/palette
 ---
-# :material-palette: Theme Spark
+# :material-palette: Spark de thème
 
-The `theme` spark applies a frontend theme to a target element.
+Le spark `theme` applique un thème frontend à un élément cible.
 
-Use it when you want a forged element to pick up an existing theme without adding extra UIX styling config.
+Utilisez-le pour appliquer à un élément créé avec UIX Forge un thème existant, sans ajouter de configuration de style UIX.
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
-|-----|------|----------|---------|-------------|
-| `type` | string | ✅ | — | Must be `theme`. |
-| `for` | string | | `element` | UIX selector path for the element to apply the theme to. When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, the default of `element` refers to the root of the forged element. |
-| `theme` | string | | — | Theme name to apply. Supports templates. |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
+|-----|------|-------------|-------------------|-------------|
+| `type` | string | ✅ | — | Doit être défini sur `theme`. |
+| `for` | string | | `element` | Chemin de sélection UIX de l'élément auquel appliquer le thème. Lorsque l'élément UIX Forge utilise la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, `element` désigne la racine de l'élément créé avec UIX Forge. |
+| `theme` | string | | — | Nom du thème à appliquer. Les modèles sont pris en charge. |
 
 !!! tip
-    `theme` config supports templates. To revert the theme back to the main theme, have your template return an empty string `""`. This will apply the main theme to `for`. As themes are applied by setting inline style properties to the element, your override theme should include the same theme elements, or be a subset of elements of the main theme. If you are using theme sparks on a cascade of forged elements, it is best to have each theme override be a subset of the prior theme override, or unexpected results may occur.
+    La configuration `theme` accepte les modèles. Pour rétablir le thème principal, faites renvoyer une chaîne vide (`""`) par le modèle. Le thème principal sera alors appliqué à `for`. Les thèmes sont appliqués en définissant des propriétés de style en ligne sur l'élément. Le thème de remplacement doit donc reprendre les mêmes propriétés que le thème principal, ou n'en définir qu'un sous-ensemble. Lorsque des sparks de thème sont appliqués à plusieurs éléments UIX Forge imbriqués, veillez à ce que chaque remplacement soit un sous-ensemble du précédent afin d'éviter des résultats inattendus.
 
-## Example - basic
+## Exemple simple
 
-Theme:
+Thème :
 
 ```yaml
 my-theme:
@@ -30,7 +30,7 @@ my-theme:
   ha-card-background: antiquewhite
 ```
 
-UIX Forge:
+Configuration UIX Forge :
 
 ```yaml
 type: custom:uix-forge
@@ -45,11 +45,11 @@ element:
   entity: light.bed_light
 ```
 
-![Theme spark basic example](../../assets/page-assets/forge/sparks/theme-basic.png)
+![Exemple de thème de base avec le spark Theme](../../assets/page-assets/forge/sparks/theme-basic.png)
 
-## Example - template
+## Exemple avec un modèle
 
-Themes:
+Thèmes :
 
 ```yaml
 my-blue-theme:
@@ -63,7 +63,7 @@ my-red-theme:
   ha-card-background: antiquewhite
 ```
 
-UIX Forge:
+Configuration UIX Forge :
 
 ```yaml
 type: "custom:uix-forge"
@@ -78,7 +78,7 @@ element:
   entity: light.bed_light
 ```
 
-![Theme spark template example](../../assets/page-assets/forge/sparks/theme-template.gif)
+![Exemple de thème dynamique avec un modèle](../../assets/page-assets/forge/sparks/theme-template.gif)
 
 !!! tip
-    You can use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) DOM helper to take the guesswork out of finding the right path for `for`.
+    Le helper DOM [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) vous aide à déterminer le chemin à utiliser pour `for`.
