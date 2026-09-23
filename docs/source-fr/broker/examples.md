@@ -1,27 +1,27 @@
 ---
-title: Examples
-description: UIX Broker examples
+title: Exemples
+description: Exemples de courtier UIX
 ---
-# Examples
+# Exemples
 
-## Make the card tab the default in the UI add-card dialog
+## Faire de l'onglet de la carte l'onglet par défaut dans la boîte de dialogue d'ajout de carte de l'interface utilisateur
 
-Outcome:
+Résultat :
 
-- Select the card tab when the add-card dialog opens.
-- Make sure the first expander, Suggested or Favorites, is open.
-- Collapse all other expanders.
+- Sélectionnez l'onglet de la carte lorsque la boîte de dialogue d'ajout de carte s'ouvre.
+- Assurez-vous que le premier module d'extension, Suggéré ou Favoris, est ouvert.
+- Réduisez tous les autres extensions.
 
-Method:
+Méthode :
 
 <!-- markdownlint-configure-file {"MD007": { "indent": 4 }} -->
-- Listen to `show-dialog` in the `browser` realm.
-- The matching rule passes only when the `show-dialog` event's `dialogTag` is `hui-dialog-create-card`.
-- Use an absolute short-form interaction anchor that matches the dialog (`hui-dialog-create-card`).
-- Directives:
-    - Set the dialog's `_currTab` property to `card`. As this property is reactive, there is no need to force an update.
-    - Set the first expander's `expanded` property to `true`, using a relative short-form anchor.
-    - Set the other expanders' `expanded` property to `false`, using relative short-form anchors.
+- Écoutez `show-dialog` dans le domaine `browser`.
+- La règle de correspondance est transmise uniquement lorsque le `dialogTag` de l'événement `show-dialog` est `hui-dialog-create-card`.
+- Utilisez une ancre d'interaction courte et absolue qui correspond à la boîte de dialogue (`hui-dialog-create-card`).
+- Directives :
+    - Définissez la propriété `_currTab` de la boîte de dialogue sur `card`. Cette propriété étant réactive, il n’est pas nécessaire de forcer une mise à jour.
+    - Définissez la propriété `expanded` du premier extenseur sur `true`, à l’aide d’une ancre relative de forme courte.
+    - Définissez la propriété `expanded` des autres extensions sur `false`, à l’aide d’ancres relatives de forme courte.
 
 ```yaml
 uix_broker:
@@ -63,27 +63,27 @@ uix_broker:
 ```
 
 !!! tip
-    Save the YAML as a new file in your Home Assistant configuration directory or subdirectory, then register it using the UIX options config flow.
+Enregistrez le YAML en tant que nouveau fichier dans votre répertoire ou sous-répertoire de configuration Home Assistant, puis enregistrez-le à l'aide du flux de configuration des options UIX.
 
-## Automation sidebar and YAML mode
+## Barre latérale d'automatisation et mode YAML
 
-### Open the automation editor sidebar in YAML mode by default
+### Ouvrez la barre latérale de l'éditeur d'automatisation en mode YAML par défaut
 
-Combine this with the following example to allow changing YAML mode; by itself, this example locks the automation sidebar to **always** use YAML mode.
+Combinez cela avec l'exemple suivant pour permettre de changer le mode YAML ; à lui seul, cet exemple verrouille la barre latérale d'automatisation pour **toujours** utiliser le mode YAML.
 
-Outcome:
+Résultat :
 
-- Set the automation sidebar to YAML mode.
-- Add button in automation sidebar header to toggle YAML mode.
+- Définissez la barre latérale d'automatisation en mode YAML.
+- Ajoutez un bouton dans l’en-tête de la barre latérale d’automatisation pour basculer en mode YAML.
 
-Method:
+Méthode :
 
-- Listen to the `open-sidebar` event in the `browser` realm.
-- Set `reentrant: false` to prevent re-entry when toggling YAML mode itself fires `open-sidebar`.
-- The interaction anchor is `manual-automation-editor`, which is found through an outward search across the event's composed path and shadow-root boundaries.
-- Use a short-form host-element path selection rule to continue only when `uixBlockAutoYamlMode` does **not** exist on the interaction anchor's JavaScript object. This is important when combined with the following example.
-- Use a call directive to invoke `_toggleYamlMode()` on `ha-automation-sidebar`, resolved by searching the first shadow root of the interaction anchor, `manual-automation-editor`.
-- Use a button directive to place a button before the three dots sidebar menu. The action used in UIX `event` action to which UIX Broker injects the anchor element so `toggle-yaml-mode` bubbles up through `manual-automation-editor` allowing the next example, [Allow toggle YAML mode in automation editor](#allow-toggle-yaml-mode-in-automation-editor) to cover both the stock toggle button in the dropdown as well as the added UIX Broker button.
+- Écoutez l'événement `open-sidebar` dans le domaine `browser`.
+- Définissez `reentrant: false` pour empêcher toute nouvelle saisie lorsque le basculement du mode YAML déclenche lui-même `open-sidebar`.
+- L'ancre d'interaction est `manual-automation-editor`, qui est trouvée grâce à une recherche vers l'extérieur à travers le chemin composé de l'événement et les limites de la racine fantôme.
+- Utilisez une règle de sélection de chemin d'accès d'élément hôte abrégé pour continuer uniquement lorsque `uixBlockAutoYamlMode` n'existe **pas** sur l'objet JavaScript de l'ancre d'interaction. Ceci est important lorsqu’il est combiné avec l’exemple suivant.
+- Utilisez une directive d'appel pour appeler `_toggleYamlMode()` sur `ha-automation-sidebar`, résolu en recherchant la première racine fantôme de l'ancre d'interaction, `manual-automation-editor`.
+- Utilisez une directive de bouton pour placer un bouton avant le menu de la barre latérale à trois points. L'action utilisée dans l'action UIX `event` dans laquelle UIX Broker injecte l'élément d'ancrage afin que `toggle-yaml-mode` bouillonne jusqu'à `manual-automation-editor`, permettant l'exemple suivant, [Autoriser le mode YAML dans l'éditeur d'automatisation](#allow-toggle-yaml-mode-in-automation-editor) pour couvrir à la fois le bouton bascule de stock dans la liste déroulante ainsi que le bouton UIX Broker ajouté.
 
 ```yaml
   - realm: browser
@@ -108,25 +108,25 @@ Method:
             name: toggle-yaml-mode
 ```
 
-### Allow toggle YAML mode in automation editor
+### Autoriser le basculement du mode YAML dans l'éditeur d'automatisation
 
-Use this example with the previous one and the next example (a keyboard shortcut to toggle YAML mode).
+Utilisez cet exemple avec le précédent et l'exemple suivant (un raccourci clavier pour basculer en mode YAML).
 
-The Toggle YAML Mode menu item in the automation editor runs code that fires `toggle-yaml-mode`, which ultimately calls `_toggleYamlMode()` on `manual-automation-editor`. Without coordination, this would always force YAML mode. This example works around that by blocking the event, setting a guard property, calling the function directly, then clearing the guard.
+L'élément de menu Basculer le mode YAML dans l'éditeur d'automatisation exécute le code qui déclenche `toggle-yaml-mode`, qui appelle finalement `_toggleYamlMode()` sur `manual-automation-editor`. Sans coordination, cela forcerait toujours le mode YAML. Cet exemple contourne ce problème en bloquant l'événement, en définissant une propriété guard, en appelant directement la fonction, puis en effaçant la garde.
 
-Outcome:
+Résultat :
 
-- Allow the Toggle YAML Mode menu item to switch between the visual editor and YAML mode.
+- Autorisez l’élément de menu Basculer le mode YAML à basculer entre l’éditeur visuel et le mode YAML.
 
-Method:
+Méthode :
 
-- Listen to `toggle-yaml-mode` in the `browser` realm.
-- The interaction anchor is `manual-automation-editor`, which is found through an outward search across the event's composed path and shadow-root boundaries.
-- Directives:
-    - Block the event because it will be handled directly.
-    - Set `uixBlockAutoYamlMode` to `true` on `manual-automation-editor`.
-    - Use a call directive to invoke `_toggleYamlMode()` on `ha-automation-sidebar`, resolved by searching the first shadow root of the interaction anchor, `manual-automation-editor`. As the previous example checks for the absence of `uixBlockAutoYamlMode`, it does not proceed with its directive to force YAML mode.
-    - Clear `uixBlockAutoYamlMode` so the previous example once again forces YAML mode when the sidebar opens.
+- Écoutez `toggle-yaml-mode` dans le domaine `browser`.
+- L'ancre d'interaction est `manual-automation-editor`, qui est trouvée grâce à une recherche vers l'extérieur à travers le chemin composé de l'événement et les limites de la racine fantôme.
+- Directives :
+    - Bloquez l'événement car il sera traité directement.
+    - Définissez `uixBlockAutoYamlMode` sur `true` sur `manual-automation-editor`.
+    - Utilisez une directive d'appel pour appeler `_toggleYamlMode()` sur `ha-automation-sidebar`, résolu en recherchant la première racine fantôme de l'ancre d'interaction, `manual-automation-editor`. Comme l'exemple précédent vérifie l'absence de `uixBlockAutoYamlMode`, il ne poursuit pas sa directive pour forcer le mode YAML.
+    - Effacez `uixBlockAutoYamlMode` pour que l'exemple précédent force à nouveau le mode YAML lorsque la barre latérale s'ouvre.
 
 ```yaml
   - realm: browser
@@ -144,20 +144,20 @@ Method:
         clear: uixBlockAutoYamlMode
 ```
 
-### Toggle YAML mode in automation editor with keyboard shortcut
+### Basculer le mode YAML dans l'éditeur d'automatisation avec un raccourci clavier
 
-Outcome:
+Résultat :
 
-- Use a keyboard shortcut to toggle YAML mode in the automation editor.
+- Utilisez un raccourci clavier pour basculer en mode YAML dans l'éditeur d'automatisation.
 
-Method:
+Méthode :
 
-- Listen for a keyboard shortcut in the `shortcut` realm (`$mod+Shift+Y` in the code below; change it to suit).
-- Use the absolute interaction anchor `&home-assistant $$ manual-automation-editor` because the keyboard shortcut target can be any DOM element.
-- Directives:
-    - Set `uixBlockAutoYamlMode` to `true` on `manual-automation-editor`.
-    - Use a call directive to invoke `_toggleYamlMode()` on `ha-automation-sidebar`, resolved by searching the first shadow root of the interaction anchor, `manual-automation-editor`. As the automatic YAML-mode example checks for the absence of `uixBlockAutoYamlMode`, it does not proceed with its directive to force YAML mode.
-    - Clear `uixBlockAutoYamlMode` so the automatic YAML-mode example once again forces YAML mode when the sidebar opens.
+- Écoutez un raccourci clavier dans le domaine `shortcut` (`$mod+Shift+Y` dans le code ci-dessous ; modifiez-le en conséquence).
+- Utilisez l'ancre d'interaction absolue `&home-assistant $$ manual-automation-editor` car la cible du raccourci clavier peut être n'importe quel élément DOM.
+- Directives :
+    - Définissez `uixBlockAutoYamlMode` sur `true` sur `manual-automation-editor`.
+    - Utilisez une directive d'appel pour appeler `_toggleYamlMode()` sur `ha-automation-sidebar`, résolu en recherchant la première racine fantôme de l'ancre d'interaction, `manual-automation-editor`. Comme l'exemple du mode YAML automatique vérifie l'absence de `uixBlockAutoYamlMode`, il ne poursuit pas sa directive pour forcer le mode YAML.
+    - Effacez `uixBlockAutoYamlMode` pour que l'exemple de mode YAML automatique force à nouveau le mode YAML lorsque la barre latérale s'ouvre.
 
 ```yaml
   - realm: shortcut
@@ -175,10 +175,10 @@ Method:
         clear: uixBlockAutoYamlMode
 ```
 
-## Automation sidebar and YAML mode complete
+## Barre latérale d'automatisation et mode YAML terminés
 
-??? example "Complete YAML for the three automation sidebar examples"
-    Save the YAML as a new file in your Home Assistant configuration directory or subdirectory, then register it using the UIX options config flow.
+??? example "Complétez YAML pour les trois exemples de barre latérale d'automatisation"
+Enregistrez le YAML en tant que nouveau fichier dans votre répertoire ou sous-répertoire de configuration Home Assistant, puis enregistrez-le à l'aide du flux de configuration des options UIX.
     ```yaml
     uix_broker:
       - realm: browser
@@ -229,21 +229,21 @@ Method:
             clear: uixBlockAutoYamlMode
     ```
 
-## Prioritize entity triggers when adding an automation editor element
+## Prioriser les déclencheurs d'entité lors de l'ajout d'un élément d'éditeur d'automatisation
 
-Outcome:
+Résultat :
 
-- Jump straight to entity triggers when adding an automation editor element.
+- Accédez directement aux déclencheurs d'entité lors de l'ajout d'un élément d'éditeur d'automatisation.
 
-Method:
+Méthode :
 
-- Listen for the `show-dialog` event in the `browser` realm.
-- First matching rule passes only when the `show-dialog` event's `dialogTag` is `add-automation-element-dialog`.
-- Second matching rules passes only when the type is `trigger` and not other types which can be `action` or `condition`.
-- Use an absolute short-form interaction anchor that matches the dialog (`add-automation-element-dialog`).
-- Directives:
-    - Set the `_tab` property to `groups`; `groups` is the value for By Type.
-    - Set `_selectedGroup` to `entity` to focus on the generic entity triggers.
+- Écoutez l'événement `show-dialog` dans le domaine `browser`.
+- La première règle de correspondance est transmise uniquement lorsque le `dialogTag` de l'événement `show-dialog` est `add-automation-element-dialog`.
+- Les secondes règles de correspondance ne sont transmises que lorsque le type est `trigger` et non d'autres types pouvant être `action` ou `condition`.
+- Utilisez une ancre d'interaction courte et absolue qui correspond à la boîte de dialogue (`add-automation-element-dialog`).
+- Directives :
+    - Définissez la propriété `_tab` sur `groups` ; `groups` est la valeur pour Par type.
+    - Définissez `_selectedGroup` sur `entity` pour vous concentrer sur les déclencheurs d'entité générique.
 
 ```yaml
   - realm: browser
@@ -261,16 +261,16 @@ Method:
         value: entity
 ```
 
-## Add tools button to sidebar title
+## Ajouter un bouton d'outils au titre de la barre latérale
 
-Outcome: A tools button that navigates to /config/tools.
+Résultat : un bouton Outils qui ouvre `/config/tools`.
 
-Method:
+Méthode :
 
-- Listen for the `uix-broker-ready` event in the `browser` realm.
-- Uses compact absolute anchor for `ha-sidebar`
-- The matching rule only passes when `user.is_admin` property of the `hass` object on `home-assistant` is true (this could also be `user.is_owner` to match only the owner user).
-- Uses `button` directive to place button after the title using simple style object to give a box-shadow and reduced icon size.
+- Écoutez l'événement `uix-broker-ready` dans le domaine `browser`.
+- Utilise un ancrage absolu compact pour `ha-sidebar`
+- La règle de correspondance n'est transmise que lorsque la propriété `user.is_admin` de l'objet `hass` sur `home-assistant` est vraie (cela pourrait également être `user.is_owner` pour correspondre uniquement à l'utilisateur propriétaire).
+- Utilise la directive `button` pour placer le bouton après le titre en utilisant un objet de style simple pour donner une ombre de boîte et une taille d'icône réduite.
 
 ```yaml
   - realm: browser
@@ -293,23 +293,23 @@ Method:
           "--ha-icon-button-size": 32px
 ```
 
-![Broker button directive example](../assets/page-assets/broker/broker-button-directive.png){ width="450" }
+![Exemple de directive de bouton de courtier](../assets/page-assets/broker/broker-button-directive.png){ width="450" ​​}
 
-## Change device entities suggested card back to entities for section views
+## Remplacer la carte suggérée par les entités de périphérique en entités pour les vues en coupe
 
-Outcome:
+Résultat :
 
-- Make the device entities suggested card for section views an entities card. NOTE: This is not the same as what is suggested for other views which is based on entity domain.
+- Transformez la carte suggérée par les entités de périphérique pour les vues en coupe en une carte d'entités. REMARQUE : Ce n'est pas la même chose que ce qui est suggéré pour d'autres vues basées sur le domaine d'entité.
 
-Method:
+Méthode :
 
-- Listen for the `show-dialog` event in the `browser` realm.
-- The matching rule passes only when the `show-dialog` event's `dialogTag` is `hui-dialog-suggest-card`.
-- The interaction is set as `reentrant: false` because it fires `show-dialog` itself.
-- The interaction anchor is `&home-assistant`. Since the directives include `block`, an anchor that exists synchronously is required. Alternatively, `anchor: target` could be used as the event-path anchor, with `anchor: "&home-assistant"` set on the event directive.
-- Directives:
-    - A `block` directive stops propagation on the original event.
-    - An `event` directive re-dispatches the event with a modified `dialogParams.sectionConfig`, setting `cards` to a single `entities`. `sectionConfig.type` and `sectionConfig.title` are copied from captured data using the `@captured` form. To avoid copying the rest of the event data object by object, `capture_data: deep` performs a deep merge of `sectionConfig`.
+- Écoutez l'événement `show-dialog` dans le domaine `browser`.
+- La règle de correspondance est transmise uniquement lorsque le `dialogTag` de l'événement `show-dialog` est `hui-dialog-suggest-card`.
+- L'interaction est définie sur `reentrant: false` car elle déclenche elle-même `show-dialog`.
+- L’ancre d’interaction est `&home-assistant`. Étant donné que les directives incluent `block`, une ancre existant de manière synchrone est requise. Alternativement, `anchor: target` pourrait être utilisé comme ancre du chemin d'événement, avec `anchor: "&home-assistant"` défini sur la directive d'événement.
+- Directives :
+    - Une directive `block` arrête la propagation sur l'événement d'origine.
+    - Une directive `event` redistribue l'événement avec un `dialogParams.sectionConfig` modifié, définissant `cards` sur un seul `entities`. `sectionConfig.type` et `sectionConfig.title` sont copiés à partir des données capturées à l'aide du formulaire `@captured`. Pour éviter de copier le reste des données d'événement objet par objet, `capture_data: deep` effectue une fusion approfondie de `sectionConfig`.
 
 ```yaml
   - realm: browser
@@ -336,19 +336,19 @@ Method:
                   entities: "@captured.dialogParams.entities"
 ```
 
-## Light button on Home dashboard menu item on sidebar
+## Bouton lumineux sur l'élément de menu du tableau de bord Accueil dans la barre latérale
 
-Outcome:
+Résultat :
 
-- Similar to [Add tools button to sidebar title](#add-tools-button-to-sidebar-title) this example adds a toggle button for a light to the Home sidebar menu item. To reflect the current state of the light, a Server realm to Browser realm helper interaction is used as well to have the main interaction run when the entity state changes.
+- Semblable à [Ajouter un bouton d'outils au titre de la barre latérale](#add-tools-button-to-sidebar-title), cet exemple ajoute un bouton bascule pour une lumière à l'élément de menu de la barre latérale d'accueil. Pour refléter l'état actuel de la lumière, une interaction d'assistance entre le domaine du serveur et le domaine du navigateur est également utilisée pour que l'interaction principale s'exécute lorsque l'état de l'entité change.
 
-Method (sidebar interaction):
+Méthode (interaction dans la barre latérale) :
 
-- Listen for the `uix-broker-ready` and `uix-update-sidebar` events in the `browser` realm. `uix-update-sidebar` is a custom event and any name could be used as long as it matched the helper interaction.
-- Uses compact absolute anchor for `ha-sidebar`
-- Directives:
-    - `javascript` directive to set object parameters to be used in `button` directive. `icon` and `color` are set by entity state.
-    - Uses `button` directive to place button after the Home menu item using simple style object to give a box-shadow and reduced icon size. Action set to toggle light. NOTE: Config and operation of this button is per [UIX Forge Button spark](../forge/sparks/button.md), for which the entity is included for action only.
+- Écoutez les événements `uix-broker-ready` et `uix-update-sidebar` dans le domaine `browser`. `uix-update-sidebar` est un événement personnalisé et n'importe quel nom peut être utilisé à condition qu'il corresponde à l'interaction de l'assistant.
+- Utilise un ancrage absolu compact pour `ha-sidebar`
+- Directives :
+    - Directive `javascript` pour définir les paramètres d'objet à utiliser dans la directive `button`. `icon` et `color` sont définis par état d'entité.
+    - Utilise la directive `button` pour placer le bouton après l'élément du menu Accueil en utilisant un objet de style simple pour donner une ombre de boîte et une taille d'icône réduite. Action définie pour activer la lumière. REMARQUE : La configuration et le fonctionnement de ce bouton sont conformes au [UIX Forge Button spark](../forge/sparks/button.md), pour lequel l'entité est incluse pour l'action uniquement.
 
 ```yaml
   - realm: browser
@@ -381,17 +381,17 @@ Method (sidebar interaction):
           "--uix-button-margin": 6px
 ```
 
-Method (helper interaction):
+Méthode (interaction d'assistance) :
 
-Outcome:
+Résultat :
 
-- Fire a custom Browser event when the entity state changes. This makes the example interaction above reactive to state changes for `light.bed_light`.
+- Déclenchez un événement de navigateur personnalisé lorsque l’état de l’entité change. Cela rend l'exemple d'interaction ci-dessus réactif aux changements d'état pour `light.bed_light`.
 
-Method:
+Méthode :
 
-- Listen for `state_changed` event in server realm.
-- Set anchor to home-assistant element using absolute compact anchor form.
-- `event` directive to fire the custom Browser event `uix-update-sidebar` if the changed state `entity_id` is `light.bed_light`. This example would also fire if the `entity_id` is `light.other_light`. This is included in this example to show use of `or:` in match; you would use such a technique if you add other button directives to the example above.
+- Écoutez l'événement `state_changed` dans le domaine du serveur.
+- Placez l'ancre sur l'élément d'assistant à domicile en utilisant une forme d'ancrage compacte absolue.
+- Directive `event` pour déclencher l'événement de navigateur personnalisé `uix-update-sidebar` si l'état modifié `entity_id` est `light.bed_light`. Cet exemple se déclencherait également si `entity_id` est `light.other_light`. Ceci est inclus dans cet exemple pour montrer l'utilisation de `or:` dans la correspondance ; vous utiliseriez une telle technique si vous ajoutiez d'autres directives de bouton à l'exemple ci-dessus.
 
 ```yaml
   - realm: server
@@ -409,4 +409,4 @@ Method:
                 - light.other_light
 ```
 
-![Button directive light toggle example](../assets/page-assets/broker/broker-button-light-directive.gif)
+![Exemple de basculement de lumière de directive de bouton](../assets/page-assets/broker/broker-button-light-directive.gif)

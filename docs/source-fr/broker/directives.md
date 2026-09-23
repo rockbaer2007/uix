@@ -1,25 +1,25 @@
 ---
-title: Directives
-description: Apply declarative UIX Broker operations to a selected element.
+titre : Directives
+description: Appliquer des opérations déclaratives UIX Broker à un élément sélectionné.
 ---
 # Directives
 
-Directives run one at a time after every interaction rule matches. Each directive performs one configured operation, using the interaction anchor by default or an explicitly selected directive anchor where supported. Except for `block`, a directive may also have its own `rules`; the directive runs only when all of them match, otherwise Broker skips it and continues with the next directive.
+Les directives s'exécutent une par une après chaque correspondance de règle d'interaction. Chaque directive effectue une opération configurée, en utilisant l'ancre d'interaction par défaut ou une ancre de directive explicitement sélectionnée si elle est prise en charge. À l'exception de `block`, une directive peut également avoir son propre `rules` ; la directive ne s'exécute que lorsque toutes correspondent, sinon Broker l'ignore et passe à la directive suivante.
 
-- [Block](#block) — prevent the initiating browser event's default action and propagation.
-- [Property](#property) — set or clear a JavaScript object property.
-- [Event](#event) — dispatch a `CustomEvent`.
-- [Call](#call) — invoke an element method.
-- [Button](#button) — insert an interactive Home Assistant button.
-- [Tile icon](#tile-icon) — insert an interactive Home Assistant tile icon.
-- [Action](#action) — run a Home Assistant, frontend, or UIX action.
-- [Template](#template) — render a Jinja2 template once and save its result.
-- [JavaScript](#javascript) — synchronously evaluate JavaScript and save its return value.
-- [Wait](#wait) — delay the next directive.
+- [Block](#block) — empêche l'action et la propagation par défaut de l'événement initiateur du navigateur.
+- [Property](#property) — définit ou efface une propriété d'objet JavaScript.
+- [Event](#event) — envoie un `CustomEvent`.
+- [Call](#call) — invoque une méthode d'élément.
+- [Button](#button) — insérez un bouton interactif Home Assistant.
+- [Icône de vignette](#tile-icon) — insérez une icône de vignette interactive Home Assistant.
+- [Action](#action) — exécutez une action Home Assistant, frontend ou UIX.
+- [Template](#template) — affiche un modèle Jinja2 une fois et enregistre son résultat.
+- [JavaScript](#javascript) — évalue JavaScript de manière synchrone et enregistre sa valeur de retour.
+- [Wait](#wait) — retarde la prochaine directive.
 
-## Directive rules
+## Règles de la directive
 
-Add `rules` to any directive except `block` to condition just that directive. The syntax is the same as [interaction rules](./rules.md). For `property`, `event`, `call`, `button`, and `tile-icon`, host-element rules inspect the resolved directive anchor by default. For `action` and `wait`, they inspect the interaction anchor. A rule's own `anchor` remains relative to that default anchor, or can be absolute as usual.
+Ajoutez `rules` à n’importe quelle directive à l’exception de `block` pour conditionner uniquement cette directive. La syntaxe est la même que celle des [règles d'interaction](./rules.md). Pour `property`, `event`, `call`, `button` et `tile-icon`, les règles d'élément hôte inspectent par défaut l'ancre de directive résolue. Pour `action` et `wait`, ils inspectent l’ancre d’interaction. Le `anchor` d'une règle reste relatif à cette ancre par défaut, ou peut être absolu comme d'habitude.
 
 ```yaml
 directives:
@@ -34,23 +34,23 @@ directives:
         match: true
 ```
 
-`panel` rules obtain the current panel state when the directive is reached. This lets an earlier directive run regardless of the current panel while a later directive only runs on a matching panel.
+Les règles `panel` obtiennent l'état actuel du panneau lorsque la directive est atteinte. Cela permet à une directive antérieure de s'exécuter quel que soit le panneau actuel, tandis qu'une directive ultérieure ne s'exécute que sur un panneau correspondant.
 
-`block` does not accept directive rules. Put its condition in the interaction's `rules` so that the event is synchronously blocked only when the complete interaction matches.
+`block` n'accepte pas les règles de directive. Placez sa condition dans le `rules` de l'interaction afin que l'événement soit bloqué de manière synchrone uniquement lorsque l'interaction complète correspond.
 
-## Block
+## Bloquer
 
-`block` calls `preventDefault()` and `stopImmediatePropagation()` on the initiating browser event.
+`block` appelle `preventDefault()` et `stopImmediatePropagation()` sur l'événement de navigateur initiateur.
 
 ```yaml
 - type: block
 ```
 
-It is available only in `browser` and `shortcut` realms. The interaction anchor and host-element rule anchors must resolve synchronously; if a required `select_tree` anchor is not already present, UIX Broker skips the complete interaction. A `block` directive is applied before the remaining directives are processed, even when it appears later in the list.
+Il est disponible uniquement dans les domaines `browser` et `shortcut`. L'ancre d'interaction et les ancres de règle d'élément hôte doivent être résolues de manière synchrone ; si une ancre `select_tree` requise n'est pas déjà présente, UIX Broker ignore l'interaction complète. Une directive `block` est appliquée avant que les directives restantes ne soient traitées, même lorsqu'elle apparaît plus tard dans la liste.
 
-## Directive anchors
+## Ancres de directive
 
-`property`, `event`, `call`, `button`, and `tile-icon` directives use the interaction anchor by default. Each can override that default with its own `anchor` configuration. A bare string is relative to the interaction anchor, a string beginning with `&` is a compact absolute document-root `select_tree` path, and `{ select_tree: ... }` is the equivalent long absolute form.
+Les directives `property`, `event`, `call`, `button` et `tile-icon` utilisent l'ancre d'interaction par défaut. Chacun peut remplacer cette valeur par défaut avec sa propre configuration `anchor`. Une chaîne nue est relative à l'ancre d'interaction, une chaîne commençant par `&` est un chemin `select_tree` de racine de document absolu compact et `{ select_tree: ... }` est la forme absolue longue équivalente.
 
 ```yaml
 directives:
@@ -67,15 +67,15 @@ directives:
     method: closeDialog
 ```
 
-Use the `uix_broker_path($0)` console helper in the browser console to find a relative directive-anchor path.
+Utilisez l'assistant de console `uix_broker_path($0)` dans la console du navigateur pour rechercher un chemin d'ancrage de directive relatif.
 
-See [Interaction Anchors](./interaction-anchors.md#anchors-in-rules-and-directives) for the selection formats.
+Voir [Interaction Anchors](./interaction-anchors.md#anchors-in-rules-and-directives) pour les formats de sélection.
 
-See [Finding paths in the browser console](./interaction-anchors.md#finding-paths-in-the-browser-console) for more information on the console helpers available.
+Voir [Recherche de chemins dans la console du navigateur](./interaction-anchors.md#finding-paths-in-the-browser-console) pour plus d'informations sur les aides de console disponibles.
 
-## Property
+## Propriété
 
-`property` directive changes the selected anchor's JavaScript object. `set` takes a dot-separated property path, creates any missing intermediate plain-object levels, and assigns the value at the final property. `clear` takes the same kind of path and deletes only the final property; it does not remove its parent objects.
+La directive `property` modifie l'objet JavaScript de l'ancre sélectionnée. `set` prend un chemin de propriété séparé par des points, crée tous les niveaux d'objet simple intermédiaires manquants et attribue la valeur à la propriété finale. `clear` emprunte le même type de chemin et supprime uniquement la propriété finale ; il ne supprime pas ses objets parents.
 
 ```yaml
 - type: property
@@ -85,7 +85,7 @@ See [Finding paths in the browser console](./interaction-anchors.md#finding-path
   clear: config.icon
 ```
 
-Values can refer to captured data or a previous `template` or `javascript` result. `@captured` resolves to the complete captured-data object, while `@captured.path` resolves to the value at that dot-separated path. Array indexes can use either dot notation (`items.0`) or brackets (`items[0]`); use a quoted bracket key for object properties that contain punctuation, such as `settings['icon-color']`. The reference is substituted before the property is set and must be quoted in YAML as it starts with `@`.
+Les valeurs peuvent faire référence à des données capturées ou à un résultat `template` ou `javascript` précédent. `@captured` résout l'objet de données capturées complet, tandis que `@captured.path` résout la valeur sur ce chemin séparé par des points. Les index de tableau peuvent utiliser la notation par points (`items.0`) ou par parenthèses (`items[0]`) ; utilisez une clé entre crochets entre guillemets pour les propriétés d'objet contenant des signes de ponctuation, telles que `settings['icon-color']`. La référence est remplacée avant que la propriété ne soit définie et doit être citée en YAML car elle commence par `@`.
 
 ```yaml
 - type: property
@@ -93,11 +93,11 @@ Values can refer to captured data or a previous `template` or `javascript` resul
   value: "@captured.entity_id"
 ```
 
-`template` and `javascript` directives save their value under their `id`. A later directive can use `@id` or a property such as `@id.path`; the value keeps its original type, including objects and arrays. References occupy a complete YAML value — Broker does not interpolate them into a longer string.
+Les directives `template` et `javascript` sauvegardent leur valeur sous leur `id`. Une directive ultérieure peut utiliser `@id` ou une propriété telle que `@id.path` ; la valeur conserve son type d'origine, y compris les objets et les tableaux. Les références occupent une valeur YAML complète — Broker ne les interpole pas dans une chaîne plus longue.
 
-## Event
+## Événement
 
-`event` dispatches a `CustomEvent`. Its `target` defaults to `anchor`, meaning the selected directive anchor (or the interaction anchor when no directive anchor is set). Set `target: window` or `target: document` to dispatch globally instead; these targets do not use or resolve an event-specific directive anchor. `bubbles` and `composed` default to `false`, matching the DOM API.
+`event` envoie un `CustomEvent`. Son `target` est par défaut `anchor`, ce qui signifie l'ancre de directive sélectionnée (ou l'ancre d'interaction lorsqu'aucune ancre de directive n'est définie). Définissez `target: window` ou `target: document` pour qu'il soit distribué globalement ; ces cibles n'utilisent ni ne résolvent d'ancre de directive spécifique à un événement. `bubbles` et `composed` sont par défaut `false`, correspondant à l'API DOM.
 
 ```yaml
 - type: event
@@ -119,7 +119,7 @@ Values can refer to captured data or a previous `template` or `javascript` resul
   name: broker-document-event
 ```
 
-Set `capture_data: true` to copy captured event data into a modified event. The outgoing event's `detail` starts with the initiating interaction's captured data, then shallowly overlays values from this directive's `data` object. The `capture_data` option is only available to the `event` directive.
+Définissez `capture_data: true` pour copier les données d'événement capturées dans un événement modifié. Le `detail` de l'événement sortant commence par les données capturées de l'interaction initiatrice, puis superpose superficiellement les valeurs de l'objet `data` de cette directive. L'option `capture_data` est disponible uniquement pour la directive `event`.
 
 ```yaml
 - type: event
@@ -129,7 +129,7 @@ Set `capture_data: true` to copy captured event data into a modified event. The 
     source: uixBroker
 ```
 
-Set `capture_data: deep` when nested plain objects should be merged instead. Directive `data` wins for conflicting values; arrays and non-plain objects are replaced as complete values. This leaves `capture_data: true` unchanged.
+Définissez `capture_data: deep` lorsque les objets simples imbriqués doivent être fusionnés à la place. La directive `data` l'emporte pour les valeurs contradictoires ; les tableaux et les objets non simples sont remplacés en tant que valeurs complètes. Cela laisse `capture_data: true` inchangé.
 
 ```yaml
 - type: event
@@ -140,9 +140,9 @@ Set `capture_data: deep` when nested plain objects should be merged instead. Dir
       source: uixBroker
 ```
 
-## Call
+## Appeler
 
-`call` invokes a method on the selected anchor. `method` accepts a safe dot-separated method path and preserves the method object's `this` binding. `args`, when provided, must be an array and supports captured-data substitution.
+`call` invoque une méthode sur l'ancre sélectionnée. `method` accepte un chemin de méthode sécurisé séparé par des points et préserve la liaison `this` de l'objet méthode. `args`, lorsqu'il est fourni, doit être un tableau et prend en charge la substitution des données capturées.
 
 ```yaml
 - type: call
@@ -152,11 +152,11 @@ Set `capture_data: deep` when nested plain objects should be merged instead. Dir
   args: [0, 5]
 ```
 
-## Button
+Bouton ##
 
-`button` inserts a Home Assistant `ha-button` beside the directive anchor. It uses the same button configuration and action handling as the [Forge button spark](../forge/sparks/button.md). The button is inserted after the directive anchor by default.
+`button` insère un Home Assistant `ha-button` à côté de l'ancre de directive. Il utilise la même configuration de bouton et la même gestion des actions que le [bouton Forge spark](../forge/sparks/button.md). Le bouton est inséré par défaut après l'ancre de la directive.
 
-Use `after` or `before` to select a different reference element. These paths are relative to the resolved directive anchor and support the usual UIX `select_tree` syntax. The button is still inserted as a sibling of the matched reference element.
+Utilisez `after` ou `before` pour sélectionner un autre élément de référence. Ces chemins sont relatifs à l'ancre de directive résolue et prennent en charge la syntaxe UIX `select_tree` habituelle. Le bouton est toujours inséré en tant que frère de l’élément de référence correspondant.
 
 ```yaml
 - type: button
@@ -176,7 +176,7 @@ Use `after` or `before` to select a different reference element. These paths are
     action: toggle
 ```
 
-Use `style` for a flat mapping of CSS property names and values. The properties are set inline on the generated `ha-button`, which is useful for button dimensions and spacing that cannot be styled from dashboard configuration.
+Utilisez `style` pour un mappage plat des noms et valeurs des propriétés CSS. Les propriétés sont définies en ligne sur le `ha-button` généré, ce qui est utile pour les dimensions et l'espacement des boutons qui ne peuvent pas être stylisés à partir de la configuration du tableau de bord.
 
 ```yaml
 - type: button
@@ -192,10 +192,10 @@ Use `style` for a flat mapping of CSS property names and values. The properties 
     "--ha-icon-button-size": 32px
 ```
 
-Use `uix` for UIX styling, including styles inside the button's shadow root. Its UIX type is `uix-broker-button`, and the resolved button settings are available as `config` in UIX templates.
+Utilisez `uix` pour le style UIX, y compris les styles à l’intérieur de la racine fantôme du bouton. Son type UIX est `uix-broker-button` et les paramètres de bouton résolus sont disponibles sous la forme `config` dans les modèles UIX.
 
 !!! info
-    `button` UIX styling available in 8.3.0-beta.3
+    Style UIX `button` disponible dans la version 8.3.0-beta.3
 
 ```yaml
 - type: button
@@ -208,38 +208,38 @@ Use `uix` for UIX styling, including styles inside the button's shadow root. Its
       }
 ```
 
-| Key | Type | Default | Description |
+| Clé | Tapez | Par défaut | Descriptif |
 | --- | --- | --- | --- |
-| `after` | `string` | directive anchor | Relative selector for the reference element. The button is inserted after it. |
-| `before` | `string` | — | Relative selector for the reference element. The button is inserted before it. |
-| `entity` | `string` | — | Entity ID used by entity-based actions. |
-| `icon` | `string` | — | MDI icon placed in the button label slot. It takes precedence over `label`. |
-| `color` | `string` | — | Icon colour for an icon-only button. |
-| `label` | `string` | `""` | Button label. |
-| `start_icon` / `end_icon` | `string` | — | MDI icon before or after the label. |
-| `variant` | `string` | Home Assistant default | `brand`, `neutral`, `danger`, `warning`, or `success`. Icon-only buttons default to `neutral`. |
-| `appearance` | `string` | Home Assistant default | `accent`, `filled`, `outlined`, or `plain`. Icon-only buttons default to `plain`. |
-| `size` | `string` | — | `s` (small) or `m` (medium). |
-| `style` | object | — | Flat map of CSS property names and string or numeric values, set inline on `ha-button`. |
-| `uix` | object | — | UIX configuration applied to the generated button as type `uix-broker-button`. |
-| `tap_action` / `hold_action` / `double_tap_action` | action | — | Home Assistant action to run from the button. |
+| `after` | `string` | ancre directive | Sélecteur relatif pour l'élément de référence. Le bouton est inséré après. |
+| `before` | `string` | — | Sélecteur relatif pour l'élément de référence. Le bouton est inséré avant lui. |
+| `entity` | `string` | — | ID d'entité utilisé par les actions basées sur l'entité. |
+| `icon` | `string` | — | Icône MDI placée dans la fente pour étiquette du bouton. Il est prioritaire sur `label`. |
+| `color` | `string` | — | Couleur de l’icône pour un bouton contenant uniquement une icône. |
+| `label` | `string` | `""` | Etiquette du bouton. |
+| `start_icon` / `end_icon` | `string` | — | Icône MDI avant ou après l'étiquette. |
+| `variant` | `string` | Par défaut de Home Assistant | `brand`, `neutral`, `danger`, `warning` ou `success`. Les boutons contenant uniquement des icônes sont par défaut `neutral`. |
+| `appearance` | `string` | Par défaut de Home Assistant | `accent`, `filled`, `outlined` ou `plain`. Les boutons contenant uniquement des icônes sont par défaut `plain`. |
+| `size` | `string` | — | `s` (petit) ou `m` (moyen). |
+| `style` | objet | — | Carte plate des noms de propriétés CSS et des valeurs de chaîne ou numériques, définie en ligne sur `ha-button`. |
+| `uix` | objet | — | Configuration UIX appliquée au bouton généré en tant que type `uix-broker-button`. |
+| `tap_action` / `hold_action` / `double_tap_action` | actions | — | Action Home Assistant à exécuter à partir du bouton. |
 
 !!! note
-    - Set at most one of `after` and `before`.
-    - Button clicks are isolated from the reference element's own action handler.
-    - Pointer, mouse, touch, and click events stop at the generated button. This prevents a containing element's ripple or action handler from reacting while retaining the button's own action and ripple.
-    - The same `--uix-button-margin` CSS variable as the Forge button spark apply. The default margin is `-6px` for a labelled button and `0px` for an icon-only button.
-    - Other CSS variables applicable to the Forge button spark also apply.
+    - Définissez au maximum un des `after` et `before`.
+    - Les clics sur les boutons sont isolés du propre gestionnaire d'action de l'élément de référence.
+    - Les événements de pointeur, de souris, de toucher et de clic s'arrêtent au bouton généré. Cela empêche l'ondulation ou le gestionnaire d'action d'un élément conteneur de réagir tout en conservant l'action et l'ondulation du bouton.
+    - La même variable CSS `--uix-button-margin` que l'étincelle du bouton Forge s'applique. La marge par défaut est `-6px` pour un bouton étiqueté et `0px` pour un bouton contenant uniquement une icône.
+    - D'autres variables CSS applicables à l'étincelle du bouton Forge s'appliquent également.
 
-## Tile icon
+## Icône de tuile
 
 !!! info
-    `tile-icon` directive available in 8.3.0-beta.3
+    Directive `tile-icon` disponible en 8.3.0-beta.3
 
 
-`tile-icon` inserts a Home Assistant `ha-tile-icon` beside the directive anchor. It uses the same icon rendering and action handling as the [Forge tile-icon spark](../forge/sparks/tile-icon.md). The tile icon is inserted after the directive anchor by default.
+`tile-icon` insère un Home Assistant `ha-tile-icon` à côté de l'ancre directive. Il utilise le même rendu d'icône et la même gestion des actions que [Forge Tile-icon spark](../forge/sparks/tile-icon.md). L'icône de vignette est insérée par défaut après l'ancre de la directive.
 
-Use `after` or `before` to select a different reference element. These paths are relative to the resolved directive anchor and support the usual UIX `select_tree` syntax. The tile icon is inserted as a sibling of the matched reference element.
+Utilisez `after` ou `before` pour sélectionner un autre élément de référence. Ces chemins sont relatifs à l'ancre de directive résolue et prennent en charge la syntaxe UIX `select_tree` habituelle. L'icône de tuile est insérée en tant que frère de l'élément de référence correspondant.
 
 ```yaml
 - type: tile-icon
@@ -259,7 +259,7 @@ Use `after` or `before` to select a different reference element. These paths are
     action: more-info
 ```
 
-Use `style` for a flat mapping of CSS property names and values. The properties are set inline on the generated `ha-tile-icon`, which is useful for positioning and sizing the icon where dashboard styling cannot reach it.
+Utilisez `style` pour un mappage plat des noms et valeurs des propriétés CSS. Les propriétés sont définies en ligne sur le `ha-tile-icon` généré, ce qui est utile pour positionner et dimensionner l'icône là où le style du tableau de bord ne peut pas l'atteindre.
 
 ```yaml
 - type: tile-icon
@@ -270,7 +270,7 @@ Use `style` for a flat mapping of CSS property names and values. The properties 
     z-index: 1
 ```
 
-Use `uix` for UIX styling, including styles inside the tile icon's shadow root. Its UIX type is `broker-tile-icon`, and the resolved tile-icon settings are available as `config` in UIX templates.
+Utilisez `uix` pour le style UIX, y compris les styles à l’intérieur de la racine fantôme de l’icône de vignette. Son type UIX est `broker-tile-icon`, et les paramètres d'icône de tuile résolus sont disponibles en tant que `config` dans les modèles UIX.
 
 ```yaml
 - type: tile-icon
@@ -282,29 +282,29 @@ Use `uix` for UIX styling, including styles inside the tile icon's shadow root. 
       }
 ```
 
-| Key | Type | Default | Description |
+| Clé | Tapez | Par défaut | Descriptif |
 | --- | --- | --- | --- |
-| `after` | `string` | directive anchor | Relative selector for the reference element. The tile icon is inserted after it. |
-| `before` | `string` | — | Relative selector for the reference element. The tile icon is inserted before it. |
-| `entity` | `string` | — | Entity whose state icon is rendered. It supplies the default tap action: `toggle` for toggleable entities, otherwise `none`. |
-| `icon` | `string` | — | MDI icon. With `entity`, it overrides the entity's normal state icon. |
-| `icon_path` | `string` | — | SVG path passed to `ha-tile-icon` as `iconPath`. |
-| `image_url` | `string` | — | Image URL passed to `ha-tile-icon` as `imageUrl`. |
-| `color` | CSS color | — | Tile icon colour. With `entity`, this is applied while the entity is active. |
-| `style` | object | — | Flat map of CSS property names and string or numeric values, set inline on `ha-tile-icon`. |
-| `uix` | object | — | UIX configuration applied to the generated tile icon as type `broker-tile-icon`. |
-| `tap_action` / `hold_action` / `double_tap_action` | action | — | Home Assistant action to run from the tile icon. |
+| `after` | `string` | ancre directive | Sélecteur relatif pour l'élément de référence. L'icône de tuile est insérée après. |
+| `before` | `string` | — | Sélecteur relatif pour l'élément de référence. L'icône de tuile est insérée devant elle. |
+| `entity` | `string` | — | Entité dont l'icône d'état est rendue. Il fournit l'action d'appui par défaut : `toggle` pour les entités basculables, sinon `none`. |
+| `icon` | `string` | — | Icône MDI. Avec `entity`, il remplace l'icône d'état normal de l'entité. |
+| `icon_path` | `string` | — | Chemin SVG transmis à `ha-tile-icon` sous le nom `iconPath`. |
+| `image_url` | `string` | — | URL de l'image transmise à `ha-tile-icon` sous le nom `imageUrl`. |
+| `color` | Couleur CSS | — | Couleur de l’icône de tuile. Avec `entity`, ceci est appliqué pendant que l'entité est active. |
+| `style` | objet | — | Carte plate des noms de propriétés CSS et des valeurs de chaîne ou numériques, définie en ligne sur `ha-tile-icon`. |
+| `uix` | objet | — | Configuration UIX appliquée à l'icône de vignette générée en tant que type `broker-tile-icon`. |
+| `tap_action` / `hold_action` / `double_tap_action` | actions | — | Action Home Assistant à exécuter à partir de l’icône de la vignette. |
 
 !!! note
-    - Set at most one of `after` and `before`.
-    - Supply an icon source with `icon`, `icon_path`, `image_url`, or `entity`.
-    - Entity-based tile icons update when Home Assistant state updates.
-    - Pointer, mouse, touch, and click events stop at the generated icon. This prevents a containing element's ripple or action handler from reacting while retaining the tile icon's own action and ripple.
-    - Broker adds the `data-uix-broker-tile-icon` attribute to each generated tile icon, so it can be selected from UIX styling.
+    - Définissez au plus un des `after` et `before`.
+    - Fournissez une source d'icônes avec `icon`, `icon_path`, `image_url` ou `entity`.
+    - Les icônes de vignettes basées sur les entités sont mises à jour lorsque l'état de Home Assistant est mis à jour.
+    - Les événements de pointeur, de souris, de toucher et de clic s'arrêtent à l'icône générée. Cela empêche l'ondulation ou le gestionnaire d'action d'un élément conteneur de réagir tout en conservant l'action et l'ondulation de l'icône de tuile.
+    - Broker ajoute l'attribut `data-uix-broker-tile-icon` à chaque icône de tuile générée, afin qu'il puisse être sélectionné à partir du style UIX.
 
-## Action
+##Action
 
-`action` runs a Home Assistant service call, a standard frontend action, or one of the UIX Broker-specific actions.
+`action` exécute un appel de service Home Assistant, une action frontale standard ou l'une des actions spécifiques à UIX Broker.
 
 ```yaml
 - type: action
@@ -320,9 +320,9 @@ Use `uix` for UIX styling, including styles inside the tile icon's shadow root. 
       message: Done
 ```
 
-### JavaScript action
+###Action JavaScript
 
-`action: javascript` is a UIX Broker action. Put the code in `data.code`. UIX Broker automatically passes `hass`, `anchor`, `event`, and `captured` as variables. `hass` is the active Home Assistant object, `anchor` is the resolved interaction anchor DOM element, `event` is the initiating event, and `captured` is the interaction's captured data.
+`action: javascript` est une action de courtier UIX. Mettez le code dans `data.code`. UIX Broker transmet automatiquement `hass`, `anchor`, `event` et `captured` en tant que variables. `hass` est l'objet Home Assistant actif, `anchor` est l'élément DOM d'ancrage d'interaction résolu, `event` est l'événement initiateur et `captured` est les données capturées de l'interaction.
 
 ```yaml
 - type: action
@@ -332,13 +332,13 @@ Use `uix` for UIX styling, including styles inside the tile icon's shadow root. 
       console.log(anchor, event, captured)
 ```
 
-Use JavaScript only from trusted UIX configurations.
+Utilisez JavaScript uniquement à partir de configurations UIX fiables.
 
-## Template
+## Modèle
 
-`template` renders a Home Assistant Jinja2 template once through the template API; it does not create a template subscription. Its string result is stored under `id` for the remaining directives in that interaction.
+`template` restitue un modèle Home Assistant Jinja2 une fois via l'API du modèle ; il ne crée pas d'abonnement modèle. Son résultat de chaîne est stocké sous `id` pour les directives restantes de cette interaction.
 
-Every uncached render is a round trip to the Home Assistant server. Avoid using it on interactions that can run frequently. Set `cache` to a positive number of milliseconds when a slightly stale value is acceptable:
+Chaque rendu non mis en cache est un aller-retour vers le serveur Home Assistant. Évitez de l'utiliser sur des interactions qui peuvent s'exécuter fréquemment. Définissez `cache` sur un nombre positif de millisecondes lorsqu'une valeur légèrement obsolète est acceptable :
 
 ```yaml
 - type: template
@@ -347,7 +347,7 @@ Every uncached render is a round trip to the Home Assistant server. Avoid using 
   template: "{{ states('sensor.example') }}"
 ```
 
-The cache is held in the browser and shared by template directives using the same template text and prior directive results. A cached value is used only when it is younger than the directive's `cache` duration; `cache: 0` (or omitting `cache`) always renders again. The cache stores only successful results, is cleared when Broker configuration reloads, and does not observe template changes during the cache period. When `cache` is enabled, prior directive results must be JSON-serializable because they form part of the cache key; circular objects cannot be cached.
+Le cache est conservé dans le navigateur et partagé par les directives de modèle en utilisant le même texte de modèle et les mêmes résultats de directive précédente. Une valeur mise en cache est utilisée uniquement lorsqu'elle est inférieure à la durée `cache` de la directive ; `cache: 0` (ou en omettant `cache`) est toujours restitué. Le cache stocke uniquement les résultats réussis, est effacé lors du rechargement de la configuration du Broker et n'observe pas les modifications de modèle pendant la période de cache. Lorsque `cache` est activé, les résultats des directives précédentes doivent être sérialisables en JSON car ils font partie de la clé de cache ; les objets circulaires ne peuvent pas être mis en cache.
 
 ```yaml
 - type: template
@@ -362,13 +362,13 @@ The cache is held in the browser and shared by template directives using the sam
     url_path: "@log_provider_url"
 ```
 
-`id` must start with a letter or underscore and can then contain letters, numbers, underscores, and hyphens. The name `captured` is reserved for `@captured` event data and cannot be used as an ID. Use dot or bracket array paths to select a saved object or array value, just as for `@captured`. Quoted bracket keys also work, for example `@config_path['icon-color']` or `@config_path["icon-color"]`.
+`id` doit commencer par une lettre ou un trait de soulignement et peut ensuite contenir des lettres, des chiffres, des traits de soulignement et des traits d'union. Le nom `captured` est réservé aux données d'événement `@captured` et ne peut pas être utilisé comme identifiant. Utilisez des chemins de tableau de points ou de crochets pour sélectionner un objet ou une valeur de tableau enregistré, tout comme pour `@captured`. Les clés de support citées fonctionnent également, par exemple `@config_path['icon-color']` ou `@config_path["icon-color"]`.
 
-Templates receive prior directive results in the top-level `directive` variable. For example, a prior directive with `id: provider` is available as `{{ directive.provider }}`. This namespace contains only results from earlier directives in the same interaction.
+Les modèles reçoivent les résultats des directives antérieures dans la variable `directive` de niveau supérieur. Par exemple, une directive antérieure avec `id: provider` est disponible sous le nom `{{ directive.provider }}`. Cet espace de noms contient uniquement les résultats des directives précédentes dans la même interaction.
 
 ## JavaScript
 
-`javascript` evaluates `code` once and saves its synchronous return value under `id`. The code receives `hass`, `anchor`, `event`, `captured`, and `directive`; `directive` contains prior directive results from the same interaction. Return a scalar, object, or array; the following directives can use it as `@id` without conversion.
+`javascript` évalue une fois `code` et enregistre sa valeur de retour synchrone sous `id`. Le code reçoit `hass`, `anchor`, `event`, `captured` et `directive` ; `directive` contient des résultats de directives antérieures issus de la même interaction. Renvoie un scalaire, un objet ou un tableau ; les directives suivantes peuvent l'utiliser comme `@id` sans conversion.
 
 ```yaml
 - type: javascript
@@ -387,11 +387,11 @@ Templates receive prior directive results in the top-level `directive` variable.
     url_path: "@config_path.path"
 ```
 
-Use JavaScript only from trusted UIX configurations.
+Utilisez JavaScript uniquement à partir de configurations UIX fiables.
 
-## Wait
+## Attendez
 
-Use `wait` to pause a directive sequence without performing another operation. It requires a non-negative number of milliseconds.
+Utilisez `wait` pour suspendre une séquence de directives sans effectuer une autre opération. Cela nécessite un nombre de millisecondes non négatif.
 
 ```yaml
 directives:
@@ -403,7 +403,7 @@ directives:
       entity_id: light.example
 ```
 
-Every directive also accepts `wait`, a non-negative number of milliseconds. In that form, UIX Broker waits after applying the directive before starting the next one. A `block` directive always runs synchronously, though it can include `wait` to delay later directives.
+Chaque directive accepte également `wait`, un nombre non négatif de millisecondes. Sous cette forme, UIX Broker attend après avoir appliqué la directive avant de démarrer la suivante. Une directive `block` s'exécute toujours de manière synchrone, bien qu'elle puisse inclure `wait` pour retarder les directives ultérieures.
 
 ```yaml
 directives:

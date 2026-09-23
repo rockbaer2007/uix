@@ -1,28 +1,28 @@
 ---
-title: Rules
-description: Match UIX Broker interactions against elements, captured data, and browser identity.
+title: Règles
+description: Faites correspondre les interactions d'UIX Broker avec les éléments, les données capturées et l'identité du navigateur.
 ---
 
-# Rules
+# Règles
 
-Every interaction rule must match before Broker runs its directives. Rules use the interaction anchor by default, but can also specify a relative or absolute override anchor.
+Chaque règle d'interaction doit correspondre avant que Broker exécute ses directives. Les règles utilisent l'ancre d'interaction par défaut, mais peuvent également spécifier une ancre de remplacement relative ou absolue.
 
-For non-`block` interactions, UIX Broker retries a missing rule override anchor every 50 ms for up to two seconds. This is useful for interfaces, such as dialogs, that mount after their initiating event fires.
+Pour les interactions non `block`, UIX Broker réessaye une ancre de remplacement de règle manquante toutes les 50 ms pendant deux secondes maximum. Ceci est utile pour les interfaces, telles que les boîtes de dialogue, qui se montent après le déclenchement de leur événement initiateur.
 
-## Host-element rules
+## Règles des éléments hôtes
 
-Compact string rules use [UIX host-element path](../concepts/dom.md#hostelement-path-selection) matching against the interaction anchor or an override anchor.
+Les règles de chaîne compacte utilisent [le chemin d'accès de l'élément hôte UIX](../concepts/dom.md#hostelement-path-selection) correspondant à l'ancre d'interaction ou à une ancre de remplacement.
 
-`Tag`, `class`, `id`, `attribute`, and `property` selectors are supported.
+Les sélecteurs `Tag`, `class`, `id`, `attribute` et `property` sont pris en charge.
 
-Compact rules match against the interaction anchor, allowing for terse one-line rule definitions.
+Les règles compactes correspondent à l'ancre d'interaction, permettant des définitions de règles concises sur une seule ligne.
 
-The rule list below matches when the interaction anchor:
+La liste de règles ci-dessous correspond au moment où l'interaction s'ancre :
 
-- is `ha-button.action-button[data-action]`;
-- has an object property `config.entity` that equals `light.example`;
-- has an object property `controller` that is present but `undefined`; and
-- does not have the object property `uixBrokerGuard`.
+- est `ha-button.action-button[data-action]` ;
+- a une propriété d'objet `config.entity` qui est égale à `light.example` ;
+- a une propriété d'objet `controller` qui est présente mais `undefined` ; et
+- n'a pas la propriété d'objet `uixBrokerGuard`.
 
 ```yaml
 rules:
@@ -32,7 +32,7 @@ rules:
   - "{!.uixBrokerGuard}"
 ```
 
-Use the expanded form when a rule must inspect a different anchor element. Its `anchor` config selects the element to test, and its `match` applies [UIX host-element path](../concepts/dom.md#hostelement-path-selection) matching to that selected element. A rule `anchor` is relative to the interaction anchor; prefix it with `&` for an absolute document root `select_tree` path. The expanded `select_tree` form is also available and is always absolute to the document root.
+Utilisez le formulaire développé lorsqu'une règle doit inspecter un élément d'ancrage différent. Sa configuration `anchor` sélectionne l'élément à tester et son `match` applique le [chemin d'accès à l'élément hôte UIX](../concepts/dom.md#hostelement-path-selection) correspondant à cet élément sélectionné. Une règle `anchor` est relative à l'ancre d'interaction ; préfixez-le avec `&` pour un chemin `select_tree` racine absolue du document. Le formulaire `select_tree` étendu est également disponible et est toujours absolu par rapport à la racine du document.
 
 ```yaml
 rules:
@@ -51,18 +51,18 @@ rules:
 ```
 
 !!! tip
-    Rule anchors use the same [select-tree syntax](./interaction-anchors.md#select-tree-anchors) as directive anchors and are retried while a non-`block` interaction is running.
+Les ancres de règle utilisent la même [syntaxe d'arbre de sélection](./interaction-anchors.md#select-tree-anchors) que les ancres de directive et sont réessayées pendant qu'une interaction non-`block` est en cours d'exécution.
 
 !!! tip
-    Host-element object property match `{.property=undefined}` matches only when the property exists and its value is `undefined`. `{!.property}` matches only when the property is absent.
+Correspondance de propriété d'objet d'élément hôte `{.property=undefined}` correspond uniquement lorsque la propriété existe et que sa valeur est `undefined`. `{!.property}` correspond uniquement lorsque la propriété est absente.
 
-## Typed rules
+## Règles typées
 
-Typed rules have a `type` key. The supported types are `browserid`, `user`, `user_is_admin`, `hash`, `search`, `captured`, and `panel`.
+Les règles typées ont une clé `type`. Les types pris en charge sont `browserid`, `user`, `user_is_admin`, `hash`, `search`, `captured` et `panel`.
 
-### Browser identity
+### Identité du navigateur
 
-The `browserid` rule matches a [Browser Mod](https://github.com/thomasloven/hass-browser_mod) browser id. Use the key `id`, `browser_id`, or `value` for the expected browser identity.
+La règle `browserid` correspond à un identifiant de navigateur [Browser Mod](https://github.com/thomasloven/hass-browser_mod). Utilisez la clé `id`, `browser_id` ou `value` pour l'identité de navigateur attendue.
 
 ```yaml
 rules:
@@ -70,18 +70,18 @@ rules:
     id: kitchen-tablet
 ```
 
-### Home Assistant user
+### Utilisateur de Home Assistant
 
 !!! info
-    Home Assistant user rules available in 8.3.0-beta.1
+Règles d'utilisation de Home Assistant disponibles dans la version 8.3.0-beta.1
 
-Use `type: user` to match the signed-in Home Assistant user by either their
-display name (`hass.user.name`) or stable user id (`hass.user.id`). Home
-Assistant usernames are not available in the frontend user object and are not
-supported by this rule; use a display name or id. `match` and `value` use the
-same matching syntax and operators as [captured-data rules](#captured-data-rules),
-including wildcards, regular expressions, and boolean composition. Set either
-`match` or `value`.
+Utilisez `type: user` pour faire correspondre l'utilisateur Home Assistant connecté par son
+nom d’affichage (`hass.user.name`) ou identifiant d’utilisateur stable (`hass.user.id`). Maison
+Les noms d'utilisateur de l'assistant ne sont pas disponibles dans l'objet utilisateur frontal et ne sont pas
+soutenu par cette règle ; utilisez un nom d’affichage ou un identifiant. `match` et `value` utilisent le
+mêmes syntaxe et opérateurs de correspondance que [règles de données capturées](#captured-data-rules),
+y compris les caractères génériques, les expressions régulières et la composition booléenne. Réglez soit
+`match` ou `value`.
 
 ```yaml
 rules:
@@ -94,9 +94,9 @@ rules:
     match: 9f1362c9e0a24d918c66d4fdcf12b001
 ```
 
-For a positive matcher, either the name or id may match. A negated matcher,
-including `not` or `!=`, must exclude both fields. For example, this matches
-every user except the user named `wall-panel` (or with that id):
+Pour un correspondant positif, le nom ou l'identifiant peuvent correspondre. Un matcher annulé,
+y compris `not` ou `!=`, doit exclure les deux champs. Par exemple, cela correspond
+chaque utilisateur sauf l'utilisateur nommé `wall-panel` (ou avec cet identifiant) :
 
 ```yaml
 rules:
@@ -105,26 +105,26 @@ rules:
       not: wall-panel
 ```
 
-Use `type: user_is_admin` to match the current user's administrator status.
-With no matcher it means “is an admin”; set `match` or `value` to `false` for
-non-admin users. It supports the same advanced matcher objects.
+Utilisez `type: user_is_admin` pour correspondre au statut d'administrateur de l'utilisateur actuel.
+Sans matcher, cela signifie « est un administrateur » ; réglez `match` ou `value` sur `false` pour
+utilisateurs non-administrateurs. Il prend en charge les mêmes objets de correspondance avancés.
 
-Admin user:
-
-    rules:
-      - type: user_is_admin
-
-Non-admin user whose name or id starts with wall-:
+Utilisateur administrateur :
 
     rules:
-      - type: user
+      - tapez : user_is_admin
+
+Utilisateur non-administrateur dont le nom ou l'identifiant commence par wall- :
+
+    rules:
+      - tapez : utilisateur
         match: wall-*
-      - type: user_is_admin
+      - tapez : user_is_admin
         match: false
 
-### Browser URL fragment
+### Fragment d'URL du navigateur
 
-Use `type: hash` to match the browser URL fragment. The value is the portion after `#`, so no `path` is required. `match` and `value` use the same matching syntax and operators as [captured-data rules](#captured-data-rules).
+Utilisez `type: hash` pour faire correspondre le fragment d'URL du navigateur. La valeur est la partie après `#`, donc aucun `path` n'est requis. `match` et `value` utilisent la même syntaxe et les mêmes opérateurs de correspondance que les [règles de données capturées](#captured-data-rules).
 
 ```yaml
 rules:
@@ -132,11 +132,11 @@ rules:
     match: settings
 ```
 
-This rule prevents the interaction's directives from running unless the current URL ends with `#settings`.
+Cette règle empêche l'exécution des directives de l'interaction à moins que l'URL actuelle ne se termine par `#settings`.
 
-### Browser search parameters
+### Paramètres de recherche du navigateur
 
-Use `type: search` to match a named URL search parameter. Set `path` to the parameter name. `match` and `value` use the same matching syntax and operators as [captured-data rules](#captured-data-rules).
+Utilisez `type: search` pour faire correspondre un paramètre de recherche d'URL nommé. Définissez `path` sur le nom du paramètre. `match` et `value` utilisent la même syntaxe et les mêmes opérateurs de correspondance que les [règles de données capturées](#captured-data-rules).
 
 ```yaml
 rules:
@@ -145,13 +145,13 @@ rules:
     match: "light.kitchen*"
 ```
 
-This rule prevents the interaction's directives from running unless the URL has a matching `?entity_id=` parameter. Use `exists: false` to match when the named parameter is absent.
+Cette règle empêche l'exécution des directives de l'interaction à moins que l'URL n'ait un paramètre `?entity_id=` correspondant. Utilisez `exists: false` pour effectuer une correspondance lorsque le paramètre nommé est absent.
 
-## Captured-data rules
+## Règles relatives aux données capturées
 
-Use `type: captured` to match data collected from the initiating event. `path` is a dot-separated optional-chaining path relative to captured data; do not start it with `@captured`. Array indexes can use dot notation (`items.0`) or brackets (`items[0]`). Use quoted bracket keys when a property contains punctuation, for example `settings['icon-color']`.
+Utilisez `type: captured` pour faire correspondre les données collectées à partir de l'événement initiateur. `path` est un chemin de chaînage facultatif séparé par des points relatif aux données capturées ; ne le démarrez pas avec `@captured`. Les index de tableau peuvent utiliser la notation par points (`items.0`) ou par parenthèses (`items[0]`). Utilisez des touches entre crochets lorsqu'une propriété contient des signes de ponctuation, par exemple `settings['icon-color']`.
 
-For browser and shortcut interactions, captured data starts at the DOM event's `detail`. For server interactions, Home Assistant event data is under `data`. Array indexes are supported.
+Pour les interactions avec le navigateur et les raccourcis, les données capturées commencent au niveau `detail` de l'événement DOM. Pour les interactions avec le serveur, les données d'événement Home Assistant se trouvent sous `data`. Les index de tableau sont pris en charge.
 
 ```yaml
 rules:
@@ -162,7 +162,7 @@ rules:
       value: 20
 ```
 
-Simple match values support exact values, wildcards, regular expressions, and numeric comparisons:
+Les valeurs de correspondance simples prennent en charge les valeurs exactes, les caractères génériques, les expressions régulières et les comparaisons numériques :
 
 ```yaml
 rules:
@@ -177,11 +177,11 @@ rules:
     match: ">= 20"
 ```
 
-### Advanced matching
+### Correspondance avancée
 
-A matcher object supports `operator`, `value` (or `match`), `ignore_case`, `exists`, and nested `and`, `or`, and `not` compositions.
+Un objet matcher prend en charge les compositions `operator`, `value` (ou `match`), `ignore_case`, `exists` et les compositions imbriquées `and`, `or` et `not`.
 
-Supported operators are `>`, `<`, `=`, `<=`, `>=`, `==`, `!=`, `contains`, `starts_with`, `ends_with`, and `is_undefined`.
+Les opérateurs pris en charge sont `>`, `<`, `=`, `<=`, `>=`, `==`, `!=`, `contains`, `starts_with`, `ends_with` et `is_undefined`.
 
 ```yaml
 rules:
@@ -204,11 +204,11 @@ rules:
       exists: true
 ```
 
-`is_undefined` with `exists: true` distinguishes a present property whose value is `undefined` from a missing path. Use `exists: false` to explicitly match a missing path.
+`is_undefined` avec `exists: true` distingue une propriété actuelle dont la valeur est `undefined` d'un chemin manquant. Utilisez `exists: false` pour faire correspondre explicitement un chemin manquant.
 
-### Compact captured-data form
+### Formulaire compact de données capturées
 
-For compact configurations, map one or more captured paths directly in an object rule. Every entry must match. The `@captured` prefix is retained only in this compact form.
+Pour les configurations compactes, mappez un ou plusieurs chemins capturés directement dans une règle d'objet. Chaque entrée doit correspondre. Le préfixe `@captured` est conservé uniquement sous cette forme compacte.
 
 ```yaml
 rules:
@@ -216,11 +216,11 @@ rules:
     "@captured.enabled": true
 ```
 
-## Panel rules
+## Règles du panel
 
-Use `type: panel` to match the current UIX panel object. UIX Broker obtains this object asynchronously; it contains the same `panel` fields available to [templates](../using/templates.md), such as `fullUrlPath`, `panelUrlPath`, `viewUrlPath`, and `panelComponentName`.
+Utilisez `type: panel` pour faire correspondre l'objet du panneau UIX actuel. UIX Broker obtient cet objet de manière asynchrone ; il contient les mêmes champs `panel` disponibles pour [modèles](../using/templates.md), tels que `fullUrlPath`, `panelUrlPath`, `viewUrlPath` et `panelComponentName`.
 
-`path` (or its `property` alias) is a dot-separated optional-chaining path relative to that panel object. `match` and `value` use exactly the same matching syntax and operators as [captured-data rules](#captured-data-rules), including wildcards, regular expressions, numeric comparisons, `exists`, and `and`/`or`/`not` composition.
+`path` (ou son alias `property`) est un chemin de chaînage facultatif séparé par des points par rapport à cet objet panneau. `match` et `value` utilisent exactement la même syntaxe et les mêmes opérateurs de correspondance que les [règles de données capturées](#captured-data-rules), y compris les caractères génériques, les expressions régulières, les comparaisons numériques, `exists` et la composition `and`/`or`/`not`.
 
 ```yaml
 rules:
@@ -240,4 +240,4 @@ rules:
 ```
 
 !!! warning
-    Panel state is asynchronous. An interaction using a panel rule cannot use a `block` directive, because blocking an event must complete in the event's synchronous call stack. UIX Broker skips such interactions and logs a warning.
+L’état du panneau est asynchrone. Une interaction utilisant une règle de panneau ne peut pas utiliser une directive `block`, car le blocage d'un événement doit se terminer dans la pile d'appels synchrones de l'événement. UIX Broker ignore ces interactions et enregistre un avertissement.

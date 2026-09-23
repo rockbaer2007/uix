@@ -1,10 +1,10 @@
 ---
-title: Broker
-description: Configure UIX Broker interactions and manage their configuration sources.
+title: UIX Broker
+description: Configurez les interactions UIX Broker et gérez leurs sources de configuration.
 ---
 # UIX Broker
 
-An interaction has a `realm`, a `listen` value, an interaction `anchor`, optional `rules`, and an ordered list of `directives`.
+Une interaction a un `realm`, une valeur `listen`, une interaction `anchor`, un `rules` facultatif et une liste ordonnée de `directives`.
 
 ```yaml
 uix_broker:
@@ -21,24 +21,24 @@ uix_broker:
             message: Shortcut pressed
 ```
 
-See [Realms](./realms.md), [Interaction Anchors](./interaction-anchors.md), [Rules](./rules.md), and [Directives](./directives.md) for each part of an interaction.
+Voir [Domaines](./realms.md), [Ancres d'interaction](./interaction-anchors.md), [Règles](./rules.md) et [Directives](./directives.md) pour chaque partie d'une interaction.
 
-## Interaction options
+## Options d'interaction
 
-| Key | Description |
+| Clé | Description |
 | --- | --- |
-| `realm` | Where UIX listens: `browser`, `shortcut`, or `server`. |
-| `listen` | The DOM event name, [Tinykeys](https://jamiebuilds.github.io/tinykeys/) binding, or Home Assistant event-bus event name for the selected realm. In the `browser` realm, this may also be a list of DOM event names. |
-| `anchor` | The element to inspect and use as the default rule and directive target. |
-| `rules` | Optional conditions that must all match before directives run. |
-| `directives` | Ordered operations to apply when the interaction matches. |
-| `enabled` | Defaults to `true`. Set to `false` to retain an interaction in configuration without registering it. |
-| `reentrant` | Defaults to `true`. Set to `false` to ignore matching events for the same interaction while it is resolving or running. |
-| `debug` | Set to `true` to log the interaction lifecycle in the browser developer console. |
+| `realm` | Où UIX écoute : `browser`, `shortcut` ou `server`. |
+| `listen` | Le nom de l'événement DOM, la liaison [Tinykeys](https://jamiebuilds.github.io/tinykeys/) ou le nom de l'événement du bus d'événements Home Assistant pour le domaine sélectionné. Dans le domaine `browser`, il peut également s'agir d'une liste de noms d'événements DOM. |
+| `anchor` | L’élément à inspecter et à utiliser comme cible de règle et de directive par défaut. |
+| `rules` | Conditions facultatives qui doivent toutes correspondre avant l'exécution des directives. |
+| `directives` | Opérations ordonnées à appliquer lorsque l’interaction correspond. |
+| `enabled` | La valeur par défaut est `true`. Définissez sur `false` pour conserver une interaction dans la configuration sans l'enregistrer. |
+| `reentrant` | La valeur par défaut est `true`. Définissez sur `false` pour ignorer les événements correspondants pour la même interaction pendant sa résolution ou son exécution. |
+| `debug` | Définissez sur `true` pour enregistrer le cycle de vie des interactions dans la console du développeur du navigateur. |
 
-Each interaction is independent. All of its rules must match before directives run, and directives run one at a time in configuration order.
+Chaque interaction est indépendante. Toutes ses règles doivent correspondre avant l'exécution des directives, et les directives s'exécutent une par une dans l'ordre de configuration.
 
-Use a browser-realm `listen` list when the same interaction should run for more than one browser event:
+Utilisez une liste `listen` du domaine du navigateur lorsque la même interaction doit s'exécuter pour plusieurs événements de navigateur :
 
 ```yaml
 - realm: browser
@@ -51,26 +51,26 @@ Use a browser-realm `listen` list when the same interaction should run for more 
       method: requestUpdate
 ```
 
-Lists are supported only in the `browser` realm; `shortcut` and `server` interactions each listen for one binding or event name.
+Les listes sont prises en charge uniquement dans le domaine `browser` ; Les interactions `shortcut` et `server` écoutent chacune une liaison ou un nom d'événement.
 
-`reentrant: false` is useful when an interaction dispatches the same event that started it. The interaction is considered active while anchors are resolving, directives are running, and directive waits are in progress.
+`reentrant: false` est utile lorsqu'une interaction distribue le même événement qui l'a déclenchée. L'interaction est considérée comme active pendant la résolution des ancres, l'exécution des directives et l'attente des directives.
 
-## Broker ready event
+## Événement prêt pour les courtiers
 
-After UIX Broker applies its configuration, it dispatches a `uix-broker-ready` browser event on `window`. The event fires after Broker has registered its browser-realm listeners, so an interaction can listen to this event to apply an initial UI customisation. It also fires after every Broker configuration reload.
+Une fois qu'UIX Broker a appliqué sa configuration, il distribue un événement de navigateur `uix-broker-ready` sur `window`. L'événement se déclenche une fois que Broker a enregistré ses écouteurs du domaine du navigateur, de sorte qu'une interaction peut écouter cet événement pour appliquer une personnalisation initiale de l'interface utilisateur. Il se déclenche également après chaque rechargement de la configuration du courtier.
 
-See [Add tools button to sidebar title](./examples.md#add-tools-button-to-sidebar-title) for an example using this event.
+Voir [Ajouter un bouton d'outils au titre de la barre latérale](./examples.md#add-tools-button-to-sidebar-title) pour un exemple utilisant cet événement.
 
-## Configuration sources
+## Sources de configuration
 
-Configure interactions in one or more of the following ways:
+Configurez les interactions d'une ou plusieurs des manières suivantes :
 
-1. In the UIX options flow — **Settings → Devices & services → UIX → Configure (Cog) →
-Configure Broker**.
-1. In one or more registered YAML files — **Settings → Devices & services → UIX → Configure (Cog) →
-Manage Broker files**.
+1. Dans le flux d'options UIX — **Paramètres → Appareils et services → UIX → Configurer (Cog) →
+Configurez le courtier**.
+1. Dans un ou plusieurs fichiers YAML enregistrés — **Paramètres → Appareils et services → UIX → Configurer (Cog) →
+Gérer les fichiers du courtier**.
 
-Each YAML file is a mapping with a top-level `uix_broker` list:
+Chaque fichier YAML est un mappage avec une liste `uix_broker` de niveau supérieur :
 
 ```yaml
 uix_broker:
@@ -83,27 +83,27 @@ uix_broker:
       - type: block
 ```
 
-Use **Manage Broker files** to register, deregister, or reload files. File paths may be absolute or relative to the Home Assistant configuration directory. Registered files are read in registration order, then UI-configured interactions are appended. All interactions are delivered to connected browsers as one list.
+Utilisez **Gérer les fichiers Broker** pour enregistrer, désenregistrer ou recharger des fichiers. Les chemins de fichiers peuvent être absolus ou relatifs au répertoire de configuration de Home Assistant. Les fichiers enregistrés sont lus dans l'ordre d'enregistrement, puis les interactions configurées par l'interface utilisateur sont ajoutées. Toutes les interactions sont transmises aux navigateurs connectés sous la forme d'une seule liste.
 
-YAML file configurations use the same Home Assistant YAML resolution as Foundries, including `!include` and `!secret`. The **UIX Broker** action in **Tools → YAML** reloads all registered Broker files and reports file
-errors. For YAML-mode dashboards, the dashboard's built-in **Refresh** action
-also reloads registered Broker files.
+Les configurations de fichiers YAML utilisent la même résolution YAML de Home Assistant que les fonderies, notamment `!include` et `!secret`. L'action **UIX Broker** dans **Outils → YAML** recharge tous les fichiers Broker enregistrés et les fichiers de rapports.
+erreurs. Pour les tableaux de bord en mode YAML, l'action **Actualiser** intégrée du tableau de bord
+recharge également les fichiers de courtier enregistrés.
 
-## Synchronous vs asynchronous interaction execution paths
+## Chemins d'exécution des interactions synchrones et asynchrones
 
-Captured-data and browser-identity rules run synchronously before interaction-anchor resolution. Event-path interaction anchors are also resolved synchronously. This allows a browser-realm interaction to apply a `block` directive using captured data, browser identity, and elements already in the event's composed path.
+Les règles de données capturées et d'identité du navigateur s'exécutent de manière synchrone avant la résolution de l'ancre d'interaction. Les ancres d'interaction événement-chemin sont également résolues de manière synchrone. Cela permet à une interaction navigateur-domaine d'appliquer une directive `block` en utilisant les données capturées, l'identité du navigateur et les éléments déjà présents dans le chemin composé de l'événement.
 
-Because the `block` [directive](directives.md) must run synchronously, interactions containing `block` require their [interaction anchor](interaction-anchors.md) and [host-element rule](rules.md#host-element-rules) anchors to be immediately available. UIX Broker makes one synchronous lookup; if either is unavailable, it skips the interaction.
+Étant donné que la [directive](directives.md) `block` doit s'exécuter de manière synchrone, les interactions contenant `block` nécessitent que leurs ancres [d'interaction](interaction-anchors.md) et [d'élément hôte](rules.md#host-element-rules) soient immédiatement disponibles. UIX Broker effectue une recherche synchrone ; si l'un ou l'autre n'est pas disponible, il ignore l'interaction.
 
-After a blocking interaction has resolved and applied `block`, anchors supplied by later `property`, `event`, `call`, and `button` directives still use the normal asynchronous retry behaviour.
+Une fois qu'une interaction bloquante a été résolue et appliquée `block`, les ancres fournies par les directives ultérieures `property`, `event`, `call` et `button` utilisent toujours le comportement normal de nouvelle tentative asynchrone.
 
-For interactions without `block`, missing [interaction anchors](interaction-anchors.md) and [host-element rule](rules.md#host-element-rules) anchors are retried every 50 ms for up to two seconds. This permits an interaction listening to a browser event such as `show-dialog` to wait for the dialog to mount before selecting the dialog or one of its elements as the interaction anchor.
+Pour les interactions sans `block`, les [ancres d'interaction](interaction-anchors.md) et les [règles d'élément hôte](rules.md#host-element-rules) manquantes sont réessayées toutes les 50 ms pendant deux secondes maximum. Cela permet à une interaction écoutant un événement de navigateur tel que `show-dialog` d'attendre que la boîte de dialogue soit montée avant de sélectionner la boîte de dialogue ou l'un de ses éléments comme ancre d'interaction.
 
-See [Realms](realms.md), [Interaction Anchors](interaction-anchors.md), and [Rules](rules.md) for more information.
+Voir [Realms](realms.md), [Interaction Anchors](interaction-anchors.md) et [Rules](rules.md)] pour plus d'informations.
 
-## Debugging
+## Débogage
 
-Set `debug: true` on an interaction to log listener activity, anchor resolution, every rule result, and each directive before and after it runs. The post-run entry for a `template` or `javascript` directive also includes its saved result. Debug log messages are labelled with the interaction's realm and listen value.
+Définissez `debug: true` sur une interaction pour enregistrer l'activité de l'auditeur, la résolution de l'ancre, chaque résultat de règle et chaque directive avant et après son exécution. L'entrée post-exécution d'une directive `template` ou `javascript` inclut également son résultat enregistré. Les messages du journal de débogage sont étiquetés avec le domaine et la valeur d'écoute de l'interaction.
 
 ```yaml
 - realm: browser
@@ -117,11 +117,11 @@ Set `debug: true` on an interaction to log listener activity, anchor resolution,
       name: another-event
 ```
 
-## Interaction reactivity
+## Réactivité des interactions
 
-UIX Broker [`template` and `javascript` directives](directives.md) run only when their interaction runs; neither subscribes to state changes. If you wish to have an interaction be reactive to entity state updates you create a helper interaction that listens to `state_changed`, with a [rule](./rules.md) to match the entity you wish an interaction to be reactive for and use a `event` directive to fire custom browser event and add that to your listen list for the interaction.
+UIX Broker [directives `template` et `javascript`](directives.md) s'exécutent uniquement lorsque leur interaction s'exécute ; ni l’un ni l’autre ne souscrit aux changements d’état. Si vous souhaitez qu'une interaction soit réactive aux mises à jour de l'état de l'entité, vous créez une interaction d'assistance qui écoute `state_changed`, avec une [rule](./rules.md) pour correspondre à l'entité pour laquelle vous souhaitez qu'une interaction soit réactive et utilisez une directive `event` pour déclencher un événement de navigateur personnalisé et ajoutez-le à votre liste d'écoute pour l'interaction.
 
-Server realm to Browser realm interaction:
+Interaction entre le domaine du serveur et le domaine du navigateur :
 
 ```yaml
   - realm: server
@@ -139,7 +139,7 @@ Server realm to Browser realm interaction:
                 - light.bed_light
 ```
 
-Browser realm interaction:
+Interaction avec le domaine du navigateur :
 
 ```yaml
   - realm: browser
@@ -150,4 +150,4 @@ Browser realm interaction:
     #... rules and directives
 ```
 
-See [Light button on Home dashboard menu item on sidebar](./examples.md#light-button-on-home-dashboard-menu-item-on-sidebar) for a full example.
+Voir [Bouton lumineux sur l'élément de menu du tableau de bord Accueil sur la barre latérale](./examples.md#light-button-on-home-dashboard-menu-item-on-sidebar) pour un exemple complet.

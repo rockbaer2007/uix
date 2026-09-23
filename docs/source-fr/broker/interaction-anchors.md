@@ -1,34 +1,34 @@
 ---
-title: Interaction Anchors
-description: Select the element that UIX Broker rules and directives use by default.
+title: Ancres d’interaction
+description: Sélectionnez l'élément que les règles et directives UIX Broker utilisent par défaut.
 ---
-# Interaction Anchors
+# Ancres d’interaction
 
-An interaction anchor selects the element that host-element rules inspect and directives use by default. Browser and shortcut interactions can select from the initiating event's composed path or use a UIX `select_tree` path. Server interactions use `select_tree` paths only.
+Une ancre d'interaction sélectionne l'élément que les règles d'élément hôte inspectent et que les directives utilisent par défaut. Les interactions de navigateur et de raccourci peuvent effectuer une sélection à partir du chemin composé de l'événement initiateur ou utiliser un chemin UIX `select_tree`. Les interactions serveur utilisent uniquement les chemins `select_tree`.
 
-For terse YAML, `anchor` configuration is usually written in compact form. The table below summarises when event-path selection is used and when `select_tree` is used.
+Pour un YAML concis, la configuration `anchor` est généralement écrite sous forme compacte. Le tableau ci-dessous résume quand la sélection du chemin d'événement est utilisée et quand `select_tree` est utilisé.
 
-| `anchor:` | Method |
+| `anchor:` | Méthode |
 | --- | --- |
-| `target` | Uses [event-path](#event-path-anchors) selection and resolves to the target of a `browser` or `shortcut` [realm](realms.md) event. It is not available in the `server` realm. |
-| `<`, `<$`, `<selector> <$`, or `<selector> <$$` | Uses [event-path](#event-path-anchors) selection. It is not available in the `server` realm. |
-| A string starting with `&` | Uses `select_tree` selection from `document`. It is available in all [realms](realms.md). |
-| `{ select_tree: <path> }` | Uses long-form `select_tree` selection from `document`. It is available in all realms. |
+| `target` | Utilise la sélection [event-path](#event-path-anchors) et se résout vers la cible d'un événement `browser` ou `shortcut` [realm](realms.md). Il n'est pas disponible dans le domaine `server`. |
+| `<`, `<$`, `<selector> <$` ou `<selector> <$$` | Utilise la sélection [event-path](#event-path-anchors). Il n'est pas disponible dans le domaine `server`. |
+| Une chaîne commençant par `&` | Utilise la sélection `select_tree` de `document`. Il est disponible dans tous les [realms](realms.md). |
+| `{ select_tree: <path> }` | Utilise la sélection longue `select_tree` de `document`. Il est disponible dans tous les domaines. |
 
-## Event-path anchors
+## Ancres de chemin d'événement
 
-Event-path expressions are evaluated right to left from the implicit `target`, where `target` is the innermost element returned by [`event.composedPath()`](https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath).
+Les expressions de chemin d'événement sont évaluées de droite à gauche à partir du `target` implicite, où `target` est l'élément le plus interne renvoyé par [`event.composedPath()`](https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath).
 
-| Anchor | Result |
+| Ancre | Résultat |
 | --- | --- |
-| `target` | The original innermost event target. In all other forms, `target` is optional for brevity but can be included for readability. |
-| `< [target]` | The parent element of `target`. |
-| `<$ [target]` | The first shadow-root host above `target`. |
-| `<selector> <$ [target]` | The first matching element in the light DOM of that first shadow host. |
-| `<selector> <$$ [target]` | The first matching element while walking outward through the composed path and crossing shadow roots. |
+| `target` | La cible d’origine de l’événement la plus interne. Dans toutes les autres formes, `target` est facultatif par souci de concision mais peut être inclus pour des raisons de lisibilité. |
+| `< [target]` | L'élément parent de `target`. |
+| `<$ [target]` | Le premier hôte racine fantôme au-dessus de `target`. |
+| `<selector> <$ [target]` | Le premier élément correspondant dans le DOM clair de ce premier hôte fantôme. |
+| `<selector> <$$ [target]` | Le premier élément correspondant en marchant vers l'extérieur à travers le chemin composé et en traversant les racines de l'ombre. |
 
 !!! note
-    Event-path interaction anchors are resolved synchronously and can be used with the [`block` directive](directives.md#block).
+Les ancres d'interaction événement-chemin sont résolues de manière synchrone et peuvent être utilisées avec la [directive `block`](directives.md#block).
 
 ```yaml
 # Nearest shadow host of the event target
@@ -37,18 +37,18 @@ anchor: "<$"
 # A matching ha-automation-row element in the target host's light DOM
 anchor: "ha-automation-row <$"
 
-# The first matching ha-automation-row element in the outward composed path, including shadow-root boundaries
+# Le premier élément ha-automation-row correspondant dans le chemin composé vers l'extérieur, y compris les limites de Shadow Root
 anchor: "ha-automation-row <$$"
 ```
 
-`<` and `<$` accept `target` explicitly on the right and can be included for readability, but it is more compact to omit it. `<$$` requires an outward selector.
+`<` et `<$` acceptent explicitement `target` à droite et peuvent être inclus pour des raisons de lisibilité, mais il est plus compact de l'omettre. `<$$` nécessite un sélecteur extérieur.
 
-## Select-tree anchors
+## Ancres d'arbre de sélection
 
-Use a normal UIX `select_tree` path when an anchor is not determined by the event path, including every server interaction.
+Utilisez un chemin UIX `select_tree` normal lorsqu'une ancre n'est pas déterminée par le chemin de l'événement, y compris chaque interaction du serveur.
 
 !!! note
-    `select_tree` paths are described in detail in [DOM navigation](../concepts/dom.md).
+Les chemins `select_tree` sont décrits en détail dans [DOM navigation](../concepts/dom.md).
 
 ```yaml
 # Compact absolute form
@@ -59,11 +59,11 @@ anchor:
   select_tree: "home-assistant $ home-assistant-main $ ha-panel-lovelace $ hui-root"
 ```
 
-For non-`block` interactions, UIX Broker retries a missing `select_tree` anchor every 50 ms for up to two seconds. This is useful for interfaces, such as dialogs, that mount after their initiating event fires.
+Pour les interactions non-`block`, UIX Broker réessaye une ancre `select_tree` manquante toutes les 50 ms pendant deux secondes maximum. Ceci est utile pour les interfaces, telles que les boîtes de dialogue, qui se montent après le déclenchement de leur événement initiateur.
 
-## Anchors in rules and directives
+## Ancres dans les règles et directives
 
-Rules and directives use the interaction anchor by default. They can also override the interaction anchor with their own `anchor` configuration, in either compact relative or absolute form, or the long `select_tree` form. For the compact absolute form, the path starts with `&`.
+Les règles et directives utilisent l'ancre d'interaction par défaut. Ils peuvent également remplacer l'ancre d'interaction par leur propre configuration `anchor`, sous forme relative ou absolue compacte, ou sous la forme longue `select_tree`. Pour la forme absolue compacte, le chemin commence par `&`.
 
 Relative:
 
@@ -75,7 +75,7 @@ Relative:
   value: false
 ```
 
-Absolute short form:
+Forme abrégée absolue :
 
 ```yaml
 - type: call
@@ -83,7 +83,7 @@ Absolute short form:
   method: closeDialog
 ```
 
-Absolute long form:
+Forme longue absolue :
 
 ```yaml
 - type: call
@@ -92,29 +92,29 @@ Absolute long form:
   method: closeDialog
 ```
 
-## Finding paths in the browser console
+## Rechercher des chemins dans la console du navigateur
 
-To find an absolute anchor path, select an element in the browser inspector and run:
+Pour trouver un chemin d'ancrage absolu, sélectionnez un élément dans l'inspecteur du navigateur et exécutez :
 
 ```javascript
 uix_broker_absolute_path($0)
 ```
 
-This reports a compact absolute interaction-anchor path beginning with `&`.
+Cela signale un chemin d’ancrage d’interaction absolu compact commençant par `&`.
 
-For a directive or rule anchor relative to a previously resolved interaction
-anchor, use:
+Pour une ancre de directive ou de règle relative à une interaction précédemment résolue
+ancre, utilisez :
 
 ```javascript
 uix_broker_path($0)
 ```
 
-It chooses the closest matching recent interaction anchor. Pass the anchor
-explicitly as a second argument when multiple interactions overlap:
+Il choisit l’ancre d’interaction récente la plus proche. Passer l'ancre
+explicitement comme deuxième argument lorsque plusieurs interactions se chevauchent :
 
 ```javascript
 uix_broker_path($0, $1)
 ```
 
-See [DOM inspection helpers](../concepts/dom.md#uix_broker_path0-broker-directive-anchor-helper)
-for the console helper details.
+Voir [Aide à l'inspection DOM](../concepts/dom.md#uix_broker_path0-broker-directive-anchor-helper)
+pour les détails de l'aide à la console.
