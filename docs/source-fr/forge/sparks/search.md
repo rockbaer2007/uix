@@ -1,15 +1,15 @@
 ---
-description: Use the search spark to find elements within a shadow-DOM path and apply class, attribute, or text mutations to all matching elements.
+description: Recherchez des éléments dans le Shadow DOM et modifiez leurs classes, attributs ou textes avec le spark Search de UIX Forge.
 icon: material/magnify
 ---
 
-# :mag: Search spark
+# :mag: Spark de recherche
 
-The `search` spark queries a container element with a CSS selector, optionally filters the results by a text regex, and then applies class, attribute, and/or text mutations to every matching element. It also sets up a `MutationObserver` so that newly added elements (for example, calendar events after month navigation) are automatically processed without any additional configuration.
+Le spark `search` recherche des éléments dans un conteneur à l'aide d'un sélecteur CSS. Il peut filtrer les résultats à l'aide d'une expression régulière appliquée au texte, puis modifier les classes, les attributs ou le texte de chaque élément correspondant. Il installe également un `MutationObserver` afin de traiter automatiquement les nouveaux éléments, comme les événements d'un calendrier après un changement de mois.
 
-## Basic usage
+## Utilisation de base
 
-Add a `search` entry to `forge.sparks`:
+Ajoutez une entrée `search` à `forge.sparks` :
 
 ```yaml
 type: custom:uix-forge
@@ -29,38 +29,38 @@ element:
     - calendar.work
 ```
 
-`query` is a CSS selector passed to `querySelectorAll` on the resolved container. `text` is a regex that is tested against the full text content of each matched element (including text inside child elements such as `<a>` or `<span>`). Only elements that pass the text filter receive the `actions`.
+`query` est un sélecteur CSS transmis à `querySelectorAll` sur le conteneur trouvé. `text` est une expression régulière comparée à tout le texte de chaque élément correspondant, y compris celui de ses enfants tels que `<a>` ou `<span>`. Seuls les éléments qui passent ce filtre reçoivent les `actions`.
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
 | --- | ---- | -------- | ------- | ----------- |
-| `type` | `string` | ✅ | — | Must be `search`. |
-| `for` | `string` | | `element` | UIX selector for the container element to search within. Supports `$` for shadow-root crossings (see [DOM navigation](../../concepts/dom.md)). Default `element` refers to the root of the forged element. |
-| `query` | `string` | ✅ | — | CSS selector passed to `querySelectorAll` on the resolved container. All matching elements receive the configured `actions`. |
-| `text` | `string` | | — | Regular expression string. When provided, only elements whose full text content (including text inside child elements) matches the regex are processed. |
-| `actions` | `object` | | `{}` | Mutations to apply to each matching element. See [Actions](#actions) below. |
+| `type` | `string` | ✅ | — | Doit être défini sur `search`. |
+| `for` | `string` | | `element` | Sélecteur UIX du conteneur à explorer. `$` permet de traverser les racines Shadow DOM (voir [Navigation dans le DOM](../../concepts/dom.md)). Par défaut, `element` désigne la racine de l'élément créé avec UIX Forge. |
+| `query` | `string` | ✅ | — | Sélecteur CSS transmis à `querySelectorAll` sur le conteneur trouvé. Les actions configurées sont appliquées à tous les éléments correspondants. |
+| `text` | `string` | | — | Expression régulière. Si elle est définie, seuls les éléments dont le texte complet correspond, y compris le texte de leurs enfants, sont traités. |
+| `actions` | `object` | | `{}` | Modifications à appliquer à chaque élément correspondant. Voir la section [Actions](#actions). |
 
 !!! tip
-    Use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) console helper to find the exact selector for `for`.
+    Utilisez le helper de console [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) pour trouver le sélecteur exact à utiliser avec `for`.
 
 ### Actions
 
-The `actions` object may contain any combination of the following keys. All keys are optional.
+L'objet `actions` peut contenir n'importe quelle combinaison des clés suivantes. Elles sont toutes facultatives.
 
-| Key | Type | Description |
+| Clé | Type | Description |
 | --- | ---- | ----------- |
-| `add_class` | `list[string]` | CSS class names to add to each matching element. |
-| `remove_class` | `list[string]` | CSS class names to remove from each matching element. |
-| `add_attribute` | `list[{attribute, value}]` | HTML attributes to set. Each entry must have an `attribute` name and a `value` string. |
-| `remove_attribute` | `list[string]` | HTML attribute names to remove from each matching element. |
-| `replace_text` | `string` \| `{find, replace}` | Regex-based text replacement applied to every text node inside the element. A **string** is used as the regex pattern and the match is replaced with an empty string. An **object** with `find` and `replace` keys replaces each match with the `replace` value. |
-| `prepend_text` | `string` | Text to prepend to every text node inside the element. |
-| `append_text` | `string` | Text to append to every text node inside the element. |
+| `add_class` | `list[string]` | Noms des classes CSS à ajouter à chaque élément correspondant. |
+| `remove_class` | `list[string]` | Noms des classes CSS à retirer de chaque élément correspondant. |
+| `add_attribute` | `list[{attribute, value}]` | Attributs HTML à définir. Chaque entrée doit contenir un nom `attribute` et une chaîne `value`. |
+| `remove_attribute` | `list[string]` | Noms des attributs HTML à supprimer de chaque élément correspondant. |
+| `replace_text` | `string` \| `{find, replace}` | Remplacement par expression régulière dans chaque nœud texte de l'élément. Une **chaîne** sert de motif et les occurrences sont supprimées. Un **objet** contenant `find` et `replace` remplace chaque occurrence par la valeur de `replace`. |
+| `prepend_text` | `string` | Texte à ajouter au début de chaque nœud texte de l'élément. |
+| `append_text` | `string` | Texte à ajouter à la fin de chaque nœud texte de l'élément. |
 
-## Examples
+## Exemples
 
-### Add a CSS class to calendar events matching a regex
+### Ajouter une classe CSS aux événements correspondant à une expression régulière
 
 ```yaml
 type: custom:uix-forge
@@ -101,9 +101,9 @@ element:
 
 ![Search spark calendar example](../../assets/page-assets/forge/sparks/search-calendar.png)
 
-### Remove an attribute from all matched elements
+### Supprimer un attribut de tous les éléments correspondants
 
-Strip `title` attributes from every link inside a markdown card so the browser's native tooltip does not appear:
+Supprimez l'attribut `title` de chaque lien d'une carte Markdown afin d'empêcher l'affichage de l'infobulle native du navigateur :
 
 ```yaml
 type: custom:uix-forge
@@ -136,9 +136,9 @@ element:
 
 ![Search spark entities example](../../assets/page-assets/forge/sparks/search-entities.png)
 
-### Prepend and append text
+### Ajouter du texte au début et à la fin
 
-Add a prefix and suffix to first entities row info:
+Ajoutez un préfixe et un suffixe aux informations de la première ligne d'entités :
 
 ```yaml
 type: custom:uix-forge
@@ -159,11 +159,11 @@ element:
 
 ![Search prepend append example](../../assets/page-assets/forge/sparks/search-prepend-append.png)
 
-### Match text inside child elements
+### Rechercher dans le texte des éléments enfants
 
-The `text` filter matches the **full** text content of each element, including text wrapped inside child elements like `<a>`, `<span>`, etc.
+Le filtre `text` compare le **texte complet** de chaque élément, y compris le texte contenu dans des éléments enfants tels que `<a>` ou `<span>`.
 
-This example builds on from the earlier calendar example to include highlighting list events by adding the `future-event` class by querying `.fc-list-event-title`. Additional styling also added, using a selector that enables to select a preceding sibling of `.future-event` by using `:has` pseudo class with subsequent sibling combinator `+`.
+Cet exemple reprend celui du calendrier et met également en évidence les événements de la liste en ajoutant la classe `future-event` aux éléments `.fc-list-event-title`. Il ajoute aussi des styles avec un sélecteur qui cible le frère précédent de `.future-event`, à l'aide de la pseudo-classe `:has` et du combinateur de frères adjacents `+`.
 
 ```yaml
 type: custom:uix-forge
@@ -180,7 +180,7 @@ forge:
     - type: search
       for: hui-calendar-card $ ha-full-calendar $
       query: .fc-list-event-title
-      text: ^(Future|Timetravel) # Matches even though `Future` is in child <a> link
+      text: ^(Future|Timetravel) # Correspond même si `Future` se trouve dans le lien enfant <a>
       actions:
         add_class:
           - future-event
@@ -232,5 +232,5 @@ element:
 ![Search calendar example 3](../../assets/page-assets/forge/sparks/search-calendar-3.png)
 
 !!! note
-    - **All** elements returned by `query` receive the actions. Use `text` to narrow the selection to elements whose text content matches a regex.
-    - The spark watches the container with a `MutationObserver` so dynamically added elements (e.g. after navigating a calendar month) are processed automatically.
+    - Les actions s'appliquent à **tous** les éléments renvoyés par `query`. Utilisez `text` pour limiter la sélection à ceux dont le texte correspond à une expression régulière.
+    - Le spark observe le conteneur avec un `MutationObserver` et traite automatiquement les éléments ajoutés dynamiquement, par exemple après un changement de mois dans un calendrier.
