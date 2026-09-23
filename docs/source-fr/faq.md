@@ -1,85 +1,85 @@
 ---
-description: Your FAQ for UI eXtension answered here.
+description: Réponses aux questions fréquentes sur UI eXtension.
 hide:
   - toc
   - navigation
 ---
 # FAQ
 
-## How do I best migrate from Card-mod?
+## Comment migrer au mieux depuis Card-mod ?
 
-- Uninstall card-mod.
-- If you use extra_module_url for card-mod resource, remove and restart Home Assistant.
-- Proceed to follow the [UI eXtension quick start guide](./quick-start.md).
+- Désinstallez Card-mod.
+- Si vous utilisez `extra_module_url` pour charger la ressource Card-mod, supprimez cette entrée et redémarrez Home Assistant.
+- Suivez ensuite le [guide de démarrage rapide de UI eXtension](./quick-start.md).
 
-!!! tip "Add UI eXtension as a Service"
-    UI eXtension is an integration and needs to be added as a Service once you have downloaded by HACS. Make sure you don't miss the **Add UI eXtension service** step. This is something you may miss if you are not accustomed to adding integrations like UIX as a Service.
+!!! tip "Ajouter UI eXtension comme service"
+    UI eXtension est une intégration. Après l'avoir installée avec HACS, vous devez l'ajouter comme service. Ne sautez pas l'étape **Ajouter le service UI eXtension** ; elle peut facilement passer inaperçue si vous n'avez pas l'habitude d'ajouter des intégrations comme services.
 
-??? warning "UI Lovelace Minimalist may load card-mod resource"
-    If you have UI Lovelace Minimalist installed it may load card-mod resource. Due to load order of integrations, UI eXtension cannot check for this conflict. To continue to use UI Lovelace Minimalist with UI eXtension you need to turn off UI Lovelace Minimalist config option `Include custom card resources it's depending on` and load any required custom cards through HACS or manually.
+??? warning "UI Lovelace Minimalist peut charger la ressource Card-mod"
+    Si UI Lovelace Minimalist est installé, il peut charger la ressource Card-mod. En raison de l'ordre de chargement des intégrations, UI eXtension ne peut pas détecter ce conflit. Pour continuer à utiliser UI Lovelace Minimalist avec UI eXtension, désactivez l'option `Include custom card resources it's depending on` dans sa configuration, puis chargez les cartes personnalisées nécessaires avec HACS ou manuellement.
 
     ![UI Minimalist custom card option](../assets/page-assets/faq/ui-minimalist-option.png)
 
-## Is UI eXtension a drop in replacement for Card-mod?
+## UI eXtension peut-il remplacer Card-mod directement ?
 
-Yes, UI eXtension is a drop in replacement for Card-mod versions up to 4.2.1. All Card-mod card and themes configurations are supported. While you are encouraged to update to use `uix:` in your cards and `uix-<thing>(-yaml)` for your themes, it is not required.
+Oui. UI eXtension remplace directement Card-mod jusqu'à la version 4.2.1 et prend en charge les configurations de cartes et de thèmes Card-mod. Il est conseillé d'adopter `uix:` dans les cartes et `uix-<thing>(-yaml)` dans les thèmes, mais ce changement n'est pas obligatoire.
 
-## Is UI eXtension just Card-mod with different documentation?
+## UI eXtension est-il simplement Card-mod avec une documentation différente ?
 
-No, UI eXtension code has been updated so that UIX is primary domain and config key. Card-mod keys are supported but overridden by `uix:`.
+Non. Le code de UI eXtension a évolué pour faire de UIX le domaine et la clé de configuration principaux. Les clés Card-mod restent prises en charge, mais `uix:` est prioritaire.
 
-??? info "UI eXtension differences from Card-mod"
-    - Config key for cards is `uix:`.
-    - Theme key is `uix-theme:`.
-    - Theme `thing` keys are `uix-<thing>(-yaml):`.
-    - HTML node for UI eXtension is `<uix-node>` and properties of the node all refer to `uix`.
-    - You can use `{# uix.debug #}` to debug templates.
-    - All debug console messages will start with `UIX`.
+??? info "Différences entre UI eXtension et Card-mod"
+    - La clé de configuration des cartes est `uix:`.
+    - La clé des thèmes est `uix-theme:`.
+    - Les clés de thème `thing` sont `uix-<thing>(-yaml):`.
+    - Le nœud HTML de UI eXtension est `<uix-node>` ; ses propriétés se rapportent toutes à `uix`.
+    - Vous pouvez utiliser `{# uix.debug #}` pour déboguer les modèles.
+    - Tous les messages de débogage de la console commencent par `UIX`.
 
-## Is there a list of differences between Card-mod and UI eXtension?
+## Existe-t-il une liste des différences entre Card-mod et UI eXtension ?
 
-Yes, see the table below.
+Oui, consultez le tableau ci-dessous.
 
 <!-- markdownlint-disable MD033 -->
-| Feature | Card-mod | UIX |
+| Fonctionnalité | Card-mod | UIX |
 | --- | :---: | :---: |
-| Correctly loads `...-yaml` theme variables | ❌<br>Since 2026.8.0 | Yes |
-| Correctly handles `...-more-info(-yaml)` theme variable | ❌<br>Since 2026.3.0 | Yes |
-| Correctly patches adaptive dialogs for `...-dialog(-yaml)` theme variable | ❌<br>Since 2026.3.0 | Yes |
-| [DOM inspection helpers](https://uix.lf.technology/concepts/dom/#dom-inspection-helpers) | No | Yes |
-| [Host/element path selection](https://uix.lf.technology/concepts/dom/#hostelement-path-selection) | No | Yes |
-| [Express search selector](https://uix.lf.technology/concepts/dom/#express-search-selector) | No | Yes |
-| [Forge](https://uix.lf.technology/forge/) (custom lovelace element) | No | Yes |
-| [Foundries](https://uix.lf.technology/forge/foundries/) (reusable forges) | No | Yes |
-| [Macros](https://uix.lf.technology/using/templates/#macros) (reusable jinja templates) | No | Yes |
-| [Sparks](https://uix.lf.technology/forge/sparks/) (self-contained behaviours that augment forged elements) | No | Yes |
-| [Frontend state throttling](https://uix.lf.technology/extras/frontend-states-throttling/) (optional) | No | Yes |
-| [Dialog Styling delay](https://uix.lf.technology/extras/dialog-styling-delay/) (optional) | No | Yes |
-| [Dashboard view backgrounds](https://uix.lf.technology/using/view-backgrounds/) | No | Yes |
-| [Section backgrounds](https://uix.lf.technology/using/section-backgrounds/) | No | Yes |
-| [View backgrounds](https://uix.lf.technology/using/view-backgrounds/) | No | Yes |
-| [Icon styling - entity override](https://uix.lf.technology/using/icons/#specifying-for-an-entity-override) | No | Yes |
-| [Styling entity images](https://uix.lf.technology/using/images/) | No | Yes |
-| Reload/Clear cache popup | No | Yes |
-| Expansive documentation including visual examples | Limited | Yes |
-| Mod-Card | Yes | Yes |
-| CSS styling in themes | Yes | Yes |
-| Reload/Clear cache service/action | Yes | Yes |
-| Provides variables (e.g current user) | Yes | Yes |
-| CSS styling | Yes | Yes |
-| Resource url | Yes | N/A |
+| Charge correctement les variables de thème `...-yaml` | ❌<br>Depuis 2026.8.0 | Oui |
+| Gère correctement la variable de thème `...-more-info(-yaml)` | ❌<br>Depuis 2026.3.0 | Oui |
+| Adapte correctement les dialogues pour la variable de thème `...-dialog(-yaml)` | ❌<br>Depuis 2026.3.0 | Oui |
+| [Outils d'inspection du DOM](../concepts/dom.md#dom-inspection-helpers) | Non | Oui |
+| [Sélection de chemin hôte/élément](../concepts/dom.md#hostelement-path-selection) | Non | Oui |
+| [Sélecteur de recherche rapide](../concepts/dom.md#express-search-selector) | Non | Oui |
+| [Forge](../forge/index.md) (élément Lovelace personnalisé) | Non | Oui |
+| [Fonderies](../forge/foundries.md) (configurations Forge réutilisables) | Non | Oui |
+| [Macros](../using/templates.md#macros) (modèles Jinja réutilisables) | Non | Oui |
+| [Sparks](../forge/sparks/index.md) (comportements autonomes ajoutés aux éléments Forge) | Non | Oui |
+| [Limitation des mises à jour d'état du frontend](../extras/frontend-states-throttling.md) (facultative) | Non | Oui |
+| [Délai d'application des styles aux dialogues](../extras/dialog-styling-delay.md) (facultatif) | Non | Oui |
+| [Arrière-plans des vues du tableau de bord](../using/view-backgrounds.md) | Non | Oui |
+| [Arrière-plans des sections](../using/section-backgrounds.md) | Non | Oui |
+| [Arrière-plans des vues](../using/view-backgrounds.md) | Non | Oui |
+| [Style des icônes — remplacement par entité](../using/icons.md#specifying-for-an-entity-override) | Non | Oui |
+| [Style des images d'entité](../using/images.md) | Non | Oui |
+| Fenêtre contextuelle pour recharger ou vider le cache | Non | Oui |
+| Documentation détaillée avec exemples visuels | Limitée | Oui |
+| Mod-card | Oui | Oui |
+| Styles CSS dans les thèmes | Oui | Oui |
+| Service/action de rechargement ou d'effacement du cache | Oui | Oui |
+| Fournit des variables (par exemple l'utilisateur actuel) | Oui | Oui |
+| Styles CSS | Oui | Oui |
+| URL de ressource | Oui | S.O. |
 
-## Does UI eXtension have resource URL issues?
+## UI eXtension rencontre-t-il des problèmes d'URL de ressource ?
 
-No, being an integration, UI eXtension manages its resource URLs directly. You don't need to do anything to have UI eXtension run at peak performance. UI eXtension dynamically adds its Frontend resource, `uix.js`, as an extra module, as well as adding a Dashboard resource in case you use CAST. UI eXtension will add its version to these resources automatically each time the integration loads.
+Non. En tant qu'intégration, UI eXtension gère directement ses URL de ressources. Aucune intervention n'est nécessaire pour garantir son bon fonctionnement. UI eXtension ajoute dynamiquement sa ressource frontend `uix.js` comme module supplémentaire et ajoute également une ressource de tableau de bord si vous utilisez CAST. À chaque chargement de l'intégration, UI eXtension ajoute automatiquement sa version à ces ressources.
 
-## Does UI eXtension need manual cache clear after upgrade for Browsers and device Companion Apps?
+## Faut-il vider manuellement le cache des navigateurs et des applications mobiles après une mise à jour de UI eXtension ?
 
-UI eXtension will show a toast message when it detects that a reload is needed to clear caches, with a convenient `Reload Now` button and auto reload after 60s.
+Non. Lorsque UI eXtension détecte qu'un rechargement est nécessaire pour vider les caches, un message temporaire s'affiche avec le bouton `Reload Now`. La page se recharge automatiquement après 60 secondes.
 
 !!! note
-    While the Auto reload code is in 8.1.0, auto Reload will be available when you next update. When you install 8.1.0, device will still be running 8.0.1 code which does not have the auto reload feature.
+    Le code de rechargement automatique est inclus depuis la version 8.1.0, mais il ne sera disponible qu'après votre prochaine mise à jour. Lors de l'installation de la version 8.1.0, l'appareil utilise encore le code de la version 8.0.1, qui ne comporte pas cette fonction.
 
-## How do I uninstall UI eXtension?
+## Comment désinstaller UI eXtension ?
 
-Uninstallation of UI eXtension is a two step process. First, remove the service entry in Devices & services. Next uninstall the integration either using HACS or manually removing the `uix` folder from `custom_components` directory if you installed manually.
+La désinstallation de UI eXtension se déroule en deux étapes. Supprimez d'abord son entrée de service dans **Appareils et services**. Désinstallez ensuite l'intégration avec HACS ou, si vous l'avez installée manuellement, en supprimant le dossier `uix` du répertoire `custom_components`.
