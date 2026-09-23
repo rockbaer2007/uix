@@ -63,7 +63,7 @@ uix_broker:
 ```
 
 !!! tip
-Enregistrez le YAML en tant que nouveau fichier dans votre répertoire ou sous-répertoire de configuration Home Assistant, puis enregistrez-le à l'aide du flux de configuration des options UIX.
+    Enregistrez le YAML en tant que nouveau fichier dans votre répertoire ou sous-répertoire de configuration Home Assistant, puis enregistrez-le à l'aide du flux de configuration des options UIX.
 
 ## Barre latérale d'automatisation et mode YAML
 
@@ -178,7 +178,7 @@ Méthode :
 ## Barre latérale d'automatisation et mode YAML terminés
 
 ??? example "Complétez YAML pour les trois exemples de barre latérale d'automatisation"
-Enregistrez le YAML en tant que nouveau fichier dans votre répertoire ou sous-répertoire de configuration Home Assistant, puis enregistrez-le à l'aide du flux de configuration des options UIX.
+    Enregistrez le YAML en tant que nouveau fichier dans votre répertoire ou sous-répertoire de configuration Home Assistant, puis enregistrez-le à l'aide du flux de configuration des options UIX.
     ```yaml
     uix_broker:
       - realm: browser

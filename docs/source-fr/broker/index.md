@@ -37,7 +37,7 @@ uix_broker:
 - [Exemples](./examples.md) — exemples. Voir également [UIX Guides](https://uix-guides.lf.technology), où des exemples plus détaillés peuvent être publiés.
 
 !!! note
-Pour la correspondance de l'identité du navigateur, [Browser Mod](https://github.com/thomasloven/hass-browser_mod) est requis.
+    Pour la correspondance de l'identité du navigateur, [Browser Mod](https://github.com/thomasloven/hass-browser_mod) est requis.
 
 ## Fonctionnalités futures
 

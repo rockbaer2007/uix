@@ -90,13 +90,13 @@ Pour les interactions avec le serveur, les données capturées possèdent une cl
 La directive `block` est disponible dans les domaines du navigateur et des raccourcis. Ses règles d'ancrage et d'élément hôte sont résolues de manière synchrone ; si une ancre `select_tree` ne peut pas être trouvée immédiatement, l'interaction complète est ignorée. Cela préserve la propagation du navigateur et le timing des actions par défaut. Les événements du serveur ne peuvent pas être bloqués.
 
 !!! note
-Tinykeys ignore les touches enfoncées dans les zones de saisie, de zone de texte, de sélection et modifiables, donc un domaine `shortcut` `block` ne s'exécutera pas dans ces situations. Pour bloquer une clé dans ces situations, utilisez le domaine `browser` avec `listen: keydown`, ainsi que des règles de données capturées et/ou d'éléments hôtes synchrones.
+    Tinykeys ignore les touches enfoncées dans les zones de saisie, de zone de texte, de sélection et modifiables, donc un domaine `shortcut` `block` ne s'exécutera pas dans ces situations. Pour bloquer une clé dans ces situations, utilisez le domaine `browser` avec `listen: keydown`, ainsi que des règles de données capturées et/ou d'éléments hôtes synchrones.
 
-Lorsqu'une liaison de raccourci s'exécute, `block` empêche l'action native par défaut et arrête les écouteurs ultérieurs sur `window`. Il ne peut pas annuler un gestionnaire de raccourcis Home Assistant déjà exécuté.
+    Lorsqu'une liaison de raccourci s'exécute, `block` empêche l'action native par défaut et arrête les écouteurs ultérieurs sur `window`. Il ne peut pas annuler un gestionnaire de raccourcis Home Assistant déjà exécuté.
 
 ## Modèles
 
 UIX Broker ne fournit délibérément pas de domaine qui s'abonne directement aux modèles Jinja2. La directive [`template`](./directives.md#template) peut restituer un modèle une fois pendant qu'une interaction est en cours, mais elle n'écoute pas les modifications ultérieures. Pour un comportement réactif, utilisez un script, une automatisation ou une entité modèle avec un déclencheur, puis déclenchez un événement personnalisé sur le bus d'événements Home Assistant et écoutez-le dans le domaine `server`.
 
 !!! tip
-Vous pouvez utiliser l'intégration [`custom_event`](https://github.com/reubn/hass_custom_event) pour déclencher des événements personnalisés sur le bus d'événements Home Assistant, puis les écouter dans le domaine `server`.
+    Vous pouvez utiliser l'intégration [`custom_event`](https://github.com/reubn/hass_custom_event) pour déclencher des événements personnalisés sur le bus d'événements Home Assistant, puis les écouter dans le domaine `server`.

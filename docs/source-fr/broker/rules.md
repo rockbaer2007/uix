@@ -51,10 +51,10 @@ rules:
 ```
 
 !!! tip
-Les ancres de règle utilisent la même [syntaxe d'arbre de sélection](./interaction-anchors.md#select-tree-anchors) que les ancres de directive et sont réessayées pendant qu'une interaction non-`block` est en cours d'exécution.
+    Les ancres de règle utilisent la même [syntaxe d'arbre de sélection](./interaction-anchors.md#select-tree-anchors) que les ancres de directive et sont réessayées pendant qu'une interaction non-`block` est en cours d'exécution.
 
 !!! tip
-Correspondance de propriété d'objet d'élément hôte `{.property=undefined}` correspond uniquement lorsque la propriété existe et que sa valeur est `undefined`. `{!.property}` correspond uniquement lorsque la propriété est absente.
+    Correspondance de propriété d'objet d'élément hôte `{.property=undefined}` correspond uniquement lorsque la propriété existe et que sa valeur est `undefined`. `{!.property}` correspond uniquement lorsque la propriété est absente.
 
 ## Règles typées
 
@@ -73,7 +73,7 @@ rules:
 ### Utilisateur de Home Assistant
 
 !!! info
-Règles d'utilisation de Home Assistant disponibles dans la version 8.3.0-beta.1
+    Règles d'utilisation de Home Assistant disponibles dans la version 8.3.0-beta.1
 
 Utilisez `type: user` pour faire correspondre l'utilisateur Home Assistant connecté par son
 nom d’affichage (`hass.user.name`) ou identifiant d’utilisateur stable (`hass.user.id`). Maison
@@ -240,4 +240,4 @@ rules:
 ```
 
 !!! warning
-L’état du panneau est asynchrone. Une interaction utilisant une règle de panneau ne peut pas utiliser une directive `block`, car le blocage d'un événement doit se terminer dans la pile d'appels synchrones de l'événement. UIX Broker ignore ces interactions et enregistre un avertissement.
+    L’état du panneau est asynchrone. Une interaction utilisant une règle de panneau ne peut pas utiliser une directive `block`, car le blocage d'un événement doit se terminer dans la pile d'appels synchrones de l'événement. UIX Broker ignore ces interactions et enregistre un avertissement.

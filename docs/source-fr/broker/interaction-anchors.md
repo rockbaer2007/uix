@@ -28,7 +28,7 @@ Les expressions de chemin d'événement sont évaluées de droite à gauche à p
 | `<selector> <$$ [target]` | Le premier élément correspondant en marchant vers l'extérieur à travers le chemin composé et en traversant les racines de l'ombre. |
 
 !!! note
-Les ancres d'interaction événement-chemin sont résolues de manière synchrone et peuvent être utilisées avec la [directive `block`](directives.md#block).
+    Les ancres d'interaction événement-chemin sont résolues de manière synchrone et peuvent être utilisées avec la [directive `block`](directives.md#block).
 
 ```yaml
 # Nearest shadow host of the event target
@@ -48,7 +48,7 @@ anchor: "ha-automation-row <$$"
 Utilisez un chemin UIX `select_tree` normal lorsqu'une ancre n'est pas déterminée par le chemin de l'événement, y compris chaque interaction du serveur.
 
 !!! note
-Les chemins `select_tree` sont décrits en détail dans [DOM navigation](../concepts/dom.md).
+    Les chemins `select_tree` sont décrits en détail dans [DOM navigation](../concepts/dom.md).
 
 ```yaml
 # Compact absolute form
