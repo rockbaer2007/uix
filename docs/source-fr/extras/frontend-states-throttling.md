@@ -1,41 +1,41 @@
 ---
-title: Frontend states throttling
-description: Learn about how UIX can help tame your Home Assistant Frontend with Frontend states throttling
+title: Limiter les mises à jour d'état du frontend
+description: Découvrez comment UIX limite la fréquence des mises à jour d'état de Home Assistant afin de fluidifier le frontend.
 ---
-# Frontend states throttling
+# Limiter les mises à jour d'état du frontend
 
-Home Assistant can be very chatty sending states to the Frontend, with no mechanism to control which states are sent. Therefore if you have a Bluetooth RSSI changing rapidly, it will send the state to the Frontend causing views to refresh. This can be problematic for slow devices or for busy Dashboard views. UIX provides Frontend states throttling which can be used to help mitigate issues caused by rapid state updates.
+Home Assistant peut envoyer très fréquemment des états au frontend, sans permettre de choisir ceux qui sont transmis. Par exemple, une valeur RSSI Bluetooth qui change rapidement provoque l'envoi de nouveaux états et l'actualisation des vues. Cela peut gêner les appareils lents ou les tableaux de bord très chargés. UIX permet de limiter la fréquence des mises à jour d'état afin d'atténuer ces problèmes.
 
-!!! info "What is throttled?"
-    Only updates where `hass.states` has changed are throttled. All other `hass` changes — such as theme updates, localization, and connected user changes — always pass through immediately so the UI stays responsive.
+!!! info "Quelles mises à jour sont limitées ?"
+    Seules les mises à jour qui modifient `hass.states` sont limitées. Tous les autres changements de `hass` — comme les thèmes, la langue ou l'utilisateur connecté — sont transmis immédiatement afin de préserver la réactivité de l'interface.
 
-## Enabling via the integration UI
+## Activation dans l'interface de l'intégration
 
-Frontend states throttling is **disabled by default**. To enable it:
+La limitation des mises à jour d'état est **désactivée par défaut**. Pour l'activer :
 
-1. In Home Assistant, go to **Settings → Devices & Services → UI eXtension → Configure**.
-2. Select **Performance settings** from the menu.
-3. Toggle **Throttle entity state updates** on.
-4. Set the **Throttle interval** — the minimum time (in milliseconds) between state-update re-renders. The default is `200 ms`. The valid range is 50–10,000 ms.
-5. Save.
+1. Dans Home Assistant, ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer**.
+2. Choisissez **Performance settings** dans le menu.
+3. Activez **Throttle entity state updates**.
+4. Réglez **Throttle interval**, c'est-à-dire le délai minimal en millisecondes entre deux rendus déclenchés par un changement d'état. La valeur par défaut est `200 ms` ; les valeurs autorisées vont de 50 à 10 000 ms.
+5. Enregistrez.
 
-The setting takes effect immediately across all connected browser sessions — no page reload required.
+Le réglage prend effet immédiatement dans toutes les sessions de navigateur connectées ; aucun rechargement de page n'est nécessaire.
 
-## How it works
+## Fonctionnement
 
-When throttling is enabled, UIX patches `hui-view` (the element that wraps every Home Assistant Dashboard) with a custom `shouldUpdate` guard. When entity states change more frequently than the configured interval, intermediate updates are suppressed.
+Lorsque la limitation est activée, UIX adapte `hui-view` — l'élément qui enveloppe chaque tableau de bord Home Assistant — en lui ajoutant une vérification `shouldUpdate`. Si les états changent plus souvent que l'intervalle configuré, les mises à jour intermédiaires sont temporairement ignorées.
 
-### Flushing the last update
+### Appliquer la dernière mise à jour
 
-A suppressed (throttled) update is **never lost**. UIX reschedules a flush timer on every throttled call. The timer fires `throttle interval + 50 ms` after the **last** throttled update, and at that point the update is applied to the view — so the UI always converges to the latest known state.
+Une mise à jour ignorée pendant la limitation n'est **jamais perdue**. UIX programme un minuteur après chaque mise à jour limitée. Il se déclenche `intervalle de limitation + 50 ms` après la **dernière** mise à jour ignorée, puis applique celle-ci à la vue. L'interface finit ainsi toujours par afficher le dernier état connu.
 
-When a natural (non-throttled) update is allowed through before the timer fires, the timer is cancelled and no extra render is triggered.
+Si une mise à jour non limitée est transmise avant le déclenchement du minuteur, celui-ci est annulé et aucun rendu supplémentaire n'est effectué.
 
-## Client-side override API
+## API de remplacement côté client
 
-`window.uixCoordinator` exposes a `setThrottleOverride()` method that lets external integrations — such as [Browser Mod](https://github.com/thomasloven/hass-browser_mod) — apply **per-browser**, **per-user**, or **per-device** throttle settings without requiring a backend configuration change. For Browser Mod you would apply a [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action) javascript action.
+`window.uixCoordinator` expose la méthode `setThrottleOverride()`. Les intégrations externes, comme [Browser Mod](https://github.com/thomasloven/hass-browser_mod), peuvent ainsi appliquer une limite **par navigateur**, **par utilisateur** ou **par appareil**, sans modifier la configuration du serveur. Avec Browser Mod, utilisez une action JavaScript [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action).
 
-The override takes precedence over the server-pushed integration config. Individual fields can be overridden independently; any field not specified in the override falls back to the server value.
+Cette valeur de remplacement est prioritaire sur la configuration de l'intégration envoyée par le serveur. Chaque champ peut être remplacé séparément ; tout champ omis conserve la valeur définie par le serveur.
 
 ```js
 // Enable throttle with a 500 ms interval for this browser session:
@@ -48,11 +48,11 @@ window.uixCoordinator.setThrottleOverride({ ms: 1000 });
 window.uixCoordinator.setThrottleOverride(null);
 ```
 
-Because `hui-view` reads the coordinator values on every `shouldUpdate` call, the override takes effect immediately — no page reload required.
+Comme `hui-view` lit les valeurs du coordinateur à chaque appel de `shouldUpdate`, le remplacement prend effet immédiatement, sans rechargement de page.
 
-### Using with Browser Mod
+### Utilisation avec Browser Mod
 
-Browser Mod lets you run JavaScript per browser session via [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action), making it a natural fit for per-device throttle overrides. For example, to apply a longer throttle interval on a slow wall-mounted tablet:
+Browser Mod permet d'exécuter du JavaScript pour chaque session de navigateur avec une action [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action). Il convient donc aux réglages par appareil. Par exemple, pour appliquer un intervalle plus long sur une tablette murale lente :
 
 ```yaml
 # In your Browser Mod configuration for a specific browser ID:
@@ -61,9 +61,9 @@ Browser Mod lets you run JavaScript per browser session via [**Default action**]
     window.uixCoordinator?.setThrottleOverride({ enable: true, ms: 1000 });
 ```
 
-### Using with custom:button-card
+### Utilisation avec `custom:button-card`
 
-[`custom:button-card`](https://github.com/custom-cards/button-card) can be used to add toggle buttons directly on a dashboard to enable, disable, or clear the throttle override at runtime — useful for testing or for dashboards that need dynamic control.
+Vous pouvez ajouter au tableau de bord des boutons [`custom:button-card`](https://github.com/custom-cards/button-card) pour activer, désactiver ou effacer le remplacement à la volée, ce qui est utile pour les tests ou pour les tableaux de bord nécessitant une commande dynamique.
 
 ```yaml
 # Enable throttling at 500 ms for this browser session:
@@ -87,8 +87,8 @@ tap_action:
     [[[ window.uixCoordinator?.setThrottleOverride(null); ]]]
 ```
 
-??? example "Full toggle example"
-    A button card that reads the current throttle state and toggles it on or off, showing the current interval when active.
+??? example "Exemple complet de bouton bascule"
+    Cette carte bouton lit l'état actuel de la limitation, l'active ou la désactive et affiche l'intervalle lorsqu'elle est active.
     ```yaml
     type: custom:button-card
     grid_options:
@@ -124,20 +124,20 @@ tap_action:
         }); ]]]
     ```
 
-## Configuration reference
+## Référence de configuration
 
-| Setting | Default | Description |
+| Réglage | Valeur par défaut | Description |
 |---|---|---|
-| Throttle entity state updates | Off | Enable/disable the states throttle globally. |
-| Throttle interval | 200 ms | Minimum time between state-update re-renders. Range: 50–10,000 ms. |
+| Throttle entity state updates | Désactivé | Active ou désactive globalement la limitation des mises à jour d'état. |
+| Throttle interval | 200 ms | Délai minimal entre les rendus déclenchés par un changement d'état. Plage : 50 à 10 000 ms. |
 
-## When to use throttling
+## Quand utiliser la limitation
 
-Throttling is beneficial when:
+Elle est utile lorsque :
 
-- **Rapidly changing entities** (e.g. Bluetooth RSSI, energy monitoring sensors, weather sensors) cause the dashboard to feel sluggish or flicker.
-- **Slow or low-powered devices** (wall tablets, older browsers) struggle to keep up with frequent re-renders.
-- **Complex dashboards** with many cards or heavy UIX styling slow down noticeably during bursts of state updates.
+- des **entités qui changent rapidement** (RSSI Bluetooth, capteurs d'énergie ou météo, par exemple) rendent le tableau de bord lent ou provoquent des scintillements ;
+- des **appareils lents ou peu puissants** (tablettes murales ou anciens navigateurs) ont du mal à suivre les rendus fréquents ;
+- des **tableaux de bord complexes**, comportant de nombreuses cartes ou beaucoup de styles UIX, ralentissent lors de fortes rafales de mises à jour.
 
 !!! warning
-    Setting the throttle interval too high can make dashboards feel unresponsive. A value of 200–500 ms is a good starting point. The flush mechanism ensures the final state is always rendered even if intermediate updates are suppressed. So if you toggle a sensor rapidly within the throttle time, the second update will not reflect until the throttle time plus 50ms has expired.
+    Un intervalle trop élevé peut rendre le tableau de bord moins réactif. Une valeur de 200 à 500 ms constitue un bon point de départ. Le mécanisme de rattrapage garantit l'affichage du dernier état, même si les mises à jour intermédiaires sont ignorées. Si vous basculez rapidement un capteur, la seconde mise à jour apparaîtra au plus tard à la fin de l'intervalle, plus 50 ms.
