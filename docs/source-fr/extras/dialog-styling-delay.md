@@ -1,34 +1,34 @@
 ---
-title: Dialog styling delay
-description: Learn how UIX can delay applying dialog styles until after a dialog is fully shown, reducing visual flicker and animation artifacts
+title: Délai d'application des styles aux dialogues
+description: Découvrez comment UIX peut appliquer les styles d'un dialogue après son ouverture afin de réduire les scintillements et les défauts d'animation.
 ---
-# Dialog styling delay
+# Délai d'application des styles aux dialogues
 
-By default, UIX applies styles to dialogs as soon as they are opened. On some devices this can produce a brief visual flicker as the styles are applied mid-animation causing Browser repaint during animation. UIX provides a **dialog styling delay** option that defers style application until after the dialog's open animation completes, eliminating any flicker or animation artifacts.
+Par défaut, UIX applique les styles dès l'ouverture des dialogues. Sur certains appareils, cela peut provoquer un bref scintillement, car le navigateur redessine le dialogue pendant son animation. L'option de **délai d'application des styles** attend la fin de l'animation d'ouverture, ce qui évite ces scintillements et défauts d'animation.
 
-## Enabling via the integration UI
+## Activation dans l'interface de l'intégration
 
-The dialog styling delay is **disabled by default**. To enable it:
+Le délai d'application des styles est **désactivé par défaut**. Pour l'activer :
 
-1. In Home Assistant, go to **Settings → Devices & Services → UI eXtension → Configure**.
-2. Select **Performance settings** from the menu.
-3. Toggle **Delay UIX styling for dialogs until fully shown** on.
-4. Save.
+1. Dans Home Assistant, ouvrez **Paramètres → Appareils et services → UI eXtension → Configurer**.
+2. Choisissez **Performance settings** dans le menu.
+3. Activez **Delay UIX styling for dialogs until fully shown**.
+4. Enregistrez.
 
-The setting takes effect immediately across all connected browser sessions — no page reload required.
+Le réglage prend effet immédiatement dans toutes les sessions de navigateur connectées ; aucun rechargement de page n'est nécessaire.
 
-## How it works
+## Fonctionnement
 
-When the delay is enabled, UIX listens for the `after-show` event fired by Home Assistant dialogs once their open animation has completed. Styles are only applied at that point rather than immediately when the dialog is opened, which prevents mid-animation style recalculations that can cause animation flicker.
+Lorsque cette option est activée, UIX attend l'événement `after-show` émis par les dialogues Home Assistant à la fin de leur animation d'ouverture. Les styles sont alors appliqués, plutôt qu'au début de l'ouverture, ce qui évite les recalculs en cours d'animation susceptibles de provoquer un scintillement.
 
 !!! info
-    The need for delaying UIX styling for dialogs may be Browser dependent. Safari / WebKit devices, particularly iOS seem to suffer more from the issue of applying dialog styles without delay.
+    Le besoin de retarder l'application des styles peut dépendre du navigateur. Safari et les appareils WebKit, notamment sous iOS, semblent davantage concernés par les problèmes d'application immédiate des styles.
 
-## Client-side override API
+## API de remplacement côté client
 
-`window.uixCoordinator` exposes a `setDialogApplyAfterShowOverride()` method that lets external integrations — such as [Browser Mod](https://github.com/thomasloven/hass-browser_mod) — apply **per-browser**, **per-user**, or **per-device** settings without requiring a backend configuration change. For Browser Mod you would apply a [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action) javascript action.
+`window.uixCoordinator` expose la méthode `setDialogApplyAfterShowOverride()`. Les intégrations externes, comme [Browser Mod](https://github.com/thomasloven/hass-browser_mod), peuvent ainsi appliquer un réglage **par navigateur**, **par utilisateur** ou **par appareil**, sans modifier la configuration du serveur. Avec Browser Mod, utilisez une action JavaScript [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action).
 
-The override takes precedence over the server-pushed integration config.
+Cette valeur de remplacement est prioritaire sur la configuration de l'intégration envoyée par le serveur.
 
 ```js
 // Enable the delay for this browser session:
@@ -41,11 +41,11 @@ window.uixCoordinator.setDialogApplyAfterShowOverride(false);
 window.uixCoordinator.setDialogApplyAfterShowOverride(null);
 ```
 
-Because `ha-dialog` and `ha-more-info-dialog` read the coordinator value when a dialog opens, the override takes effect immediately for the next dialog opened — no page reload required.
+Comme `ha-dialog` et `ha-more-info-dialog` lisent la valeur du coordinateur à l'ouverture, le remplacement s'applique dès le prochain dialogue, sans rechargement de page.
 
-### Using with Browser Mod
+### Utilisation avec Browser Mod
 
-Browser Mod lets you run JavaScript per browser session via [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action), making it a natural fit for per-device overrides. For example, to enable the delay on a slow wall-mounted tablet:
+Browser Mod permet d'exécuter du JavaScript pour chaque session de navigateur avec une action [**Default action**](https://github.com/thomasloven/hass-browser_mod/blob/master/documentation/configuration-panel.md#default-action). Il convient donc aux réglages par appareil. Par exemple, pour activer le délai sur une tablette murale lente :
 
 ```yaml
 # In your Browser Mod configuration for a specific browser ID:
@@ -54,9 +54,9 @@ Browser Mod lets you run JavaScript per browser session via [**Default action**]
     window.uixCoordinator?.setDialogApplyAfterShowOverride(true);
 ```
 
-### Using with custom:button-card
+### Utilisation avec `custom:button-card`
 
-[`custom:button-card`](https://github.com/custom-cards/button-card) can be used to add a toggle button directly on a dashboard to enable or disable the delay at runtime.
+Vous pouvez ajouter au tableau de bord un bouton [`custom:button-card`](https://github.com/custom-cards/button-card) pour activer ou désactiver le délai à la volée.
 
 ```yaml
 # Enable the dialog styling delay for this browser session:
@@ -80,7 +80,7 @@ tap_action:
     [[[ window.uixCoordinator?.setDialogApplyAfterShowOverride(false); ]]]
 ```
 
-??? example "Full toggle example"
+??? example "Exemple complet de bouton bascule"
     ```yaml
     type: custom:button-card
     grid_options:
@@ -114,18 +114,18 @@ tap_action:
         window.uixCoordinator?.setDialogApplyAfterShowOverride(true); ]]]
     ```
 
-## Configuration reference
+## Référence de configuration
 
-| Setting | Default | Description |
+| Réglage | Valeur par défaut | Description |
 |---|---|---|
-| Delay UIX styling for dialogs until fully shown | Off | When enabled, UIX applies dialog styles after the open animation completes rather than immediately. |
+| Delay UIX styling for dialogs until fully shown | Désactivé | Lorsque cette option est activée, UIX applique les styles du dialogue après la fin de l'animation d'ouverture. |
 
-## When to use the dialog styling delay
+## Quand utiliser ce délai
 
-The delay is beneficial when:
+Ce délai est utile lorsque :
 
-- Dialogs show a **brief flash or animation artifacts** like may be seen with the bottom sheet dialog variant.
-- You are on a **slow or low-powered device** where style calculations during the open animation are noticeable.
+- les dialogues présentent un **bref scintillement ou des défauts d'animation**, notamment avec la variante « bottom sheet » ;
+- vous utilisez un **appareil lent ou peu puissant** et les calculs de styles pendant l'ouverture sont perceptibles.
 
 !!! warning
-    Enabling dialog styling delay option means styles are applied slightly later than normal. On fast devices, the difference will likely be minor, but on very slow devices there may be a noticeable delay. If some devices need this option enabled and others do not, consider using Browser Mod with Default action to set the override via JavaScript.
+    Lorsque cette option est activée, les styles sont appliqués un peu plus tard. La différence est généralement faible sur les appareils rapides, mais peut devenir perceptible sur les appareils très lents. Si seuls certains appareils en ont besoin, utilisez Browser Mod et une action **Default action** pour appliquer le réglage en JavaScript.
