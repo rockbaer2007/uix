@@ -1,19 +1,19 @@
 ---
-description: Use the map spark to preserve zoom level and map centre when a map card is used inside UIX Forge.
+description: Préservez le niveau de zoom et le centre d'une carte Home Assistant avec le spark map de UIX Forge.
 icon: material/map
 ---
 
-# :material-map: Map spark
+# :material-map: Spark Map
 
-The `map` spark adds advanced map state management to a map card used inside a [UIX Forge](../index.md) forged element. It supports five modes:
+Le spark `map` ajoute des fonctions avancées de gestion de l'état à une carte Map utilisée dans un élément créé avec [UIX Forge](../index.md). Il propose cinq modes :
 
-- **Memory mode** (`memory: true`): Captures the current Leaflet zoom and centre before each update and restores them afterwards, so the user's view is always preserved. Without it, every forge template update causes the map to reset to its default zoom level and centre position.
-- **Fit map mode** (`fit_map: true`): Fits the map view when map card does not auto fit on load when used in custom cards which may hide the map initially. e.g. `custom: auto-entities`.
-- **Tour mode** (`tour: true | object`): Automatically moves the map between a list of points of interest. A pause/play button is injected into the map. When `tour: true` all defaults are used; pass an object to customise behaviour.
-- **Hours to show slider mode** (`hours_to_show: true | object`): Injects an interactive `ha-slider` overlay into the map allowing users to adjust the hours of history loaded and rendered in real-time.
-- **Entity filter overlay mode** (`entity_filter: true | object`): Injects an interactive checkable dropdown checklist overlay into the map allowing users to toggle visible entities on the map in real-time.
+- **Mode mémoire** (`memory: true`) : enregistre le zoom et le centre Leaflet avant chaque mise à jour, puis les restaure pour conserver la vue de l'utilisateur. Sans ce mode, chaque mise à jour du modèle Forge réinitialise la carte à son zoom et son centre par défaut.
+- **Mode ajustement de la carte** (`fit_map: true`) : ajuste la carte lorsque celle-ci ne s'adapte pas automatiquement au chargement, par exemple dans une carte personnalisée qui masque d'abord la carte, comme `custom:auto-entities`.
+- **Mode visite** (`tour: true | object`) : déplace automatiquement la carte entre une liste de points d'intérêt. Un bouton pause/lecture est ajouté. Avec `tour: true`, les valeurs par défaut sont utilisées ; indiquez un objet pour personnaliser le comportement.
+- **Mode curseur de période** (`hours_to_show: true | object`) : ajoute un curseur `ha-slider` interactif à la carte afin de régler en temps réel la durée de l'historique chargé et affiché.
+- **Mode filtre d'entités** (`entity_filter: true | object`) : ajoute à la carte un menu déroulant avec cases à cocher pour afficher ou masquer les entités en temps réel.
 
-## Basic usage
+## Utilisation de base
 
 ```yaml
 type: custom:uix-forge
@@ -30,186 +30,186 @@ element:
 
 ## Configuration
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `type` | string | — | Must be `map`. |
-| `memory` | boolean | false | Save/restore zoom and centre before/after each update. |
-| `fit_map` | boolean | false | Fit map view to all entities once map is visible (useful for cards hidden on load). |
-| `tour` | boolean or object | false | Enable tour mode. `true` uses all defaults; pass an object to customise (see below). |
-| `hours_to_show` | boolean or object | false | Enable hours to show slider overlay. `true` uses all defaults; pass an object to customise (see below). |
-| `entity_filter` | boolean or object | false | Enable entity filter checklist dropdown overlay. `true` uses all defaults; pass an object to customise (see below). |
+| `type` | string | — | Doit être défini sur `map`. |
+| `memory` | booléen | `false` | Enregistre puis restaure le zoom et le centre avant et après chaque mise à jour. |
+| `fit_map` | booléen | `false` | Ajuste la vue à toutes les entités dès que la carte est visible, utile pour les cartes masquées au chargement. |
+| `tour` | booléen ou objet | `false` | Active le mode visite. `true` utilise toutes les valeurs par défaut ; indiquez un objet pour personnaliser les options (voir ci-dessous). |
+| `hours_to_show` | booléen ou objet | `false` | Active le curseur de période. `true` utilise les valeurs par défaut ; indiquez un objet pour les personnaliser (voir ci-dessous). |
+| `entity_filter` | booléen ou objet | `false` | Active le menu de filtrage des entités. `true` utilise les valeurs par défaut ; indiquez un objet pour les personnaliser (voir ci-dessous). |
 
-### Tour sub-keys
+### Sous-clés du mode visite
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `period` | string or number | `10s` | Time to spend at each point of interest. Accepts a human-readable duration (e.g. `"30s"`, `"2m"`) or a number in milliseconds. |
-| `zoom` | number | `14` | Default zoom level used when moving to a POI. |
-| `icon_pause` | string | `mdi:pause` | Icon shown on the overlay button while the tour is playing. |
-| `icon_play` | string | `mdi:play` | Icon shown on the overlay button while the tour is paused. |
-| `icon_position` | object | `{bottom: 10px, right: 10px}` | CSS position of the pause/play button. Accepts `top`, `bottom`, `left`, and `right` keys (numbers are treated as pixels). |
-| `poi` | list | *(unset)* | List of points of interest. When omitted, the entities declared on the ha-map card are used. |
+| `period` | chaîne ou nombre | `10s` | Durée d'arrêt sur chaque point d'intérêt. Accepte une durée lisible, par exemple `"30s"` ou `"2m"`, ou un nombre en millisecondes. |
+| `zoom` | nombre | `14` | Niveau de zoom par défaut lors du déplacement vers un point d'intérêt. |
+| `icon_pause` | string | `mdi:pause` | Icône du bouton superposé pendant la lecture de la visite. |
+| `icon_play` | string | `mdi:play` | Icône du bouton superposé lorsque la visite est en pause. |
+| `icon_position` | objet | `{bottom: 10px, right: 10px}` | Position CSS du bouton pause/lecture. Accepte les clés `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
+| `poi` | liste | *(non défini)* | Liste de points d'intérêt. Si elle est absente, les entités déclarées dans la carte `ha-map` sont utilisées. |
 
-Each `poi` list entry may contain:
+Chaque entrée de la liste `poi` peut contenir :
 
-| Key | Type | Description |
+| Clé | Type | Description |
 | --- | --- | --- |
-| `entity` | string | Entity ID. Must be present in the ha-map's `entities` list. Lat/lng are read from hass state attributes. |
-| `latitude` | number | Latitude (required when `entity` is not set). |
-| `longitude` | number | Longitude (required when `entity` is not set). |
-| `zoom` | number | Per-POI zoom override. |
+| `entity` | string | ID d'entité. Doit figurer dans la liste `entities` de `ha-map`. La latitude et la longitude sont lues dans les attributs d'état hass. |
+| `latitude` | nombre | Latitude, obligatoire si `entity` n'est pas défini. |
+| `longitude` | nombre | Longitude, obligatoire si `entity` n'est pas défini. |
+| `zoom` | nombre | Remplacement du zoom pour ce point d'intérêt. |
 
-### Hours to Show sub-keys
+### Sous-clés du curseur de période
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `min` | number | `0` | Minimum hours to show on the slider. |
-| `max` | number | `24` | Maximum hours to show on the slider. |
-| `step` | number | `1` | Increment step size of the slider. |
-| `position` | object | `{bottom: 10px, right: 10px}` | CSS position of the slider capsule. Accepts `top`, `bottom`, `left`, and `right` keys (numbers are treated as pixels). |
-| `tooltip_distance` | number | `20` | Distance in pixels of slider tooltip away from thumb. |
+| `min` | nombre | `0` | Nombre minimal d'heures affiché sur le curseur. |
+| `max` | nombre | `24` | Nombre maximal d'heures affiché sur le curseur. |
+| `step` | nombre | `1` | Pas d'incrémentation du curseur. |
+| `position` | objet | `{bottom: 10px, right: 10px}` | Position CSS de la capsule du curseur. Accepte `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
+| `tooltip_distance` | nombre | `20` | Distance en pixels entre l'infobulle du curseur et sa poignée. |
 
-### Entity Filter sub-keys
+### Sous-clés du filtre d'entités
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `position` | object | `{bottom: 10px, right: 10px}` | CSS position of the filter button capsule. Accepts `top`, `bottom`, `left`, and `right` keys (numbers are treated as pixels). |
-| `size` | string | `s` | Button size (e.g. `s`, `m`, `l`). |
-| `variant` | string | `neutral` | Button variant brand/style (e.g. `brand`, `neutral`, `danger`, `warning`, `success`). |
-| `appearance` | string | `filled` | Button presentation appearance (e.g. `accent`, `filled`, `plain`). |
-| `icon` | string | `mdi:filter-variant` | Trigger button start-icon representation. |
-| `label` | string | `Filter` | Trigger button label string. Set to empty string to disable. |
-| `group` | boolean or object | false | Group entities according to their domain. Set to `true` to use defaults, or an object to set labels for each entity domain grouping. |
+| `position` | objet | `{bottom: 10px, right: 10px}` | Position CSS de la capsule du bouton de filtre. Accepte `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
+| `size` | string | `s` | Taille du bouton, par exemple `s`, `m` ou `l`. |
+| `variant` | string | `neutral` | Variante de couleur du bouton, par exemple `brand`, `neutral`, `danger`, `warning` ou `success`. |
+| `appearance` | string | `filled` | Apparence du bouton, par exemple `accent`, `filled` ou `plain`. |
+| `icon` | string | `mdi:filter-variant` | Icône de début du bouton déclencheur. |
+| `label` | string | `Filter` | Libellé du bouton déclencheur. Définissez une chaîne vide pour le masquer. |
+| `group` | booléen ou objet | `false` | Regroupe les entités par domaine. Utilisez `true` pour les valeurs par défaut ou un objet pour définir le libellé de chaque groupe de domaine. |
 
-#### Entity filter group sub-keys
+#### Sous-clés des groupes du filtre d'entités
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `persons` | string | `Persons` | Label for the `person` domain entity grouping. |
-| `trackers` | string | `Trackers` | Label for the `device_tracker` domain entity grouping. |
-| `zones` | string | `Zones` | Label for the `zone` domain entity grouping. |
+| `persons` | string | `Persons` | Libellé du groupe d'entités du domaine `person`. |
+| `trackers` | string | `Trackers` | Libellé du groupe d'entités du domaine `device_tracker`. |
+| `zones` | string | `Zones` | Libellé du groupe d'entités du domaine `zone`. |
 
-### Tour CSS variables
+### Variables CSS du mode visite
 
-The pause/play button can be styled using CSS variables placed on the `ha-card` or any ancestor:
+Le bouton pause/lecture peut être stylisé avec des variables CSS définies sur `ha-card` ou l'un de ses ancêtres :
 
-| Variable | Default | Description |
+| Variable | Valeur par défaut | Description |
 | --- | --- | --- |
-| `--uix-map-tour-icon-color` | `var(--primary-color)` | Icon color. |
-| `--uix-map-tour-icon-ring-color` | `var(--uix-map-tour-icon-color)` | Countdown ring color (defaults to icon color). |
-| `--uix-map-tour-icon-background` | `rgba(255,255,255,0.8)` | Button background. |
-| `--uix-map-tour-icon-box-shadow` | `0 1px 5px rgba(0,0,0,0.4)` | Box shadow of the icon container. |
-| `--uix-map-tour-icon-width` | `auto` | Button width. |
-| `--uix-map-tour-icon-height` | `auto` | Button height. |
-| `--uix-map-tour-icon-border-radius` | `9999px` | Button border radius (pill by default). |
-| `--uix-map-tour-icon-z-index` | `1000` | Button z-index (Leaflet controls use 1000). |
+| `--uix-map-tour-icon-color` | `var(--primary-color)` | Couleur de l'icône. |
+| `--uix-map-tour-icon-ring-color` | `var(--uix-map-tour-icon-color)` | Couleur de l'anneau de compte à rebours ; par défaut, celle de l'icône. |
+| `--uix-map-tour-icon-background` | `rgba(255,255,255,0.8)` | Arrière-plan du bouton. |
+| `--uix-map-tour-icon-box-shadow` | `0 1px 5px rgba(0,0,0,0.4)` | Ombre portée du conteneur de l'icône. |
+| `--uix-map-tour-icon-width` | `auto` | Largeur du bouton. |
+| `--uix-map-tour-icon-height` | `auto` | Hauteur du bouton. |
+| `--uix-map-tour-icon-border-radius` | `9999px` | Rayon de bordure du bouton, en forme de pilule par défaut. |
+| `--uix-map-tour-icon-z-index` | `1000` | Niveau d'empilement du bouton ; les contrôles Leaflet utilisent `1000`. |
 
-### Hours to Show CSS variables
+### Variables CSS du curseur de période
 
-The history duration slider can be styled using CSS variables placed on the `ha-card` or any ancestor:
+Le curseur de durée de l'historique peut être stylisé avec des variables CSS définies sur `ha-card` ou l'un de ses ancêtres :
 
-| Variable | Default | Description |
+| Variable | Valeur par défaut | Description |
 | --- | --- | --- |
-| `--uix-map-slider-background` | `rgba(255,255,255,0.8)` | Background color of slider container. |
-| `--uix-map-slider-text-color` | `var(--primary-text-color, #212121)` | Color of the duration label next to the slider. |
-| `--uix-map-slider-width` | `100px` | Explicit width of the slider component. |
-| `--uix-map-slider-border-radius` | `9999px` | Slider container border radius (pill by default). |
-| `--uix-map-slider-padding` | `4px 12px` | Padding of the capsule container. |
-| `--uix-map-slider-box-shadow` | `0 1px 5px rgba(0,0,0,0.4)` | Box shadow of the container element. |
-| `--uix-map-slider-z-index` | `1000` | Controls overlay depth of the slider capsule. |
-| `--uix-map-slider-label-min-width` | `28px` | Minimum width of the duration label. |
-| `--uix-map-slider-thumb-size` | *(unset)* | Height and width of the slider thumb. |
-| `--uix-map-slider-thumb-height` | `16px` | Height of the slider thumb component structure (defaults to thumb-size if set). |
-| `--uix-map-slider-thumb-width` | `16px` | Width of the slider thumb component structure (defaults to thumb-size if set). |
-| `--uix-map-slider-track-size` | `4px` | Thickness of the slider track. |
-| `--uix-map-slider-track-color` | `var(--disabled-color)` | Background base track color. |
-| `--uix-map-slider-indicator-color` | `var(--primary-color)` | Color of the active indicator bar. |
-| `--uix-map-slider-thumb-color` | `var(--uix-map-slider-indicator-color)` | Color of the circular slider thumb. |
-| `--uix-map-slider-thumb-hover-opacity` | `0.08` | Hover opacity surrounding the thumb. |
-| `--uix-map-slider-thumb-pressed-opacity` | `0.12` | Opacity of thumb halo while active/pressed. |
-| `--uix-map-slider-thumb-box-shadow` | `inherit` | Custom shadow styling applied to the interactive thumb item. |
-| `--uix-map-slider-tooltip-color` | `var(--primary-text-color)` | Text color inside the popup thumb tooltip. |
-| `--uix-map-slider-tooltip-font-size` | `var(--ha-font-size-s)` | Font size of text inside the tooltip. |
-| `--uix-map-slider-tooltip-font-weight` | `var(--ha-font-weight-normal)` | Font thickness of elements inside tooltip. |
-| `--uix-map-slider-tooltip-background-color` | `var(--secondary-background-color)` | Background color of popup tooltip bubble. |
-| `--uix-map-slider-tooltip-border-radius` | `var(--ha-border-radius-sm)` | Corner rounding of tooltip bubble. |
-| `--uix-map-slider-tooltip-border-width` | `0px` | Border thickness of tooltip. |
-| `--uix-map-slider-tooltip-border-color` | `currentColor` | Border color of tooltip bubble. |
-| `--uix-map-slider-tooltip-border-style` | `none` | Border line style. |
+| `--uix-map-slider-background` | `rgba(255,255,255,0.8)` | Couleur d'arrière-plan du conteneur du curseur. |
+| `--uix-map-slider-text-color` | `var(--primary-text-color, #212121)` | Couleur du libellé de durée affiché à côté du curseur. |
+| `--uix-map-slider-width` | `100px` | Largeur explicite du curseur. |
+| `--uix-map-slider-border-radius` | `9999px` | Rayon de bordure du conteneur, en forme de pilule par défaut. |
+| `--uix-map-slider-padding` | `4px 12px` | Marge intérieure du conteneur en forme de capsule. |
+| `--uix-map-slider-box-shadow` | `0 1px 5px rgba(0,0,0,0.4)` | Ombre portée du conteneur. |
+| `--uix-map-slider-z-index` | `1000` | Niveau d'empilement de la capsule du curseur. |
+| `--uix-map-slider-label-min-width` | `28px` | Largeur minimale du libellé de durée. |
+| `--uix-map-slider-thumb-size` | *(non défini)* | Hauteur et largeur de la poignée du curseur. |
+| `--uix-map-slider-thumb-height` | `16px` | Hauteur de la poignée ; utilise `thumb-size` si cette option est définie. |
+| `--uix-map-slider-thumb-width` | `16px` | Largeur de la poignée ; utilise `thumb-size` si cette option est définie. |
+| `--uix-map-slider-track-size` | `4px` | Épaisseur de la piste du curseur. |
+| `--uix-map-slider-track-color` | `var(--disabled-color)` | Couleur de fond de la piste. |
+| `--uix-map-slider-indicator-color` | `var(--primary-color)` | Couleur de la barre de progression active. |
+| `--uix-map-slider-thumb-color` | `var(--uix-map-slider-indicator-color)` | Couleur de la poignée circulaire. |
+| `--uix-map-slider-thumb-hover-opacity` | `0.08` | Opacité du halo autour de la poignée au survol. |
+| `--uix-map-slider-thumb-pressed-opacity` | `0.12` | Opacité du halo lorsque la poignée est active ou pressée. |
+| `--uix-map-slider-thumb-box-shadow` | `inherit` | Ombre personnalisée de la poignée interactive. |
+| `--uix-map-slider-tooltip-color` | `var(--primary-text-color)` | Couleur du texte dans l'infobulle de la poignée. |
+| `--uix-map-slider-tooltip-font-size` | `var(--ha-font-size-s)` | Taille du texte de l'infobulle. |
+| `--uix-map-slider-tooltip-font-weight` | `var(--ha-font-weight-normal)` | Graisse du texte de l'infobulle. |
+| `--uix-map-slider-tooltip-background-color` | `var(--secondary-background-color)` | Arrière-plan de l'infobulle. |
+| `--uix-map-slider-tooltip-border-radius` | `var(--ha-border-radius-sm)` | Rayon de bordure de l'infobulle. |
+| `--uix-map-slider-tooltip-border-width` | `0px` | Épaisseur de la bordure de l'infobulle. |
+| `--uix-map-slider-tooltip-border-color` | `currentColor` | Couleur de la bordure de l'infobulle. |
+| `--uix-map-slider-tooltip-border-style` | `none` | Style de la bordure de l'infobulle. |
 
-### Entity Filter CSS variables
+### Variables CSS du filtre d'entités
 
-The entity filter dropdown can be styled using CSS variables placed on the `ha-card` or any ancestor:
+Le menu déroulant du filtre d'entités peut être stylisé avec des variables CSS définies sur `ha-card` ou l'un de ses ancêtres :
 
-| Variable | Default | Description |
+| Variable | Valeur par défaut | Description |
 | --- | --- | --- |
-| `--uix-map-entity-filter-background` | `rgba(255,255,255,0.8)` | Background color of entity filter container. |
-| `--uix-map-entity-filter-padding` | `4px` | Padding of the filter capsule container. |
-| `--uix-map-entity-filter-border-radius` | `9999px` | Entity filter container border radius (pill by default). |
-| `--uix-map-entity-filter-box-shadow` | `0 1px 5px rgba(0,0,0,0.4)` | Box shadow of the container element. |
-| `--uix-map-entity-filter-z-index` | `1000` | Controls overlay depth of the filter capsule. |
-| `--uix-map-entity-filter-dropdown-min-width` | `180px` | Minimum width of the opened dropdown menu list. |
-| `--uix-map-entity-filter-item-icon-color` | `var(--ha-color-fill-neutral-loud-resting)` | Color of the check icon of entity filter list items. |
-| `--uix-map-entity-filter-item-icon-checked-color` | `var(--uix-map-entity-filter-item-icon-color, var(--primary-color))` | Color of the check icon of entity filter items when checked. |
+| `--uix-map-entity-filter-background` | `rgba(255,255,255,0.8)` | Couleur d'arrière-plan du conteneur du filtre. |
+| `--uix-map-entity-filter-padding` | `4px` | Marge intérieure de la capsule du filtre. |
+| `--uix-map-entity-filter-border-radius` | `9999px` | Rayon de bordure du conteneur, en forme de pilule par défaut. |
+| `--uix-map-entity-filter-box-shadow` | `0 1px 5px rgba(0,0,0,0.4)` | Ombre portée du conteneur. |
+| `--uix-map-entity-filter-z-index` | `1000` | Niveau d'empilement de la capsule du filtre. |
+| `--uix-map-entity-filter-dropdown-min-width` | `180px` | Largeur minimale du menu déroulant ouvert. |
+| `--uix-map-entity-filter-item-icon-color` | `var(--ha-color-fill-neutral-loud-resting)` | Couleur de l'icône de case à cocher des éléments de la liste. |
+| `--uix-map-entity-filter-item-icon-checked-color` | `var(--uix-map-entity-filter-item-icon-color, var(--primary-color))` | Couleur de l'icône lorsque l'élément de la liste est coché. |
 
-## How it works
+## Fonctionnement
 
-**Memory mode:**
+**Mode mémoire :**
 
-Each time the forged element is about to refresh due to a forge template update, the spark:
+Chaque fois que l'élément Forge est sur le point d'être actualisé à la suite d'une mise à jour du modèle, le spark :
 
-1. Reads the current `zoom` and `center` from the Leaflet map instance inside `ha-map`.
-2. Waits for the forged element and then `ha-map` to finish their own update cycle.
-3. Calls `leafletMap.setView(center, zoom, { reset: true })` to silently restore the saved position without triggering an animation.
+1. lit les valeurs `zoom` et `center` actuelles de l'instance Leaflet dans `ha-map` ;
+2. attend la fin du cycle de mise à jour de l'élément Forge, puis de `ha-map` ;
+3. appelle `leafletMap.setView(center, zoom, { reset: true })` pour restaurer la position enregistrée sans animation.
 
-If Leaflet has not yet initialised when the refresh fires (e.g. on initial render) the save step is skipped and no restore is attempted, so the map displays its default view on first load.
+Si Leaflet n'est pas encore initialisé au moment de l'actualisation, par exemple au premier rendu, l'enregistrement et la restauration sont ignorés. La carte affiche donc sa vue par défaut au premier chargement.
 
-**Fit map mode:**
+**Mode d'ajustement de la carte :**
 
-After the forged element and `ha-map` finish updating and once `ha-map` client width is non-zero and leaflet is ready, the spark will call `fitMap()` on `ha-map`.
+Lorsque l'élément Forge et `ha-map` ont terminé leur mise à jour, que la largeur côté client de `ha-map` est supérieure à zéro et que Leaflet est prêt, le spark appelle `fitMap()` sur `ha-map`.
 
-**Tour mode:**
+**Mode visite :**
 
-After the map is ready (and after `fit_map` completes if both are configured), the spark:
+Lorsque la carte est prête — et après la fin de `fit_map` si les deux options sont activées — le spark :
 
-1. Resolves the POI list (from `poi` config, or by reading `latitude`/`longitude` from hass state attributes of the ha-map entities).
-2. Injects a `ha-icon-button` overlay into the Leaflet container with a circular SVG countdown ring around it.
-3. Moves the map to the first POI immediately, then starts a repeating timer that calls `leafletMap.setView()` to advance to the next POI every `period` seconds.
-4. The countdown ring animates from full to empty over each `period`, giving a visual indication of time remaining at the current POI.
-5. When the user clicks the pause/play button, the timer is stopped or restarted and the countdown ring is hidden or restarted.
+1. résout la liste des points d'intérêt à partir de la configuration `poi` ou des attributs d'état hass `latitude` et `longitude` des entités de `ha-map` ;
+2. ajoute au conteneur Leaflet un bouton `ha-icon-button` entouré d'un anneau SVG de compte à rebours ;
+3. déplace immédiatement la carte vers le premier point, puis lance un minuteur qui appelle `leafletMap.setView()` pour passer au point suivant toutes les `period` secondes ;
+4. anime l'anneau de compte à rebours de complet à vide pendant chaque période afin d'indiquer le temps restant sur le point actuel ;
+5. arrête ou redémarre le minuteur lorsque l'utilisateur appuie sur le bouton pause/lecture, et masque ou relance l'anneau.
 
-When `memory: true` and `tour` are both active, hass-update memory restores are suppressed while the tour is playing so that the tour animation is not interrupted.
+Lorsque `memory: true` et `tour` sont activés ensemble, la restauration liée aux mises à jour hass est suspendue pendant la visite afin de ne pas interrompre son animation.
 
-**Hours to show slider mode:**
+**Mode curseur de période :**
 
-When active, the spark:
+Lorsque ce mode est actif, le spark :
 
-1. Renders a horizontal `ha-slider` control in a capsule-shaped overlay container.
-2. If `tour` is also active and at the default position, the slider is automatically shifted leftwards to prevent visual overlapping.
-3. Automatically sets, clamps, and updates `hui-map-card` `_config.hours_to_show` based on slider drags and releases to fetch history records in real-time.
-4. Smoothly preserves the user's selected value across template-driven forge re-renders.
+1. affiche un curseur horizontal `ha-slider` dans un conteneur superposé en forme de capsule ;
+2. si `tour` est également actif à sa position par défaut, décale automatiquement le curseur vers la gauche pour éviter le chevauchement ;
+3. définit, limite et met à jour automatiquement `_config.hours_to_show` de `hui-map-card` lors du déplacement ou du relâchement du curseur, afin de charger l'historique en temps réel ;
+4. conserve la valeur choisie par l'utilisateur lors des nouveaux rendus Forge déclenchés par les modèles.
 
-**Entity filter overlay mode:**
+**Mode filtre d'entités :**
 
-When active, the spark:
+Lorsque ce mode est actif, le spark :
 
-1. Renders a dropdown overlay using `ha-dropdown` with a trigger `ha-button`.
-2. Resolves and displays each map entity as a checkbox using Friendly Name.
-3. Directly filters visible entities. As a map card will error with no entities, deselecting any last selected entity is disabled.
-4. If the `show_all: true` is set in forged map card config, a `Show All` option will also show in the dropdown. While entities are filtered, any new map entities will not show until `Show All` is selected.
-5. If `tour`or `hours_to_show` is also active and at the default position, the slider is automatically shifted leftwards to prevent visual overlapping.
-6. If `tour` is also active, changing filtered entities will cause the map tour to restart.
+1. affiche un menu déroulant superposé avec `ha-dropdown` et un bouton déclencheur `ha-button` ;
+2. résout chaque entité de la carte et l'affiche sous forme de case à cocher avec son nom convivial ;
+3. filtre directement les entités visibles. Comme une carte Map renvoie une erreur sans entité, il est impossible de décocher la dernière entité sélectionnée ;
+4. si `show_all: true` est défini dans la configuration de la carte Forge, l'option `Show All` apparaît aussi dans le menu. Tant qu'un filtre est actif, les nouvelles entités ne s'affichent pas avant la sélection de `Show All` ;
+5. si `tour` ou `hours_to_show` est également actif à sa position par défaut, le curseur est décalé vers la gauche pour éviter tout chevauchement ;
+6. si `tour` est actif, toute modification du filtre redémarre la visite.
 
 !!! note
-    The spark targets the `hui-map-card` element inside the forged element as well as the `ha-map` element within its shadow root. It relies on the `leafletMap` property exposed by `ha-map`. If the forged element is not a map card (or is wrapped in another element that does not expose `hui-map-card`), none of the modes have any effect.
+    Le spark cible l'élément `hui-map-card` de l'élément Forge ainsi que l'élément `ha-map` dans son shadowRoot. Il utilise la propriété `leafletMap` exposée par `ha-map`. Si l'élément Forge n'est pas une carte Map, ou s'il est enveloppé dans un élément qui n'expose pas `hui-map-card`, aucun mode ne fonctionnera.
 
-## Examples
+## Exemples
 
-### Using fit map mode with auto-entities
+### Utiliser le mode d'ajustement avec auto-entities
 
-When using a map card with `custom:auto-entities` the way auto-entities hides the map card will mean it does not fit on load. Fit map mode can be used in this case to make sure the map fits on first load.
+Avec une carte Map dans `custom:auto-entities`, la façon dont auto-entities masque la carte l'empêche de s'ajuster au chargement. Le mode d'ajustement garantit alors que la carte s'adapte dès son premier affichage.
 
-No include filters have been used for brevity of the example.
+Les filtres `include` sont omis pour raccourcir l'exemple.
 
 ```yaml
 type: custom:auto-entities
@@ -236,17 +236,17 @@ card:
         }
 ```
 
-Without `fit_map: true`:
+Sans `fit_map: true` :
 
-![Forged map without map spark fit_map true](../../assets/page-assets/forge/sparks/map-auto-entities-no-spark.png)
+![Carte Forge sans le mode fit_map du spark Map](../../assets/page-assets/forge/sparks/map-auto-entities-no-spark.png)
 
-With `fit_map: true`:
+Avec `fit_map: true` :
 
-![Forged map with map spark fit_map true](../../assets/page-assets/forge/sparks/map-auto-entities.png)
+![Carte Forge avec le mode fit_map du spark Map](../../assets/page-assets/forge/sparks/map-auto-entities.png)
 
-### Tour mode with default settings
+### Mode visite avec les paramètres par défaut
 
-Automatically cycle through all map entities using defaults (10 s per stop, pause/play button in bottom-right corner):
+Parcourez automatiquement toutes les entités de la carte avec les valeurs par défaut (10 s par arrêt, bouton pause/lecture en bas à droite) :
 
 ```yaml
 type: custom:uix-forge
@@ -262,11 +262,11 @@ element:
     - device_tracker.my_tablet
 ```
 
-:material-movie: [Map spark tour mode example animation (mp4)](../../assets/page-assets/forge/sparks/map-tour.mp4){ data-type="video" class="glightbox" }
+:material-movie: [Animation du mode visite du spark Map (mp4)](../../assets/page-assets/forge/sparks/map-tour.mp4){ data-type="video" class="glightbox" }
 
-### Tour mode with custom POI list
+### Mode visite avec une liste de points personnalisée
 
-Fly between fixed coordinates and specific entities with individual zoom levels:
+Naviguez entre des coordonnées fixes et des entités précises, avec un niveau de zoom pour chacune :
 
 ```yaml
 type: custom:uix-forge
@@ -295,11 +295,11 @@ element:
     - device_tracker.my_tablet
 ```
 
-:material-movie: [Map spark tour mode with pois example animation (mp4)](../../assets/page-assets/forge/sparks/map-tour-pois.mp4){ data-type="video" class="glightbox" }
+:material-movie: [Animation du mode visite avec points personnalisés (mp4)](../../assets/page-assets/forge/sparks/map-tour-pois.mp4){ data-type="video" class="glightbox" }
 
-### Styling the tour button
+### Styliser le bouton de visite
 
-Override the default pill shape with rounded corners and a dark background:
+Remplacez la forme de pilule par défaut par des coins arrondis et un arrière-plan sombre :
 
 ```yaml
 type: custom:uix-forge
@@ -321,11 +321,11 @@ element:
       }
 ```
 
-![Map spark styling example](../../assets/page-assets/forge/sparks/map-tour-style.png)
+![Exemple de style du spark Map](../../assets/page-assets/forge/sparks/map-tour-style.png)
 
-### Hours to show history slider
+### Curseur de durée de l'historique
 
-Enable a customizable history duration slider to load between 1 and 48 hours of tracker data on the map:
+Activez un curseur personnalisable pour charger entre 1 et 48 heures d'historique des traceurs sur la carte :
 
 ```yaml
 type: custom:uix-forge
@@ -348,11 +348,11 @@ element:
     - device_tracker.phone
 ```
 
-![Map spark hours to show example](../../assets/page-assets/forge/sparks/map-hours-to-show.png)
+![Exemple de curseur de période du spark Map](../../assets/page-assets/forge/sparks/map-hours-to-show.png)
 
-### Entity selection filter dropdown
+### Menu déroulant de filtrage des entités
 
-Enable an interactive dropdown to toggle entity tracks visibility in real-time:
+Activez un menu déroulant interactif pour afficher ou masquer les trajets des entités en temps réel :
 
 ```yaml
 type: custom:uix-forge
@@ -368,9 +368,9 @@ element:
     - device_tracker.tablet
 ```
 
-![Map spark entity filter example](../../assets/page-assets/forge/sparks/map-entity-filter.png)
+![Exemple de filtre d'entités du spark Map](../../assets/page-assets/forge/sparks/map-entity-filter.png)
 
-Customise the trigger button text, size, color and icon styling:
+Personnalisez le texte, la taille, la couleur et l'icône du bouton déclencheur :
 
 ```yaml
 type: custom:uix-forge
@@ -391,9 +391,9 @@ element:
     - device_tracker.tablet
 ```
 
-![Map spark entity filter with style example](../../assets/page-assets/forge/sparks/map-entity-filter-style.png)
+![Exemple de filtre d'entités du spark Map avec style personnalisé](../../assets/page-assets/forge/sparks/map-entity-filter-style.png)
 
-Display entity filter grouped by domain with custom labels
+Affichez les entités regroupées par domaine avec des libellés personnalisés.
 
 ```yaml
 type: custom:uix-forge
@@ -414,4 +414,4 @@ element:
     - device_tracker.tablet
 ```
 
-![Map spark entity filter with groups example](../../assets/page-assets/forge/sparks/map-entity-filter-groups.png)
+![Exemple de groupes du filtre d'entités du spark Map](../../assets/page-assets/forge/sparks/map-entity-filter-groups.png)
