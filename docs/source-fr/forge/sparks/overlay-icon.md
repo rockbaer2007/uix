@@ -1,23 +1,23 @@
 ---
-description: Use the overlay-icon spark to overlay a ha-icon, image div, or ha-state-icon on any target element within a UIX Forge element.
+description: Superposez une icône ha-icon, une image ou une ha-state-icon sur n'importe quel élément cible avec le spark overlay-icon de UIX Forge.
 icon: material/star-four-points-outline
 ---
 
-# :material-star-four-points-outline: Overlay Icon spark
+# :material-star-four-points-outline: Spark Overlay Icon
 
-The `overlay-icon` spark overlays an icon on any element inside a [UIX Forge](../index.md) forged element.
+Le spark `overlay-icon` superpose une icône à n'importe quel élément créé avec [UIX Forge](../index.md).
 
-- If `entity` is set, the spark renders a `ha-state-icon`.
-- If `image_url` is set, the spark renders a `div` with the image as `background-image`.
-- Otherwise it renders a `ha-icon`.
+- Si `entity` est défini, le spark affiche une `ha-state-icon`.
+- Si `image_url` est défini, il affiche une `div` dont l'image est définie avec `background-image`.
+- Sinon, il affiche une `ha-icon`.
 
-The icon can come from:
+L'icône peut provenir :
 
-- a fixed MDI or custom icon (`icon`)
-- an image URL (`image_url`)
-- an entity state icon (`entity`)
+- d'une icône MDI ou personnalisée (`icon`)
+- d'une URL d'image (`image_url`)
+- de l'icône d'état d'une entité (`entity`)
 
-## Basic usage
+## Utilisation de base
 
 ```yaml
 type: custom:uix-forge
@@ -32,54 +32,54 @@ element:
   entity: light.bed_light
 ```
 
-![Basic example](../../assets/page-assets/forge/sparks/overlay-icon-basic.png)
+![Exemple de base](../../assets/page-assets/forge/sparks/overlay-icon-basic.png)
 
-## Configuration reference
+## Référence de configuration
 
-### Top-level keys
+### Clés principales
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 |---|---|---|---|
-| `type` | string | — | Must be `overlay-icon`. |
-| `for` | string | `element` | UIX selector for the element to overlay. When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, the default of `element` refers to the root of the forged element. |
-| `icon` | string | — | MDI/custom to show. Use one of `icon` or `image_url` |
-| `image_url` | string | — | Static image applied as overlay. Supports `media-source://` URIs. Use one of `icon` or `image_url`. |
-| `entity` | string | — | If provided a state icon is rendered (`ha-state-icon`). When `entity` is set, `icon` and `image_url` are ignored. |
-| `value` | string | — | If `entity` is provided you can override the state value used to generate the icon. |
-| `color` | string | `state` | If `entity` is provided set the icon color when the entity is active for the overlay icon. By default, the color is based on the `state`, `domain`, and `device_class` of the entity. To take default color, set to `none`. It accepts `state`, `none`, a Home Assistant [color token](https://www.home-assistant.io/dashboards/tile/#available-colors), or a hex color code. Default color when `none` is set is `var(--white-color)` when target is `ha-tile-icon`, otherwise `var(--primary-color)` |
-| `icon_color` | string | `var(--white-color)` when target is `ha-tile-icon`, otherwise `var(--primary-color)` | CSS color for the icon. Overrides `color` if set. |
-| `icon_position` | object | when target is `hui-generic-entity-row`: `{top: '8px', left: '30px'}`; when target is `ha-tile-icon`: `{top: '2px', left: '30px'}`; otherwise not set | Pixel offsets for the icon inside the overlay. Accepts any combination of `top`, `bottom` and `left`, `right`. Numbers are treated as pixels; strings accept any CSS value. `left` takes precedence over `right`. `top` takes precedence over `bottom`. NOTE: Due to the overlay mechanism of the icon in the overlay container, `right` is set as `left: calc(100% - var(--uix-overlay-icon-size, <icon_size>) - <icon_position.right>)` and `bottom` is set as `top: calc(100% - var(--uix-overlay-icon-size, <icon_size>) - <icon_position.bottom>)` |
-| `icon_size` | number or string | `12px` when target is `ha-tile-icon`, `24px` otherwise | Size of the icon. Numbers are treated as pixels; strings are passed through as-is. |
-| `icon_background` | CSS background | `var(--primary-color)` when target is `ha-tile-icon`, otherwise not set | Explicit CSS background for the icon (overrides the default background-color behavior). |
+| `type` | string | — | Doit être défini sur `overlay-icon`. |
+| `for` | string | `element` | Sélecteur UIX de l'élément à recouvrir. Avec la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, `element` désigne la racine de l'élément créé avec Forge. |
+| `icon` | string | — | Icône MDI ou personnalisée à afficher. Utilisez `icon` ou `image_url`. |
+| `image_url` | string | — | Image statique superposée. Les URI `media-source://` sont prises en charge. Utilisez `icon` ou `image_url`. |
+| `entity` | string | — | Affiche une icône d'état (`ha-state-icon`). Si `entity` est défini, `icon` et `image_url` sont ignorés. |
+| `value` | string | — | Permet de remplacer la valeur d'état utilisée pour générer l'icône de l'entité. |
+| `color` | string | `state` | Avec `entity`, définit la couleur de l'icône lorsque l'entité est active. Par défaut, elle dépend de l'état, du domaine et de la classe d'appareil. Utilisez `none` pour conserver la couleur par défaut. Valeurs acceptées : `state`, `none`, un [jeton de couleur Home Assistant](https://www.home-assistant.io/dashboards/tile/#available-colors) ou un code hexadécimal. Avec `none`, la couleur par défaut est `var(--white-color)` pour une cible `ha-tile-icon`, sinon `var(--primary-color)`. |
+| `icon_color` | string | `var(--white-color)` pour `ha-tile-icon`, sinon `var(--primary-color)` | Couleur CSS de l'icône. Remplace `color` si cette option est définie. |
+| `icon_position` | object | Pour `hui-generic-entity-row` : `{top: '8px', left: '30px'}` ; pour `ha-tile-icon` : `{top: '2px', left: '30px'}` ; sinon non définie | Décalages en pixels de l'icône dans la superposition. Accepte `top`, `bottom`, `left` et `right`. Les nombres sont interprétés en pixels ; les chaînes acceptent toute valeur CSS. `left` est prioritaire sur `right`, et `top` sur `bottom`. En raison du mécanisme de superposition, `right` est converti en `left: calc(100% - var(--uix-overlay-icon-size, <icon_size>) - <icon_position.right>)` et `bottom` en `top: calc(100% - var(--uix-overlay-icon-size, <icon_size>) - <icon_position.bottom>)`. |
+| `icon_size` | nombre ou chaîne | `12px` pour `ha-tile-icon`, sinon `24px` | Taille de l'icône. Les nombres sont interprétés en pixels ; les chaînes sont transmises telles quelles. |
+| `icon_background` | arrière-plan CSS | `var(--primary-color)` pour `ha-tile-icon`, sinon non défini | Arrière-plan explicite de l'icône ; remplace le comportement par défaut de `background-color`. |
 
-## Customizing the overlay appearance
+## Personnaliser l'apparence de la superposition
 
-The overlay icon respects CSS custom properties. Set these on the forged element's `uix.style` (or in a theme):
+L'icône superposée utilise les propriétés CSS personnalisées suivantes. Définissez-les dans `uix.style` de l'élément Forge ou dans un thème :
 
-| CSS variable | Default | Description |
+| Variable CSS | Valeur par défaut | Description |
 |---|---|---|
-| `--uix-overlay-icon-z-index` | `1` | Stack order of the overlay. |
-| `--uix-overlay-icon-display` | `block` | CSS display of the overlay. |
-| `--uix-overlay-icon-opacity` | `1` when target is `ha-tile-icon`; `0.5` otherwise | Opacity of the overlay (icon and background combined). |
-| `--uix-overlay-icon-border-radius` | `inherit` | Border radius of the overlay (inherits the target's). |
-| `--uix-overlay-icon-row-border-radius` | `--uix-overlay-icon-border-radius` | Border radius of the overlay when the forge mold is `row`. |
-| `--uix-overlay-icon-border` | `unset` | Border style CSS. |
-| `--uix-overlay-icon-size` | `24px`; `12px` when target is `ha-tile-icon` | Size of the icon. Overrides `icon_size` from spark config. |
-| `--uix-overlay-icon-color` | `var(--primary-color)`; `var(--white-color)` when target is `ha-tile-icon` | Icon color. |
-| `--uix-overlay-icon-background` | `transparent`; `var(--primary-color)` when target is `ha-tile-icon` | Background color of the icon element when `icon_background` is not explicitly set. |
-| `--uix-overlay-icon-border-radius` | `none`; `50%` when target is `ha-tile-icon` | Border radius of the icon element. |
-| `--uix-overlay-icon-padding` | `0`; `2px` when target is `ha-tile-icon` | Padding around the icon. |
-| `--uix-overlay-icon-position` | `none` | CSS `translate` value applied to the icon (e.g. `30px 6px`). Both `icon_position` if set and `--uix-overlay-icon-position` will combine to provide the final icon position. |
+| `--uix-overlay-icon-z-index` | `1` | Ordre de superposition. |
+| `--uix-overlay-icon-display` | `block` | Valeur CSS `display` de la superposition. |
+| `--uix-overlay-icon-opacity` | `1` pour `ha-tile-icon`, sinon `0.5` | Opacité de l'ensemble icône et arrière-plan. |
+| `--uix-overlay-icon-border-radius` | `inherit` | Rayon de bordure de la superposition, hérité de la cible. |
+| `--uix-overlay-icon-row-border-radius` | `--uix-overlay-icon-border-radius` | Rayon de bordure lorsque le moule Forge est `row`. |
+| `--uix-overlay-icon-border` | `unset` | Style CSS de la bordure. |
+| `--uix-overlay-icon-size` | `24px` ; `12px` pour `ha-tile-icon` | Taille de l'icône. Remplace `icon_size` dans la configuration du spark. |
+| `--uix-overlay-icon-color` | `var(--primary-color)` ; `var(--white-color)` pour `ha-tile-icon` | Couleur de l'icône. |
+| `--uix-overlay-icon-background` | `transparent` ; `var(--primary-color)` pour `ha-tile-icon` | Arrière-plan de l'élément icône si `icon_background` n'est pas défini. |
+| `--uix-overlay-icon-border-radius` | `none` ; `50%` pour `ha-tile-icon` | Rayon de bordure de l'élément icône. |
+| `--uix-overlay-icon-padding` | `0` ; `2px` pour `ha-tile-icon` | Marge intérieure autour de l'icône. |
+| `--uix-overlay-icon-position` | `none` | Valeur CSS `translate` appliquée à l'icône, par exemple `30px 6px`. Elle se combine avec `icon_position` si cette option est définie. |
 
 !!! warning
-    As rows in entities card are displayed inline (`display: inline`) deeper element targeting cannot take place as overlays do not work with elements displayed inline. This means overlay-icon spark can only apply to an entire entity row.
+    Les lignes des cartes Entities sont affichées en ligne (`display: inline`). Il n'est donc pas possible de cibler un élément plus profond, car les superpositions ne fonctionnent pas sur les éléments en ligne. Le spark `overlay-icon` ne peut s'appliquer qu'à une ligne entière.
 
 !!! note
-    Overlay-based sparks set `position: relative` on the targeted element when its computed position is `static`, so the absolute overlay can be anchored correctly.
+    Si la position calculée de l'élément cible est `static`, les sparks de superposition lui appliquent `position: relative` afin d'ancrer correctement la superposition absolue.
 
-## Examples
+## Exemples
 
-### Tile icon overlay badge
+### Badge superposé à l'icône d'une tuile
 
 ```yaml
 type: custom:uix-forge
@@ -96,13 +96,13 @@ element:
   entity: light.bed_light
 ```
 
-![Badge example](../../assets/page-assets/forge/sparks/overlay-icon-badge.png)
+![Exemple de badge](../../assets/page-assets/forge/sparks/overlay-icon-badge.png)
 
 !!! note
-    For non-entity overlays, when multiple icon source keys are set the spark resolves precedence as:
+    Pour les superpositions sans entité, si plusieurs sources d'icône sont définies, le spark applique cet ordre de priorité :
     `image_url` → `icon`.
 
-### Entity-driven overlay icon with value override
+### Icône superposée liée à une entité avec remplacement de valeur
 
 ```yaml
 type: entities
@@ -125,13 +125,13 @@ entities:
       entity: light.bed_light
 ```
 
-![Example with entity as row with state_color true](../../assets/page-assets/forge/sparks/overlay-icon-entity-row.png)
+![Exemple d'une entité affichée en ligne avec state_color activé](../../assets/page-assets/forge/sparks/overlay-icon-entity-row.png)
 
-### Overlay icon on a button showing the number of lights on (max 9)
+### Icône superposée sur un bouton indiquant le nombre de lumières allumées (maximum 9)
 
-Uses a macro to translate number of lights on to a circle number icon.
+Une macro convertit le nombre de lumières allumées en icône numérique circulaire.
 
-*An extra button is used to change the state of one light for the animated example.*
+*Un bouton supplémentaire change l'état d'une lumière dans l'exemple animé.*
 
 ```yaml
 type: custom:uix-forge
@@ -179,9 +179,9 @@ element:
   entity: light.all_lights
 ```
 
-![Example button with macro](../../assets/page-assets/forge/sparks/overlay-icon-button.gif)
+![Exemple de bouton utilisant une macro](../../assets/page-assets/forge/sparks/overlay-icon-button.gif)
 
-### Overlay icon with media source image_url and styling to show as a popover style badge
+### Icône superposée à partir d'une image media-source, stylée comme un badge contextuel
 
 ```yaml
 type: custom:uix-forge
@@ -209,12 +209,12 @@ element:
       }
 ```
 
-![Example button with image in a popover style](../../assets/page-assets/forge/sparks/overlay-icon-button-popover-style.png)
+![Exemple de bouton avec image dans un badge contextuel](../../assets/page-assets/forge/sparks/overlay-icon-button-popover-style.png)
 
-### Overlay icon on button icon
+### Icône superposée à l'icône d'un bouton
 
 !!! tip
-    If the icon does not show check if the icon should be applied to the target shadowRoot. e.g. overlay icon will not show with `for: hui-button-card $ ha-state-icon` but will show with `for: hui-button-card $ ha-state-icon $`. For the former, it will add to DOM but will not show due to DOM structure.
+    Si l'icône ne s'affiche pas, vérifiez si elle doit être ajoutée au shadowRoot de la cible. Par exemple, elle ne sera pas visible avec `for: hui-button-card $ ha-state-icon`, mais le sera avec `for: hui-button-card $ ha-state-icon $`. Dans le premier cas, elle est ajoutée au DOM, mais la structure de celui-ci empêche son affichage.
 
 ```yaml
 type: custom:uix-forge
@@ -240,12 +240,12 @@ type: custom:uix-forge
     entity: light.bed_light
 ```
 
-![Example with button card icon](../../assets/page-assets/forge/sparks/overlay-icon-button-icon.png)
+![Exemple avec l'icône d'une carte bouton](../../assets/page-assets/forge/sparks/overlay-icon-button-icon.png)
 
-### Overlay icon in custom:template-entity-row
+### Icône superposée dans custom:template-entity-row
 
 !!! tip
-    Sometimes the target may just be the element shadowRoot or a div under the shadowRoot. To place an overlay icon in `custom:template-entity-row` use `for: $ #wrapper`. You will need to adjust the position to match the position applied automatically by the hui-generic-entity-row target adapter.
+    La cible peut être le shadowRoot de l'élément ou une `div` qui s'y trouve. Pour ajouter une icône superposée dans `custom:template-entity-row`, utilisez `for: $ #wrapper`. Ajustez sa position pour correspondre à celle appliquée automatiquement par l'adaptateur de cible `hui-generic-entity-row`.
 
 ```yaml
 type: entities
@@ -272,4 +272,4 @@ type: entities
         entity: light.bed_light
 ```
 
-![Example with custom:template-entity-row](../../assets/page-assets/forge/sparks/overlay-icon-custom-entity-row.png)
+![Exemple avec custom:template-entity-row](../../assets/page-assets/forge/sparks/overlay-icon-custom-entity-row.png)
