@@ -1,21 +1,21 @@
 ---
-description: Learn about the lock spark for UIX Forge — add interactive lock overlays to any element inside a UIX Forge element to protect it with a PIN, passphrase, or confirmation dialog.
+description: Découvrez le spark lock de UIX Forge : protégez un élément avec une superposition interactive et un code PIN, une phrase secrète ou une confirmation.
 icon: material/lock
 ---
-# :material-lock: Lock spark
+# :material-lock: Spark Lock
 
-The `lock` spark overlays a lock icon on any element inside a [UIX Forge](../index.md) forged element. While locked, all pointer interactions with the underlying element are blocked. The user unlocks it via a tap, hold, or double-tap, which can require a PIN code, a text passphrase, or a simple confirmation. After a configurable `duration` the overlay automatically re-locks.
+Le spark `lock` superpose une icône de verrou à tout élément créé avec [UIX Forge](../index.md). Tant que l'élément est verrouillé, toutes les interactions avec lui sont bloquées. L'utilisateur peut le déverrouiller par toucher, appui prolongé ou double toucher, avec éventuellement un code PIN, une phrase secrète ou une simple confirmation. Après la durée `duration` configurée, la superposition verrouille à nouveau l'élément.
 
-All dialogs for code/passphrase input, confirmation and feedback use native Home Assistant dialogs.
+Les boîtes de dialogue de saisie, de confirmation et de retour d'information utilisent les boîtes de dialogue natives de Home Assistant.
 
 ---
 
 !!! tip
-    All the full examples add `admins: true` to the lock config being used, as you will be an admin when testing. Otherwise it will look like the lock is not working.
+    Tous les exemples complets définissent `admins: true` dans la configuration du verrou, car vous serez administrateur pendant les tests. Sans cela, le verrou pourrait sembler inopérant.
 
-## Basic usage
+## Utilisation de base
 
-Basic examples includes admins in lock config considering that admins will be implementing lock spark. Remove `admins: true` if lock will be bypassed for admins.
+Les exemples de base incluent les administrateurs dans la configuration, en supposant que l'administrateur met en place le spark. Supprimez `admins: true` si les administrateurs doivent contourner le verrou.
 
 ```yaml
 type: custom:uix-forge
@@ -31,16 +31,16 @@ element:
   entity: light.bed_light
 ```
 
-??? example "Basic usage animation"
-    ![Example output](../../assets/page-assets/forge/sparks/lock-basic.gif)
+??? example "Animation de l'utilisation de base"
+    ![Résultat de l'exemple](../../assets/page-assets/forge/sparks/lock-basic.gif)
 
 ---
 
-## Targeting specific elements with `for`
+## Cibler des éléments précis avec `for`
 
-Like other sparks, `for` accepts the same [DOM navigation syntax](../../concepts/dom.md) as UIX styles, including `$` to cross shadow-root boundaries.
+Comme pour les autres sparks, `for` accepte la même [syntaxe de navigation dans le DOM](../../concepts/dom.md) que les styles UIX, y compris `$` pour traverser les limites d'un shadowRoot.
 
-Here an entities row is the target for the lock.
+Dans cet exemple, une ligne de carte Entities est la cible du verrou.
 
 ```yaml
 type: entities
@@ -60,98 +60,98 @@ entities:
       entity: light.bed_light
 ```
 
-??? example "Targeting example"
-    ![Example output](../../assets/page-assets/forge/sparks/lock-for.gif)
+??? example "Exemple de ciblage"
+    ![Résultat de l'exemple](../../assets/page-assets/forge/sparks/lock-for.gif)
 
 !!! warning
-    As rows in entities card are displayed inline (`display: inline`) deeper element targeting cannot take place as overlays do not work with elements which are displayed inline. This means that lock spark can only apply to an entire entity row.
+    Les lignes des cartes Entities sont affichées en ligne (`display: inline`). Il n'est donc pas possible de cibler un élément plus profond, car les superpositions ne fonctionnent pas sur les éléments en ligne. Le spark `lock` ne peut s'appliquer qu'à une ligne d'entité entière.
 
 ---
 
-## Lock-matching logic
+## Règles de correspondance des verrous
 
-`locks` is an ordered list. The **first matching entry** determines what the current user must do to unlock. An entry matches according to these rules:
+`locks` est une liste ordonnée. La **première entrée correspondante** détermine ce que l'utilisateur doit faire pour déverrouiller l'élément. Les règles de correspondance sont les suivantes :
 
-| Configuration | Who it matches |
+| Configuration | Utilisateurs concernés |
 | --- | --- |
-| `users` list present | Users whose name is in the list. If `admins: true`, also admins. |
-| No `users` list | All non-admin users not in the `except` list. |
-| No `users` list + `admins: true` | **All users** (admin and non-admin) not in the `except` list. |
+| Liste `users` présente | Utilisateurs dont le nom figure dans la liste. Si `admins: true`, les administrateurs sont également concernés. |
+| Aucune liste `users` | Tous les utilisateurs non administrateurs qui ne figurent pas dans la liste `except`. |
+| Aucune liste `users` et `admins: true` | **Tous les utilisateurs**, administrateurs ou non, qui ne figurent pas dans `except`. |
 
-`admins` is an **additive** flag. On a no-`users`-list entry it *extends* the default scope (all non-admins) to also include admins, making the entry match everyone. Admins are **excluded by default** from every entry that does not explicitly set `admins: true` or list them in `users`.
+`admins` est un indicateur **additif**. Sans liste `users`, il *étend* la portée par défaut (tous les non-administrateurs) aux administrateurs ; l'entrée concerne alors tout le monde. Par défaut, les administrateurs sont **exclus** des entrées qui ne définissent pas explicitement `admins: true` et ne les mentionnent pas dans `users`.
 
-When an entry has `active: false`, further locks are searched for a matched lock that is `active: true`. If no locks are `active: true` the first lock which matches the user with `active: false` is matched as an inactive lock, with matched users of the inactive lock **not locked** (the overlay is hidden for them).  
+Lorsqu'une entrée définit `active: false`, les verrous suivants sont examinés pour trouver une correspondance avec `active: true`. Si aucun verrou n'est actif, la première entrée inactive correspondant à l'utilisateur est retenue ; les utilisateurs concernés **ne sont pas verrouillés** et la superposition est masquée pour eux.
 
-When no entry matches at all, including `active: false`:
+Si aucune entrée ne correspond, y compris une entrée `active: false` :
 
-- `permissive: true` → element is accessible for everyone (no overlay shown).
-- `permissive: false` (default) → **admins auto-bypass** (no overlay); non-admins are permanently blocked with no unlock path.
+- `permissive: true` → l'élément est accessible à tous, sans superposition.
+- `permissive: false` (valeur par défaut) → les **administrateurs contournent automatiquement** le verrou ; les autres utilisateurs sont bloqués sans possibilité de déverrouillage.
 
 ---
 
-## Configuration reference
+## Référence de configuration
 
-### Top-level keys
+### Clés principales
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `type` | string | — | Must be `lock`. |
-| `for` | string | `element` | UIX selector for the element to overlay. When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, the default of `element` refers to the root of the forged element. |
-| `action` | string | `tap` | Gesture that triggers the unlock flow. One of `tap`, `hold`, `double_tap`. |
-| `duration` | number or string | `3000` | How long before the overlay re-locks after a successful unlock. Numbers are milliseconds; strings use human-readable units (e.g. `"5s"`, `"1m"`, `"500ms"`). |
-| `icon_locked` | string | `mdi:lock-outline` | MDI icon shown when locked. |
-| `icon_unlocked` | string | — | MDI icon shown when unlocked. When not set, the lock icon fades out instead of being replaced. |
-| `icon_locked_color` | string | `--error-color` | CSS color for the locked icon. |
-| `icon_unlocked_color` | string | `--success-color` | CSS color for the unlocked icon (only used when `icon_unlocked` is set). |
-| `icon_position` | object | when forge mold is row default is `{top: 6, left: 30}`; when target is `ha-tile-icon` `{top: 3, left: 3}` | Pixel offsets for the icon inside the overlay. Accepts any combination of `top`, `bottom` (exclusive pair) and `left`, `right` (exclusive pair). Numbers are treated as pixels; strings accept any CSS value. |
-| `icon_size` | number or string | `12px` for `ha-tile-icon` targets, `24px` otherwise | Size of the lock icon. Numbers are treated as pixels (e.g. `18` → `18px`); strings are passed through as-is (e.g. `"1.5rem"`). The CSS variable `--uix-lock-icon-size` takes precedence over this setting when set via UIX Styling or in a theme. |
-| `permissive` | boolean | `false` | When `true`, elements are accessible if no lock entry matches the current user. |
-| `entity` | string | — | Entity ID used when `unlocked_action` is a plain HA action. |
-| `unlocked_action` | object | — | Action to execute immediately after a successful unlock. |
-| `locks` | list | `[]` | Ordered list of lock entries (see below). |
-| `code_dialog` | object | — | Options forwarded to the code/passphrase dialog (see below). |
+| `type` | string | — | Doit être défini sur `lock`. |
+| `for` | string | `element` | Sélecteur UIX de l'élément à recouvrir. Avec la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, `element` désigne la racine de l'élément créé avec Forge. |
+| `action` | string | `tap` | Geste qui déclenche le déverrouillage : `tap`, `hold` ou `double_tap`. |
+| `duration` | nombre ou chaîne | `3000` | Délai avant le verrouillage automatique après un déverrouillage réussi. Les nombres sont en millisecondes ; les chaînes acceptent des unités lisibles, par exemple `"5s"`, `"1m"` ou `"500ms"`. |
+| `icon_locked` | string | `mdi:lock-outline` | Icône MDI affichée lorsque l'élément est verrouillé. |
+| `icon_unlocked` | string | — | Icône MDI affichée lorsque l'élément est déverrouillé. Si cette option est absente, l'icône de verrou s'estompe. |
+| `icon_locked_color` | string | `--error-color` | Couleur CSS de l'icône verrouillée. |
+| `icon_unlocked_color` | string | `--success-color` | Couleur CSS de l'icône déverrouillée ; utilisée uniquement si `icon_unlocked` est défini. |
+| `icon_position` | object | Moule `row` : `{top: 6, left: 30}` ; cible `ha-tile-icon` : `{top: 3, left: 3}` | Décalages de l'icône dans la superposition. Accepte `top` ou `bottom`, ainsi que `left` ou `right` (une seule valeur par paire). Les nombres sont en pixels ; les chaînes acceptent toute valeur CSS. |
+| `icon_size` | nombre ou chaîne | `12px` pour `ha-tile-icon`, sinon `24px` | Taille de l'icône. Les nombres sont en pixels, par exemple `18` devient `18px` ; les chaînes sont transmises telles quelles, par exemple `"1.5rem"`. La variable CSS `--uix-lock-icon-size`, définie dans UIX Styling ou un thème, est prioritaire. |
+| `permissive` | booléen | `false` | Si `true`, l'élément est accessible lorsqu'aucune entrée de verrou ne correspond à l'utilisateur. |
+| `entity` | string | — | ID d'entité utilisé lorsque `unlocked_action` est une action Home Assistant classique. |
+| `unlocked_action` | object | — | Action exécutée immédiatement après un déverrouillage réussi. |
+| `locks` | liste | `[]` | Liste ordonnée des entrées de verrou (voir ci-dessous). |
+| `code_dialog` | object | — | Options transmises à la boîte de dialogue de saisie du code ou de la phrase secrète (voir ci-dessous). |
 
 ### `code_dialog`
 
-Controls the appearance of the PIN / passphrase entry dialog shown when a lock entry requires a code. For the number dialog, title will be prominent, and submit text will show as a tooltip when the tick is hovered over. For the passphrase dialog all options will show prominently.
+Contrôle l'apparence de la boîte de dialogue de saisie du code PIN ou de la phrase secrète. Dans la boîte de dialogue numérique, le titre est mis en évidence et le texte de validation apparaît au survol de la coche. Dans celle de la phrase secrète, toutes les options sont affichées.
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `title` | string | HA default | Dialog title. When omitted Home Assistant's built-in default title is used. |
-| `submit_text` | string | HA default | Label for the confirm/submit button. When omitted Home Assistant's built-in default label is used. |
-| `cancel_text` | string | HA default | Label for the cancel button. When omitted Home Assistant's built-in default label is used. |
+| `title` | string | Valeur Home Assistant | Titre de la boîte de dialogue. Si l'option est omise, le titre natif de Home Assistant est utilisé. |
+| `submit_text` | string | Valeur Home Assistant | Libellé du bouton de confirmation. Si l'option est omise, le libellé natif de Home Assistant est utilisé. |
+| `cancel_text` | string | Valeur Home Assistant | Libellé du bouton d'annulation. Si l'option est omise, le libellé natif de Home Assistant est utilisé. |
 
 ### `unlocked_action`
 
-| Value | Effect |
+| Valeur | Effet |
 | --- | --- |
-| `action: element_tap` | Fires the target element's `tap_action`. |
-| `action: element_hold` | Fires the target element's `hold_action`. |
-| `action: element_double_tap` | Fires the target element's `double_tap_action`. |
-| Any HA action object | Dispatches that action against `entity` (e.g. `action: toggle`). |
+| `action: element_tap` | Déclenche `tap_action` sur l'élément cible. |
+| `action: element_hold` | Déclenche `hold_action` sur l'élément cible. |
+| `action: element_double_tap` | Déclenche `double_tap_action` sur l'élément cible. |
+| N'importe quel objet d'action HA | Exécute cette action sur `entity`, par exemple `action: toggle`. |
 
 ### Lock entry keys
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `active` | boolean | `true` | Set to `false` to explicitly unlock for matched users (no overlay). |
-| `code` | string or number | — | Code to enter. Numeric values display the HA numpad; text values display a password field. |
-| `pin` | string or number | — | Alias for `code`. |
-| `confirmation` | string or boolean | — | Confirmation prompt. Pass `true` for HA's default localised text, or a custom string. |
-| `users` | list of strings | — | Usernames this entry applies to. |
-| `admins` | boolean | `false` | **Additive flag.** On a no-`users`-list entry, setting `admins: true` extends the entry to cover **all users** (admin and non-admin). On a `users`-list entry, it additionally covers admins. Admins are excluded from every entry where this is `false` or unset. |
-| `except` | list of strings | — | Users exempt from this entry (only used when no `users` list). |
-| `retry_delay` | number or string | — | How long to wait between code attempts after a wrong entry. Numbers are milliseconds; strings use human-readable units (e.g. `"10s"`). |
-| `max_retries` | number | — | Maximum consecutive wrong attempts before the extended delay kicks in. |
-| `max_retries_delay` | number or string | `30000` | How long to lock out after `max_retries` wrong attempts. Numbers are milliseconds; strings use human-readable units (e.g. `"30s"`, `"5m"`). |
+| `active` | booléen | `true` | Définissez `false` pour déverrouiller explicitement l'élément pour les utilisateurs concernés, sans superposition. |
+| `code` | chaîne ou nombre | — | Code à saisir. Une valeur numérique affiche le pavé numérique Home Assistant ; une chaîne affiche un champ de mot de passe. |
+| `pin` | chaîne ou nombre | — | Alias de `code`. |
+| `confirmation` | chaîne ou booléen | — | Demande de confirmation. Utilisez `true` pour le texte localisé par défaut de Home Assistant ou indiquez un texte personnalisé. |
+| `users` | liste de chaînes | — | Noms des utilisateurs concernés par cette entrée. |
+| `admins` | booléen | `false` | **Indicateur additif.** Sans liste `users`, `admins: true` étend l'entrée à **tous les utilisateurs**, administrateurs compris. Avec une liste `users`, les administrateurs sont également concernés. Ils sont exclus si cette option est absente ou définie sur `false`. |
+| `except` | liste de chaînes | — | Utilisateurs exemptés de cette entrée ; cette option est utilisée uniquement sans liste `users`. |
+| `retry_delay` | nombre ou chaîne | — | Délai entre deux tentatives après un code incorrect. Les nombres sont en millisecondes ; les chaînes acceptent des unités lisibles, par exemple `"10s"`. |
+| `max_retries` | nombre | — | Nombre maximal de tentatives incorrectes consécutives avant l'application du délai prolongé. |
+| `max_retries_delay` | nombre ou chaîne | `30000` | Durée du blocage après le nombre maximal de tentatives. Les nombres sont en millisecondes ; les chaînes acceptent des unités lisibles, par exemple `"30s"` ou `"5m"`. |
 
 ---
 
-## Examples
+## Exemples
 
-### Same PIN for everyone (including admins)
+### Même code PIN pour tout le monde, administrateurs compris
 
-`admins: true` extends the entry to cover everyone — a single entry is sufficient:
+`admins: true` étend l'entrée à tout le monde : une seule entrée suffit.
 
 ```yaml
 locks:
@@ -159,10 +159,9 @@ locks:
     admins: true   # applies to all users (non-admins by default + admins because admins: true)
 ```
 
-### No lock for admins (default) and a specific user
+### Aucun verrou pour les administrateurs (par défaut) et un utilisateur précis
 
-Admins bypass any entry that does not have `admins: true` or list them in `users`. Here
-user1 is explicitly unlocked, and all other non-admin users must enter a PIN:
+Les administrateurs contournent toute entrée qui ne définit pas `admins: true` et ne les mentionne pas dans `users`. Ici, `user1` est explicitement déverrouillé et tous les autres utilisateurs non administrateurs doivent saisir un code PIN :
 
 ```yaml
 locks:
@@ -172,7 +171,7 @@ locks:
   - code: 1234      # non-admins only (admins are excluded by default)
 ```
 
-### Confirmation for everyone including admins
+### Demander confirmation à tout le monde, administrateurs compris
 
 ```yaml
 locks:
@@ -180,7 +179,7 @@ locks:
     confirmation: true
 ```
 
-### PIN for everyone, no lock for named users
+### Code PIN pour tout le monde, sans verrou pour certains utilisateurs
 
 ```yaml
 permissive: false
@@ -192,11 +191,9 @@ locks:
     admins: true   # apply to everyone (including admins)
 ```
 
-### Different PINs per user group, admins bypass
+### Codes PIN différents par groupe d'utilisateurs, avec contournement pour les administrateurs
 
-Because `admins: true` on a no-`users`-list entry matches *everyone*, you cannot create an
-admin-specific entry using that approach alone. To give admins their own PIN, list them
-explicitly in the `users` key:
+Comme `admins: true` dans une entrée sans liste `users` concerne *tout le monde*, cette méthode ne permet pas de créer une entrée réservée aux administrateurs. Pour leur attribuer un code PIN distinct, indiquez-les explicitement dans `users` :
 
 ```yaml
 locks:
@@ -213,7 +210,7 @@ locks:
     code: 4567
 ```
 
-### Locked for specific users only (`permissive: true`)
+### Verrouiller uniquement certains utilisateurs (`permissive: true`)
 
 ```yaml
 permissive: true
@@ -224,7 +221,7 @@ locks:
     code: 1234
 ```
 
-### Tile card: execute hold_action on unlock
+### Carte Tile : exécuter hold_action au déverrouillage
 
 ```yaml
 type: custom:uix-forge
@@ -244,7 +241,7 @@ element:
     action: toggle
 ```
 
-### Tile card: toggle entity directly on unlock
+### Carte Tile : basculer directement l'entité au déverrouillage
 
 ```yaml
 type: custom:uix-forge
@@ -265,9 +262,9 @@ element:
 
 ---
 
-### Tile card: lock the tile icon only
+### Carte Tile : verrouiller uniquement l'icône
 
-Use `for` to target `ha-tile-icon` directly — only the icon area is locked, leaving the rest of the tile interactive. The lock icon defaults to `12px`, position `top: 3px`, `left: 3px` and `--uix-lock-icon-padding: 2px` in this context to mimic a tile icon badge on the left of the tile icon.
+Utilisez `for` pour cibler directement `ha-tile-icon` : seule la zone de l'icône est verrouillée, le reste de la tuile reste interactif. Dans ce contexte, l'icône de verrou utilise par défaut une taille de `12px`, une position `top: 3px`, `left: 3px` et `--uix-lock-icon-padding: 2px`, pour imiter un badge placé à gauche de l'icône de tuile.
 
 ```yaml
 type: custom:uix-forge
@@ -288,9 +285,9 @@ element:
 
 ---
 
-### Custom code dialog labels
+### Libellés personnalisés de la boîte de dialogue du code
 
-Use `code_dialog` to override the title and button labels shown in the PIN / passphrase entry dialog:
+Utilisez `code_dialog` pour remplacer le titre et les libellés des boutons de la boîte de dialogue de saisie du code PIN ou de la phrase secrète :
 
 ```yaml
 type: custom:uix-forge
@@ -312,40 +309,40 @@ element:
 
 ---
 
-## Customizing the overlay appearance
+## Personnaliser l'apparence de la superposition
 
-The lock overlay respects a set of CSS custom properties. Set these on the forged element's `uix.style` (or in a theme) to customise the look:
+La superposition de verrou utilise les propriétés CSS personnalisées suivantes. Définissez-les dans `uix.style` de l'élément Forge ou dans un thème pour personnaliser son apparence :
 
-| CSS variable | Default | Description |
+| Variable CSS | Valeur par défaut | Description |
 | --- | --- | --- |
-| `--uix-lock-z-index` | `10` | Stack order of the overlay. |
-| `--uix-lock-display` | `block` | CSS display of the lock overlay. Adjust for any positioning workarounds required with target element scenarios. |
-| `--uix-lock-opacity` | `0.5` | Opacity of the overlay (icon and background combined). |
-| `--uix-lock-background` | `transparent` | Background color of the overlay when locked. |
-| `--uix-lock-background-unlocked` | `none` | Background color of the overlay when unlocked. Defaults to no background so `--uix-lock-background` does not bleed into the unlocked state. |
-| `--uix-lock-background-blocked` | `--uix-lock-background` | Background color when the lock is permanently blocked (no unlock path, non-row molds). |
-| `--uix-lock-border-radius` | `inherit` | Border radius of the overlay (inherits the target's). |
-| `--uix-lock-icon-size` | `24px`; `12px` when target is `ha-tile-icon` | Size of the lock icon. Overrides any `icon_size` set in spark config. |
-| `--uix-lock-icon-background` | `none` | Background of the lock icon element. Useful for adding a colored pill or circle behind the icon. |
-| `--uix-lock-icon-background-unlocked` | `--uix-lock-icon-background` | Icon background when the lock is unlocked. Falls back to `--uix-lock-icon-background`. |
-| `--uix-lock-icon-background-blocked` | `--uix-lock-icon-background` | Icon background when the lock is permanently blocked. Falls back to `--uix-lock-icon-background`. |
-| `--uix-lock-icon-border-radius` | `none`; `50%` when target is `ha-tile-icon` | Border radius of the lock icon element. Use `50%` for a circle or a large value (e.g. `50px`) for a pill shape. |
-| `--uix-lock-icon-padding` | `0`; `2px` when the target is ha-tile-info | Padding around the lock icon, creating space between the icon and its background. |
-| `--uix-lock-icon-position` | `none` | CSS `translate` value applied to the icon (e.g. `30px 6px`). Useful for CSS-only positioning when `icon_position` is not set in config. |
-| `--uix-lock-icon-fade-duration` | `2s` | Duration of the opacity fade when the lock icon fades away on unlock (only used when `icon_unlocked` is not set). |
-| `--uix-lock-row-background` | `--uix-lock-background` | Background color of the overlay when the forge mold is `row`. |
-| `--uix-lock-row-border-radius` | `--uix-lock-border-radius` | Border radius of the overlay when the forge mold is `row`. |
-| `--uix-lock-row-outlined-blocked` | `none` | CSS `outline` value applied to the overlay in row mold when the lock is permanently blocked. |
-| `--uix-lock-cursor` | `pointer` | Cursor shown on the overlay in all states. Overridden by the state-specific variables below. |
-| `--uix-lock-cursor-locked` | `--uix-lock-cursor` | Cursor shown when the overlay is locked. |
-| `--uix-lock-cursor-unlocked` | `--uix-lock-cursor` | Cursor shown when the overlay is unlocked. |
-| `--uix-lock-cursor-blocked` | `--uix-lock-cursor` | Cursor shown when the lock is permanently blocked (no unlock path). |
+| `--uix-lock-z-index` | `10` | Ordre de superposition. |
+| `--uix-lock-display` | `block` | Valeur CSS `display` de la superposition. À ajuster si la position doit être adaptée à la cible. |
+| `--uix-lock-opacity` | `0.5` | Opacité de la superposition, icône et arrière-plan compris. |
+| `--uix-lock-background` | `transparent` | Arrière-plan lorsque l'élément est verrouillé. |
+| `--uix-lock-background-unlocked` | `none` | Arrière-plan lorsque l'élément est déverrouillé. Par défaut, aucun arrière-plan n'est affiché afin que `--uix-lock-background` ne s'applique pas à cet état. |
+| `--uix-lock-background-blocked` | `--uix-lock-background` | Arrière-plan lorsque le verrou bloque définitivement l'accès (aucun moyen de déverrouillage, sauf moule `row`). |
+| `--uix-lock-border-radius` | `inherit` | Rayon de bordure de la superposition, hérité de la cible. |
+| `--uix-lock-icon-size` | `24px` ; `12px` pour `ha-tile-icon` | Taille de l'icône de verrou. Remplace toute valeur `icon_size` définie dans la configuration du spark. |
+| `--uix-lock-icon-background` | `none` | Arrière-plan de l'élément icône. Permet, par exemple, d'ajouter une pastille ou un cercle coloré. |
+| `--uix-lock-icon-background-unlocked` | `--uix-lock-icon-background` | Arrière-plan de l'icône lorsque le verrou est ouvert. À défaut, utilise `--uix-lock-icon-background`. |
+| `--uix-lock-icon-background-blocked` | `--uix-lock-icon-background` | Arrière-plan de l'icône lorsque l'accès est bloqué définitivement. À défaut, utilise `--uix-lock-icon-background`. |
+| `--uix-lock-icon-border-radius` | `none` ; `50%` pour `ha-tile-icon` | Rayon de bordure de l'icône. Utilisez `50%` pour un cercle ou une grande valeur, par exemple `50px`, pour une pastille allongée. |
+| `--uix-lock-icon-padding` | `0` ; `2px` lorsque la cible est `ha-tile-info` | Marge intérieure autour de l'icône, entre celle-ci et son arrière-plan. |
+| `--uix-lock-icon-position` | `none` | Valeur CSS `translate` appliquée à l'icône, par exemple `30px 6px`. Utile pour la positionner uniquement en CSS lorsque `icon_position` n'est pas configuré. |
+| `--uix-lock-icon-fade-duration` | `2s` | Durée du fondu de l'icône lors du déverrouillage ; utilisée uniquement si `icon_unlocked` n'est pas défini. |
+| `--uix-lock-row-background` | `--uix-lock-background` | Arrière-plan de la superposition lorsque le moule Forge est `row`. |
+| `--uix-lock-row-border-radius` | `--uix-lock-border-radius` | Rayon de bordure de la superposition lorsque le moule Forge est `row`. |
+| `--uix-lock-row-outlined-blocked` | `none` | Valeur CSS `outline` de la superposition dans le moule `row` lorsque l'accès est bloqué définitivement. |
+| `--uix-lock-cursor` | `pointer` | Curseur affiché sur la superposition dans tous les états. Les variables spécifiques ci-dessous peuvent le remplacer. |
+| `--uix-lock-cursor-locked` | `--uix-lock-cursor` | Curseur affiché lorsque la superposition est verrouillée. |
+| `--uix-lock-cursor-unlocked` | `--uix-lock-cursor` | Curseur affiché lorsque la superposition est déverrouillée. |
+| `--uix-lock-cursor-blocked` | `--uix-lock-cursor` | Curseur affiché lorsque l'accès est bloqué définitivement. |
 
-### Styling examples
+### Exemples de style
 
-#### Overlay backgrounds
+#### Arrière-plans de la superposition
 
-Using UIX Styling to apply a locked background, unlocked background and reduced opacity. A locked icon is also used in this example.
+Cet exemple utilise UIX Styling pour définir les arrière-plans des états verrouillé et déverrouillé, ainsi qu'une opacité réduite. Il utilise également une icône de verrou.
 
 ```yaml
 type: entities
@@ -376,12 +373,12 @@ entities:
       entity: light.bed_light
 ```
 
-??? example "Styling example"
-    ![Example output](../../assets/page-assets/forge/sparks/lock-styling.gif)
+??? example "Exemple de style"
+    ![Résultat de l'exemple](../../assets/page-assets/forge/sparks/lock-styling.gif)
 
-#### Locked icon when target is a tile icon
+#### Icône de verrou sur une icône de tuile
 
-Using UIX Styling to apply lock icon background. Here the lock is applied to a tile icon and UIX Styling used to make lock appear like a tile badge.
+Cet exemple utilise UIX Styling pour définir l'arrière-plan de l'icône de verrou. Le verrou cible l'icône d'une tuile et prend l'apparence d'un badge.
 
 ```yaml
 type: custom:uix-forge
@@ -408,14 +405,14 @@ element:
   entity: light.bed_light
 ```
 
-??? example "Styling example"
-    ![Example output](../../assets/page-assets/forge/sparks/lock-styling-tile-badge.gif)
+??? example "Exemple de style"
+    ![Résultat de l'exemple](../../assets/page-assets/forge/sparks/lock-styling-tile-badge.gif)
 
 ---
 
-## Templates
+## Modèles
 
-Like all spark config, `locks` entries are processed as Jinja2 templates, so you can make `active` conditional:
+Comme toutes les configurations de spark, les entrées `locks` sont traitées comme des modèles Jinja2. Vous pouvez donc rendre `active` conditionnel :
 
 ```yaml
 - type: lock
@@ -426,4 +423,4 @@ Like all spark config, `locks` entries are processed as Jinja2 templates, so you
 ```
 
 !!! tip
-    Use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) helper in your browser DevTools console to find the right `for` selector for any element you want to lock.
+    Utilisez le helper [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) dans la console des outils de développement du navigateur pour trouver le sélecteur `for` adapté à l'élément à verrouiller.
