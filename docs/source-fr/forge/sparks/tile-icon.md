@@ -1,29 +1,29 @@
 ---
-description: Use the tile-icon spark to insert a ha-tile-icon element as a sibling before or after a target element within a UIX Forge element.
+description: Insérez un élément ha-tile-icon avant ou après un élément cible avec le spark Tile Icon de UIX Forge.
 icon: material/star-outline
 ---
 
-# :star: Tile Icon spark
+# :star: Spark d'icône de tuile
 
-The `tile-icon` spark inserts a `ha-tile-icon` element as a DOM sibling immediately **before** or **after** a target element inside a forged element.
+Le spark `tile-icon` insère un élément `ha-tile-icon` dans le DOM, immédiatement **avant** ou **après** un élément cible créé avec UIX Forge.
 
-The icon source can be:
+L'icône peut provenir :
 
-- a fixed MDI icon string (`icon`)
-- an SVG path string (`icon_path`)
-- an image URL (`image_url`)
-- an entity whose state icon is displayed via `ha-state-icon` placed in the tile icon's `icon` slot (`entity`)
+- d'une icône MDI fixe (`icon`)
+- d'un chemin SVG (`icon_path`)
+- de l'URL d'une image (`image_url`)
+- d'une entité dont l'icône d'état est affichée dans l'emplacement `icon` du tile icon au moyen de `ha-state-icon` (`entity`)
 
-Optionally the tile icon can be made interactive with tap/hold/double-tap [actions](#actions).
+Vous pouvez aussi rendre l'icône de tuile interactive avec des [actions](#actions) au toucher, à l'appui prolongé ou au double toucher.
 
-## Basic usage
+## Utilisation de base
 
-Add a `tile-icon` entry to `forge.sparks` with either `after` or `before` to specify the target element, and one of `icon`, `icon_path`, `image_url`, or `entity` to provide the icon source.
+Ajoutez une entrée `tile-icon` à `forge.sparks`. Utilisez `after` ou `before` pour désigner l'élément cible, puis `icon`, `icon_path`, `image_url` ou `entity` pour définir l'icône.
 
-The `after`/`before` value is a selector that locates the target element within the forged element. It supports the same [DOM navigation syntax](../../concepts/dom.md) as UIX styles, including `$` to cross shadow-root boundaries.
+La valeur de `after` ou `before` est un sélecteur qui repère la cible dans l'élément créé. Elle accepte la même [syntaxe de navigation dans le DOM](../../concepts/dom.md) que les styles UIX, y compris `$` pour traverser les limites d'une racine Shadow DOM.
 
 !!! tip
-    If you are inserting a tile icon **before** another tile icon, you will need to be specific in your selector so as to not select the inserted icon on updates. Tile icons added by this spark have an attribute `data-uix-forge-tile-icon-id` so you can use this with your selector. e.g. `hui-tile-card $ ha-tile-icon:not([data-uix-forge-tile-icon-id])`
+    Si vous insérez une icône de tuile **avant** une autre icône, précisez le sélecteur afin qu'il ne cible pas l'icône ajoutée lors des mises à jour. Les icônes créées par ce spark possèdent l'attribut `data-uix-forge-tile-icon-id`, que vous pouvez exclure avec le sélecteur, par exemple `hui-tile-card $ ha-tile-icon:not([data-uix-forge-tile-icon-id])`.
 
 ```yaml
 type: custom:uix-forge
@@ -43,29 +43,29 @@ element:
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
 | --- | ---- | -------- | ------- | ----------- |
-| `type` | `string` | ✅ | — | Must be `tile-icon`. |
-| `after` | `string` | one of `after`/`before` ✅ | — | UIX selector for the reference element. The icon is inserted as a sibling **after** the matched element. When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, `""`. If you wish to target `before` using Blank card config, set explicitly to `""`. |
-| `before` | `string` | one of `after`/`before` ✅ | — | UIX selector for the reference element. The icon is inserted as a sibling **before** the matched element. |
-| `icon` | `string` | one of `icon`/`icon_path`/`image_url`/`entity` ✅ | — | MDI icon string (e.g. `mdi:star`). `icon` can also be used to replace the default entity icon if `entity` is set. |
-| `icon_path` | `string` | one of `icon`/`icon_path`/`image_url`/`entity` ✅ | — | SVG path string passed to `ha-tile-icon` as its `iconPath` property (rendered via `ha-svg-icon`). |
-| `image_url` | `string` | one of `icon`/`icon_path`/`image_url`/`entity` ✅ | — | URL of an image to display inside the tile icon. |
-| `entity` | `string` | one of `icon`/`icon_path`/`image_url`/`entity` ✅ | — | Entity ID whose current state object is passed to a `ha-state-icon` placed in the tile icon's `icon` slot, displaying the entity's native state icon. |
-| `color` | CSS color | | - | Color to apply to tile icon. Overrides entity state color |
-| `tap_action` | action | | — | Action to perform on tap. |
-| `hold_action` | action | | — | Action to perform on hold. |
-| `double_tap_action` | action | — | — | Action to perform on double tap. |
+| `type` | `string` | ✅ | — | Doit être défini sur `tile-icon`. |
+| `after` | `string` | l'un de `after`/`before` ✅ | — | Sélecteur UIX de l'élément de référence. L'icône est insérée comme élément frère **après** l'élément correspondant. Avec la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, elle est `""`. Pour cibler un élément avec `before` dans cette configuration, définissez explicitement `after: ""`. |
+| `before` | `string` | l'un de `after`/`before` ✅ | — | Sélecteur UIX de l'élément de référence. L'icône est insérée comme élément frère **avant** l'élément correspondant. |
+| `icon` | `string` | l'un de `icon`/`icon_path`/`image_url`/`entity` ✅ | — | Nom d'une icône MDI, par exemple `mdi:star`. Si `entity` est défini, `icon` peut remplacer l'icône par défaut de l'entité. |
+| `icon_path` | `string` | l'un de `icon`/`icon_path`/`image_url`/`entity` ✅ | — | Chemin SVG transmis à `ha-tile-icon` comme propriété `iconPath` et rendu avec `ha-svg-icon`. |
+| `image_url` | `string` | l'un de `icon`/`icon_path`/`image_url`/`entity` ✅ | — | URL de l'image à afficher dans l'icône de tuile. |
+| `entity` | `string` | l'un de `icon`/`icon_path`/`image_url`/`entity` ✅ | — | ID de l'entité dont l'objet d'état actuel est transmis à un `ha-state-icon` placé dans l'emplacement `icon` du tile icon. L'icône d'état native de l'entité est ainsi affichée. |
+| `color` | CSS color | | — | Couleur appliquée à l'icône de tuile. Elle remplace la couleur d'état de l'entité. |
+| `tap_action` | action | | — | Action exécutée au toucher. |
+| `hold_action` | action | | — | Action exécutée lors d'un appui prolongé. |
+| `double_tap_action` | action | — | — | Action exécutée lors d'un double toucher. |
 
 !!! note
-    Exactly one of `after` or `before` must be provided, and exactly one icon source (`icon`, `icon_path`, `image_url`, or `entity`) must be provided.
+    Définissez exactement l'une des options `after` ou `before`, ainsi qu'une seule source d'icône parmi `icon`, `icon_path`, `image_url` et `entity`.
 
 !!! tip
-    You can use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) DOM helper to take the guesswork out of finding the right path for `before/after`.
+    Le helper DOM [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) vous aide à déterminer le chemin à utiliser pour `before` ou `after`.
 
 ## Actions
 
-When one or more action keys are set (`tap_action`, `hold_action`, `double_tap_action`), the tile icon is automatically made interactive.
+Lorsque vous définissez une ou plusieurs clés d'action (`tap_action`, `hold_action`, `double_tap_action`), l'icône de tuile devient automatiquement interactive.
 
 ```yaml
 type: custom:uix-forge
@@ -87,13 +87,13 @@ element:
 ![Tile icon spark actions example](../../assets/page-assets/forge/sparks/tile-icon-actions.gif)
 
 !!! note
-    - The spark targets the **first** element matched by `after`/`before`.
-    - The inserted `ha-tile-icon` element is placed in the same parent as the target element — it is a sibling, not a child.
-    - If you are inserting a tile icon **before** another tile icon, you will need to be specific in your selector so as to not select the inserted icon on updates. Tile icons added by this spark have an attribute `data-uix-forge-tile-icon-id` so you can use this with your selector. e.g. `hui-tile-card $ ha-tile-icon:not([data-uix-forge-tile-icon-id])`
+    - Le spark cible le **premier** élément correspondant à `after` ou `before`.
+    - L'élément `ha-tile-icon` inséré est placé dans le même parent que la cible : c'est un élément frère, pas un enfant.
+    - Pour insérer une icône de tuile **avant** une autre icône, précisez le sélecteur afin de ne pas sélectionner à nouveau l'icône insérée lors des mises à jour. Les icônes créées par ce spark possèdent l'attribut `data-uix-forge-tile-icon-id`, que vous pouvez exclure, par exemple avec `hui-tile-card $ ha-tile-icon:not([data-uix-forge-tile-icon-id])`.
 
-## Examples
+## Exemples
 
-??? example "Insert an icon after an element using a fixed icon with color blue"
+??? example "Insérer après un élément une icône fixe de couleur bleue"
     ```yaml
     type: custom:uix-forge
     forge:
@@ -108,9 +108,9 @@ element:
       entity: light.bed_light
     ```
 
-    ![Tile icon spark fixed blue](../../assets/page-assets/forge/sparks/tile-icon-fixed-blue.png)
+    ![Icône de tuile fixe de couleur bleue](../../assets/page-assets/forge/sparks/tile-icon-fixed-blue.png)
 
-??? example "Insert an entity state icon before an element"
+??? example "Insérer l'icône d'état d'une entité avant un élément"
     ```yaml
     type: custom:uix-forge
     forge:
@@ -124,10 +124,10 @@ element:
       entity: light.bed_light
     ```
 
-    ![Tile icon spark entity state](../../assets/page-assets/forge/sparks/tile-icon-entity-state.png)
+    ![Icône de tuile affichant l'état d'une entité](../../assets/page-assets/forge/sparks/tile-icon-entity-state.png)
 
-??? example "Insert an icon using an SVG path"
-    Path is a filled circle
+??? example "Insérer une icône à partir d'un chemin SVG"
+    Le chemin dessine un cercle plein.
     ```yaml
     type: custom:uix-forge
     forge:
@@ -142,9 +142,9 @@ element:
       entity: light.bed_light
     ```
 
-    ![Tile icon spark svg path](../../assets/page-assets/forge/sparks/tile-icon-svg-path.png)
+    ![Icône de tuile dessinée à partir d'un chemin SVG](../../assets/page-assets/forge/sparks/tile-icon-svg-path.png)
 
-??? example "Insert an image icon"
+??? example "Insérer une image comme icône"
     ```yaml
     type: custom:uix-forge
     forge:
@@ -158,9 +158,9 @@ element:
       entity: light.bed_light
     ```
 
-    ![Tile icon spark image](../../assets/page-assets/forge/sparks/tile-icon-image.png)
+    ![Image utilisée comme icône de tuile](../../assets/page-assets/forge/sparks/tile-icon-image.png)
 
-??? example "Cross a shadow boundary to reach a deeply nested element"
+??? example "Traverser une racine Shadow DOM pour atteindre un élément imbriqué"
     ```yaml
     type: custom:uix-forge
     forge:
@@ -176,4 +176,4 @@ element:
       entity: alarm_control_panel.security
     ```
 
-    ![Tile icon spark nested](../../assets/page-assets/forge/sparks/tile-icon-nested.png)
+    ![Icône de tuile insérée dans un élément imbriqué](../../assets/page-assets/forge/sparks/tile-icon-nested.png)
