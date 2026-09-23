@@ -1,30 +1,30 @@
 ---
-description: Use the attribute spark to replace or remove an HTML attribute on a target element within a UIX Forge element.
+description: Remplacez ou supprimez un attribut HTML d'un élément cible avec le spark Attribute de UIX Forge.
 icon: material/label-outline
 ---
 
-# :label: Attribute spark
+# :label: Spark d'attribut
 
-The `attribute` spark lets you **replace** or **remove** an HTML attribute on any element inside a forged element. A common use-case is removing or overriding the `title` attribute on an element so that the browser's native tooltip no longer appears, or so that a custom value is shown instead.
+Le spark `attribute` permet de **remplacer** ou de **supprimer** un attribut HTML de n'importe quel élément créé avec UIX Forge. Par exemple, vous pouvez supprimer ou remplacer l'attribut `title` afin que l'infobulle native du navigateur ne s'affiche plus, ou qu'une valeur personnalisée apparaisse à sa place.
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
 | --- | ---- | -------- | ------- | ----------- |
-| `type` | `string` | ✅ | — | Must be `attribute`. |
-| `attribute` | `string` | ✅ | — | Name of the HTML attribute to target (e.g. `title`). |
-| `for` | `string` | | `element` | CSS/UIX selector to the target element. Supports `$` for shadow-root crossings (see [DOM navigation](../../concepts/dom.md)). When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, the default of `element` refers to the root of the forged element. |
-| `action` | `string` | | `replace` | What to do with the attribute. Either `replace` (set a new value) or `remove` (delete the attribute entirely). |
-| `value` | `string` | | `""` | The new attribute value. Only used when `action` is `replace`. Supports [Jinja2 templates](../../using/templates.md). |
+| `type` | `string` | ✅ | — | Doit être défini sur `attribute`. |
+| `attribute` | `string` | ✅ | — | Nom de l'attribut HTML ciblé, par exemple `title`. |
+| `for` | `string` | | `element` | Sélecteur CSS/UIX de l'élément cible. Le caractère `$` permet de traverser une racine Shadow DOM (voir [Navigation dans le DOM](../../concepts/dom.md)). Si l'élément UIX Forge utilise la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, `element` désigne la racine de l'élément créé avec UIX Forge. |
+| `action` | `string` | | `replace` | Opération à effectuer sur l'attribut : `replace` définit une nouvelle valeur, tandis que `remove` supprime entièrement l'attribut. |
+| `value` | `string` | | `""` | Nouvelle valeur de l'attribut. Utilisée uniquement si `action` vaut `replace`. Les [modèles Jinja2](../../using/templates.md) sont pris en charge. |
 
 !!! tip
-    You can use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) DOM helper to take the guesswork out of finding the right path for `for`.
+    Le helper DOM [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) vous aide à déterminer le chemin à utiliser pour `for`.
 
-## Usage
+## Utilisation
 
-### Remove a native tooltip (title attribute)
+### Supprimer l'infobulle native (attribut `title`)
 
-Weather forecast card has a `title` attribute on the name, which causes a native browser tooltip to appear on hover. To remove it:
+La carte de prévisions météo possède un attribut `title` sur son nom, ce qui affiche l'infobulle native du navigateur au survol. Pour la supprimer :
 
 ```yaml
 type: custom:uix-forge
@@ -43,7 +43,7 @@ element:
   forecast_type: daily
 ```
 
-### Replace the title attribute with a custom value
+### Remplacer l'attribut `title` par une valeur personnalisée
 
 ```yaml
 type: custom:uix-forge
@@ -65,9 +65,9 @@ element:
 
 ![Replace attribute example](../../assets/page-assets/forge/sparks/attribute-replace-manually-generated.gif)
 
-### Use a template for the value
+### Utiliser un modèle pour définir la valeur
 
-The `value` field supports [templates](../../using/templates.md), giving you access to entity states and other template variables:
+Le champ `value` accepte les [modèles](../../using/templates.md), qui donnent accès aux états des entités et aux autres variables de modèle :
 
 ```yaml
 type: custom:uix-forge
@@ -88,5 +88,5 @@ element:
 ![Replace attribute with template example](../../assets/page-assets/forge/sparks/attribute-replace-template-manually-generated.gif)
 
 !!! note
-    - The spark targets the **first** matching element found by the `for` selector.
-    - When `action` is `replace` and `value` is an empty string, an empty attribute (e.g. `title=""`) is set — not removed. Use `action: remove` to delete the attribute entirely.
+    - Le spark cible le **premier** élément correspondant au sélecteur `for`.
+    - Si `action` vaut `replace` et que `value` est une chaîne vide, un attribut vide (par exemple `title=""`) est défini ; l'attribut n'est pas supprimé. Utilisez `action: remove` pour le supprimer entièrement.
