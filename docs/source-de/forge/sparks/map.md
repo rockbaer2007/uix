@@ -5,13 +5,13 @@ icon: material/map
 
 # :material-map: Map spark
 
-The `map` spark adds advanced map state management to a map card used inside a [UIX Forge](../index.md) forged element. It supports five modes:
+Der `map`-Spark ergänzt eine Kartenkarte innerhalb eines mit [UIX Forge](../index.md) erstellten Elements um eine erweiterte Kartenverwaltung. Er unterstützt fünf Modi:
 
 - **Speichermodus** (`memory: true`): Erfasst vor jedem Update Zoom und Mittelpunkt der aktuellen Karte und stellt sie danach wieder her. So bleibt die gewählte Kartenansicht erhalten. Ohne diesen Modus setzt jedes Forge-Template-Update die Karte auf den Standardzoom und die Standardposition zurück.
-- **Fit map mode** (`fit_map: true`): Fits the map view when map card does not auto fit on load when used in custom cards which may hide the map initially. e.g. `custom: auto-entities`.
-- **Tour mode** (`tour: true | object`): Automatically moves the map between a list of points of interest. A pause/play button is injected into the map. When `tour: true` all defaults are used; pass an object to customise behaviour.
-- **Hours to show slider mode** (`hours_to_show: true | object`): Injects an interactive `ha-slider` overlay into the map allowing users to adjust the hours of history loaded and rendered in real-time.
-- **Entity filter overlay mode** (`entity_filter: true | object`): Injects an interactive checkable dropdown checklist overlay into the map allowing users to toggle visible entities on the map in real-time.
+- **Kartenansicht anpassen** (`fit_map: true`): Passt die Kartenansicht an, wenn die Karte beim Laden nicht automatisch auf alle Entitäten zoomt, etwa in benutzerdefinierten Karten, die zunächst verborgen sind, wie `custom:auto-entities`.
+- **Tourmodus** (`tour: true | object`): Bewegt die Karte automatisch zwischen mehreren Orten. Eine Pause-/Wiedergabe-Schaltfläche wird eingeblendet. Bei `tour: true` gelten die Standardwerte; mit einem Objekt lässt sich das Verhalten anpassen.
+- **Zeitraumregler** (`hours_to_show: true | object`): Blendet einen interaktiven `ha-slider` ein, mit dem sich der geladene und angezeigte Zeitraum des Verlaufs in Echtzeit ändern lässt.
+- **Entitätsfilter** (`entity_filter: true | object`): Blendet eine interaktive Auswahlliste ein, über die sich die auf der Karte sichtbaren Entitäten in Echtzeit ein- und ausblenden lassen.
 
 ## Basic usage
 
@@ -33,41 +33,43 @@ element:
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `type` | string | — | Must be `map`. |
-| `memory` | boolean | false | Save/restore zoom and centre before/after each update. |
-| `fit_map` | boolean | false | Fit map view to all entities once map is visible (useful for cards hidden on load). |
-| `tour` | boolean or object | false | Enable tour mode. `true` uses all defaults; pass an object to customise (see below). |
-| `hours_to_show` | boolean or object | false | Enable hours to show slider overlay. `true` uses all defaults; pass an object to customise (see below). |
-| `entity_filter` | boolean or object | false | Enable entity filter checklist dropdown overlay. `true` uses all defaults; pass an object to customise (see below). |
+| `memory` | boolean | `false` | Speichert Zoomstufe und Mittelpunkt vor jeder Aktualisierung und stellt sie danach wieder her. |
+| `fit_map` | boolean | `false` | Passt die Kartenansicht an alle Entitäten an, sobald die Karte sichtbar ist; nützlich bei Karten, die beim Laden verborgen sind. |
+| `tour` | boolean or object | `false` | Aktiviert den Tourmodus. `true` verwendet alle Standardwerte; ein Objekt passt die Optionen an (siehe unten). |
+| `hours_to_show` | boolean or object | `false` | Aktiviert den Zeitraumregler. `true` verwendet die Standardwerte; ein Objekt passt die Optionen an (siehe unten). |
+| `entity_filter` | boolean or object | `false` | Aktiviert die Auswahlliste zum Filtern von Entitäten. `true` verwendet die Standardwerte; ein Objekt passt die Optionen an (siehe unten). |
 
 ### Tour sub-keys
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
-| `period` | string or number | `10s` | Time to spend at each point of interest. Accepts a human-readable duration (e.g. `"30s"`, `"2m"`) or a number in milliseconds. |
-| `zoom` | number | `14` | Default zoom level used when moving to a POI. |
-| `icon_pause` | string | `mdi:pause` | Icon shown on the overlay button while the tour is playing. |
-| `icon_play` | string | `mdi:play` | Icon shown on the overlay button while the tour is paused. |
+| `period` | string or number | `10s` | Verweildauer an jedem Ort. Akzeptiert eine lesbare Zeitangabe wie `"30s"` oder `"2m"` oder eine Zahl in Millisekunden. |
+| `zoom` | number | `14` | Standard-Zoomstufe beim Wechsel zu einem Ort. |
+| `icon_pause` | string | `mdi:pause` | Symbol auf der eingeblendeten Schaltfläche während der Tour. |
+| `icon_play` | string | `mdi:play` | Symbol auf der eingeblendeten Schaltfläche, wenn die Tour pausiert ist. |
 | `icon_position` | object | `{bottom: 40px, right: 10px}` | CSS-Position der Pause-/Wiedergabe-Schaltfläche. Akzeptiert `top`, `bottom`, `left` und `right`; Zahlen werden als Pixel behandelt. |
-| `poi` | list | *(unset)* | List of points of interest. When omitted, the entities declared on the ha-map card are used. |
+| `poi` | list | *(nicht gesetzt)* | Liste der Orte. Fehlt sie, werden die in der `ha-map`-Karte angegebenen Entitäten verwendet. |
 
 Each `poi` list entry may contain:
 
 | Key | Type | Description |
 | --- | --- | --- |
-| `entity` | string | Entity ID. Must be present in the ha-map's `entities` list. Lat/lng are read from hass state attributes. |
-| `latitude` | number | Latitude (required when `entity` is not set). |
-| `longitude` | number | Longitude (required when `entity` is not set). |
-| `zoom` | number | Per-POI zoom override. |
+| `entity` | string | Entitäts-ID. Muss in der `entities`-Liste von `ha-map` enthalten sein. Breiten- und Längengrad werden aus den Zustandsattributen gelesen. |
+| `latitude` | number | Breitengrad; erforderlich, wenn `entity` nicht gesetzt ist. |
+| `longitude` | number | Längengrad; erforderlich, wenn `entity` nicht gesetzt ist. |
+| `zoom` | number | Abweichende Zoomstufe für diesen Ort. |
 
 ### Hours to Show sub-keys
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
-| `min` | number | `0` | Minimum hours to show on the slider. |
-| `max` | number | `24` | Maximum hours to show on the slider. |
-| `step` | number | `1` | Increment step size of the slider. |
+| `min` | number | `0` | Kleinster Zeitraum in Stunden, den der Regler anzeigen kann. |
+| `max` | number | `24` | Größter Zeitraum in Stunden, den der Regler anzeigen kann. |
+| `step` | number | `1` | Schrittweite des Reglers. |
 | `position` | object | `{bottom: 40px, right: 10px}` | CSS-Position der Reglerkapsel. Akzeptiert `top`, `bottom`, `left` und `right`; Zahlen werden als Pixel behandelt. |
-| `tooltip_distance` | number | `20` | Distance in pixels of slider tooltip away from thumb. |
+| `tooltip_distance` | number | `20` | Abstand des Regler-Werkzeughinweises zum Griff in Pixeln. |
+
+Bedienelemente ohne konfigurierte Position oder mit der expliziten Position `{bottom: 40px, right: 10px}` liegen gemeinsam in einer horizontalen Reihe über der Kartenattribution. Andere Positionen, darunter `{bottom: 10px, right: 10px}`, verwenden ihre eingestellten Abstände unabhängig voneinander.
 
 Bedienelemente ohne konfigurierte Position oder mit der expliziten Position `{bottom: 40px, right: 10px}` liegen gemeinsam in einer horizontalen Reihe über der Karten-Attribution. Alle anderen Positionen, auch `{bottom: 10px, right: 10px}`, verwenden ihre konfigurierten Abstände unabhängig voneinander.
 
@@ -76,24 +78,24 @@ Bedienelemente ohne konfigurierte Position oder mit der expliziten Position `{bo
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
 | `position` | object | `{bottom: 40px, right: 10px}` | CSS-Position der Filter-Schaltflächenkapsel. Akzeptiert `top`, `bottom`, `left` und `right`; Zahlen werden als Pixel behandelt. |
-| `size` | string | `s` | Button size (e.g. `s`, `m`, `l`). |
-| `variant` | string | `neutral` | Button variant brand/style (e.g. `brand`, `neutral`, `danger`, `warning`, `success`). |
-| `appearance` | string | `filled` | Button presentation appearance (e.g. `accent`, `filled`, `plain`). |
-| `icon` | string | `mdi:filter-variant` | Trigger button start-icon representation. |
-| `label` | string | `Filter` | Trigger button label string. Set to empty string to disable. |
-| `group` | boolean or object | false | Group entities according to their domain. Set to `true` to use defaults, or an object to set labels for each entity domain grouping. |
+| `size` | string | `s` | Schaltflächengröße, zum Beispiel `s`, `m` oder `l`. |
+| `variant` | string | `neutral` | Farbvariante der Schaltfläche, zum Beispiel `brand`, `neutral`, `danger`, `warning` oder `success`. |
+| `appearance` | string | `filled` | Darstellung der Schaltfläche, zum Beispiel `accent`, `filled` oder `plain`. |
+| `icon` | string | `mdi:filter-variant` | Startsymbol der Filterschaltfläche. |
+| `label` | string | `Filter` | Beschriftung der Filterschaltfläche. Mit einer leeren Zeichenfolge wird sie ausgeblendet. |
+| `group` | boolean or object | `false` | Gruppiert Entitäten nach ihrer Domäne. `true` verwendet die Standardwerte; ein Objekt legt die Gruppenbeschriftungen fest. |
 
 #### Entity filter group sub-keys
 
 | Key | Type | Default | Description |
 | --- | --- | --- | --- |
-| `persons` | string | `Persons` | Label for the `person` domain entity grouping. |
-| `trackers` | string | `Trackers` | Label for the `device_tracker` domain entity grouping. |
-| `zones` | string | `Zones` | Label for the `zone` domain entity grouping. |
+| `persons` | string | `Persons` | Beschriftung der Entitätsgruppe für die Domäne `person`. |
+| `trackers` | string | `Trackers` | Beschriftung der Entitätsgruppe für die Domäne `device_tracker`. |
+| `zones` | string | `Zones` | Beschriftung der Entitätsgruppe für die Domäne `zone`. |
 
-### Tour CSS variables
+### CSS-Variablen des Tourmodus
 
-The pause/play button can be styled using CSS variables placed on the `ha-card` or any ancestor:
+Die Pause-/Wiedergabeschaltfläche lässt sich über CSS-Variablen auf `ha-card` oder einem übergeordneten Element gestalten:
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -106,9 +108,9 @@ The pause/play button can be styled using CSS variables placed on the `ha-card` 
 | `--uix-map-tour-icon-border-radius` | `9999px` | Button border radius (pill by default). |
 | `--uix-map-tour-icon-z-index` | `1000` | Button z-index (Leaflet controls use 1000). |
 
-### Hours to Show CSS variables
+### CSS-Variablen des Zeitraumreglers
 
-The history duration slider can be styled using CSS variables placed on the `ha-card` or any ancestor:
+Der Verlaufsregler lässt sich über CSS-Variablen auf `ha-card` oder einem übergeordneten Element gestalten:
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -139,9 +141,9 @@ The history duration slider can be styled using CSS variables placed on the `ha-
 | `--uix-map-slider-tooltip-border-color` | `currentColor` | Border color of tooltip bubble. |
 | `--uix-map-slider-tooltip-border-style` | `none` | Border line style. |
 
-### Entity Filter CSS variables
+### CSS-Variablen des Entitätsfilters
 
-The entity filter dropdown can be styled using CSS variables placed on the `ha-card` or any ancestor:
+Das Dropdown des Entitätsfilters lässt sich über CSS-Variablen auf `ha-card` oder einem übergeordneten Element gestalten:
 
 | Variable | Default | Description |
 | --- | --- | --- |
@@ -156,62 +158,62 @@ The entity filter dropdown can be styled using CSS variables placed on the `ha-c
 
 ## How it works
 
-**Memory mode:**
+**Speichermodus:**
 
-Each time the forged element is about to refresh due to a forge template update, the spark:
+Vor jeder Aktualisierung des erstellten Elements durch eine Forge-Vorlage führt der Spark folgende Schritte aus:
 
 1. Liest `zoom` und `center` der aktuellen Karten-Engine innerhalb von `ha-map`.
-2. Waits for the forged element and then `ha-map` to finish their own update cycle.
+2. Wartet, bis das erstellte Element und anschließend `ha-map` ihre Aktualisierung abgeschlossen haben.
 3. Stellt die gespeicherte Position über die Karten-Engine von Home Assistant wieder her, ohne eine Animation auszulösen.
 
 Ist die Karten-Engine beim Aktualisieren noch nicht initialisiert, etwa beim ersten Rendern, wird das Speichern übersprungen und nichts wiederhergestellt. Beim ersten Laden zeigt die Karte dann ihre Standardansicht.
 
-**Fit map mode:**
+**Kartenansicht anpassen:**
 
 Sobald das geschmiedete Element und `ha-map` ihr Update beendet haben und die Karten-Engine eine nutzbare Größe hat, ruft der Spark `fitMap()` auf `ha-map` auf.
 
-**Tour mode:**
+**Tourmodus:**
 
-After the map is ready (and after `fit_map` completes if both are configured), the spark:
+Sobald die Karte bereit ist (und gegebenenfalls `fit_map` abgeschlossen wurde), führt der Spark folgende Schritte aus:
 
-1. Resolves the POI list (from `poi` config, or by reading `latitude`/`longitude` from hass state attributes of the ha-map entities).
+1. Ermittelt die Ortsliste aus der `poi`-Konfiguration oder aus den Zustandsattributen `latitude` und `longitude` der `ha-map`-Entitäten.
 2. Fügt ein `ha-icon-button`-Overlay mit einem kreisförmigen SVG-Countdown-Ring in den Container der Karten-Engine ein.
 3. Bewegt die Karte sofort zum ersten POI und startet dann einen wiederkehrenden Timer, der über die Karten-Engine alle `period` Sekunden zum nächsten POI wechselt.
-4. The countdown ring animates from full to empty over each `period`, giving a visual indication of time remaining at the current POI.
-5. When the user clicks the pause/play button, the timer is stopped or restarted and the countdown ring is hidden or restarted.
+4. Der Countdown-Ring leert sich während jedes Zeitraums und zeigt so die verbleibende Zeit am aktuellen Ort an.
+5. Beim Betätigen der Pause-/Wiedergabeschaltfläche wird der Timer angehalten oder neu gestartet und der Ring ausgeblendet oder zurückgesetzt.
 
-When `memory: true` and `tour` are both active, hass-update memory restores are suppressed while the tour is playing so that the tour animation is not interrupted.
+Wenn `memory: true` und `tour` gleichzeitig aktiv sind, werden Wiederherstellungen bei hass-Aktualisierungen während der laufenden Tour unterdrückt, damit die Animation nicht unterbrochen wird.
 
-**Hours to show slider mode:**
+**Zeitraumregler:**
 
-When active, the spark:
+Ist der Modus aktiv, führt der Spark folgende Schritte aus:
 
-1. Renders a horizontal `ha-slider` control in a capsule-shaped overlay container.
-2. If `tour` is also active and at the default position, the slider is automatically shifted leftwards to prevent visual overlapping.
-3. Automatically sets, clamps, and updates `hui-map-card` `_config.hours_to_show` based on slider drags and releases to fetch history records in real-time.
-4. Smoothly preserves the user's selected value across template-driven forge re-renders.
+1. Zeigt einen horizontalen `ha-slider` in einem kapselartigen Overlay an.
+2. Ist zusätzlich `tour` mit der Standardposition aktiv, wird der Regler automatisch nach links verschoben, damit sich die Bedienelemente nicht überlagern.
+3. Setzt und begrenzt `hui-map-card` `_config.hours_to_show` anhand der Reglerbewegungen und lädt Verlaufsdaten in Echtzeit.
+4. Behält den ausgewählten Wert bei erneuten, vorlagenbedingten Forge-Darstellungen bei.
 
-**Entity filter overlay mode:**
+**Entitätsfilter:**
 
-When active, the spark:
+Ist der Modus aktiv, führt der Spark folgende Schritte aus:
 
-1. Renders a dropdown overlay using `ha-dropdown` with a trigger `ha-button`.
-2. Resolves and displays each map entity as a checkbox using Friendly Name.
-3. Directly filters visible entities. As a map card will error with no entities, deselecting any last selected entity is disabled.
-4. If the `show_all: true` is set in forged map card config, a `Show All` option will also show in the dropdown. While entities are filtered, any new map entities will not show until `Show All` is selected.
-5. If `tour`or `hours_to_show` is also active and at the default position, the slider is automatically shifted leftwards to prevent visual overlapping.
-6. If `tour` is also active, changing filtered entities will cause the map tour to restart.
+1. Blendet ein Dropdown mit `ha-dropdown` und einer `ha-button` als Auslöser ein.
+2. Ermittelt die Kartenentitäten und zeigt sie mit ihrem Anzeigenamen als Kontrollkästchen an.
+3. Filtert die sichtbaren Entitäten direkt. Da eine Kartenkarte ohne Entitäten einen Fehler auslöst, lässt sich die letzte ausgewählte Entität nicht abwählen.
+4. Ist `show_all: true` in der Forge-Kartenkonfiguration gesetzt, erscheint im Dropdown auch die Option `Show All`. Solange ein Filter aktiv ist, werden neue Kartenentitäten erst nach Auswahl von `Show All` angezeigt.
+5. Ist zusätzlich `tour` oder `hours_to_show` mit der Standardposition aktiv, wird der Regler automatisch nach links verschoben, um Überlagerungen zu vermeiden.
+6. Ist auch `tour` aktiv, startet eine Änderung der gefilterten Entitäten die Kartentour neu.
 
 !!! note
-    Der Spark verwendet das Element `hui-map-card` innerhalb des geschmiedeten Elements sowie das Element `ha-map` in dessen Shadow Root. Er unterstützt die Karten-Engine von Home Assistant (MapLibre, wenn verfügbar, mit Leaflet-Fallback) sowie ältere Leaflet-basierte Frontends. Ist das geschmiedete Element keine Kartenkarte oder in ein Element eingebettet, das `hui-map-card` nicht bereitstellt, haben die Modi keine Wirkung.
+    Der Spark greift auf `hui-map-card` innerhalb des erstellten Elements und auf `ha-map` in dessen Shadow Root zu. Er unterstützt die Karten-Engine von Home Assistant (MapLibre, sofern verfügbar, andernfalls Leaflet) sowie ältere Leaflet-basierte Frontends. Ist das erstellte Element keine Kartenkarte oder in ein Element eingebettet, das `hui-map-card` nicht bereitstellt, haben die Modi keine Wirkung.
 
 ## Examples
 
-### Using fit map mode with auto-entities
+### Kartenansicht mit auto-entities anpassen
 
-When using a map card with `custom:auto-entities` the way auto-entities hides the map card will mean it does not fit on load. Fit map mode can be used in this case to make sure the map fits on first load.
+Bei einer Kartenkarte in `custom:auto-entities` kann die Karte wegen des anfänglichen Ausblendens beim Laden nicht automatisch angepasst werden. Der Modus zum Anpassen der Kartenansicht sorgt in diesem Fall dafür, dass sie beim ersten Anzeigen passend skaliert wird.
 
-No include filters have been used for brevity of the example.
+Der Kürze halber enthält das Beispiel keine Include-Filter.
 
 ```yaml
 type: custom:auto-entities

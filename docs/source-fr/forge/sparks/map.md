@@ -1,13 +1,13 @@
 ---
-description: Préservez le niveau de zoom et le centre d'une carte Home Assistant avec le spark map de UIX Forge.
+description: Préservez la vue d'une carte Home Assistant et ajoutez visites, curseurs d'historique et filtres d'entités avec le spark map de UIX Forge.
 icon: material/map
 ---
 
 # :material-map: Spark Map
 
-Le spark `map` ajoute des fonctions avancées de gestion de l'état à une carte Map utilisée dans un élément créé avec [UIX Forge](../index.md). Il propose cinq modes :
+Le spark `map` ajoute une gestion avancée de la vue à une carte Map utilisée dans un élément créé avec [UIX Forge](../index.md). Il propose cinq modes :
 
-- **Mode mémoire** (`memory: true`) : enregistre le zoom et le centre Leaflet avant chaque mise à jour, puis les restaure pour conserver la vue de l'utilisateur. Sans ce mode, chaque mise à jour du modèle Forge réinitialise la carte à son zoom et son centre par défaut.
+- **Mode mémoire** (`memory: true`) : enregistre le zoom et le centre actuels de la carte avant chaque mise à jour, puis les restaure pour conserver la vue choisie. Sans ce mode, chaque mise à jour du modèle Forge réinitialise la carte à son zoom et à son centre par défaut.
 - **Mode ajustement de la carte** (`fit_map: true`) : ajuste la carte lorsque celle-ci ne s'adapte pas automatiquement au chargement, par exemple dans une carte personnalisée qui masque d'abord la carte, comme `custom:auto-entities`.
 - **Mode visite** (`tour: true | object`) : déplace automatiquement la carte entre une liste de points d'intérêt. Un bouton pause/lecture est ajouté. Avec `tour: true`, les valeurs par défaut sont utilisées ; indiquez un objet pour personnaliser le comportement.
 - **Mode curseur de période** (`hours_to_show: true | object`) : ajoute un curseur `ha-slider` interactif à la carte afin de régler en temps réel la durée de l'historique chargé et affiché.
@@ -47,7 +47,7 @@ element:
 | `zoom` | nombre | `14` | Niveau de zoom par défaut lors du déplacement vers un point d'intérêt. |
 | `icon_pause` | string | `mdi:pause` | Icône du bouton superposé pendant la lecture de la visite. |
 | `icon_play` | string | `mdi:play` | Icône du bouton superposé lorsque la visite est en pause. |
-| `icon_position` | objet | `{bottom: 10px, right: 10px}` | Position CSS du bouton pause/lecture. Accepte les clés `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
+| `icon_position` | objet | `{bottom: 40px, right: 10px}` | Position CSS du bouton pause/lecture. Accepte les clés `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
 | `poi` | liste | *(non défini)* | Liste de points d'intérêt. Si elle est absente, les entités déclarées dans la carte `ha-map` sont utilisées. |
 
 Chaque entrée de la liste `poi` peut contenir :
@@ -66,14 +66,16 @@ Chaque entrée de la liste `poi` peut contenir :
 | `min` | nombre | `0` | Nombre minimal d'heures affiché sur le curseur. |
 | `max` | nombre | `24` | Nombre maximal d'heures affiché sur le curseur. |
 | `step` | nombre | `1` | Pas d'incrémentation du curseur. |
-| `position` | objet | `{bottom: 10px, right: 10px}` | Position CSS de la capsule du curseur. Accepte `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
+| `position` | objet | `{bottom: 40px, right: 10px}` | Position CSS de la capsule du curseur. Accepte `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
 | `tooltip_distance` | nombre | `20` | Distance en pixels entre l'infobulle du curseur et sa poignée. |
+
+Les commandes sans position configurée, ou avec la position explicite `{bottom: 40px, right: 10px}`, sont alignées sur une rangée horizontale au-dessus de l'attribution de la carte. Les autres positions, y compris `{bottom: 10px, right: 10px}`, utilisent indépendamment les décalages configurés.
 
 ### Sous-clés du filtre d'entités
 
 | Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `position` | objet | `{bottom: 10px, right: 10px}` | Position CSS de la capsule du bouton de filtre. Accepte `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
+| `position` | objet | `{bottom: 40px, right: 10px}` | Position CSS de la capsule du bouton de filtre. Accepte `top`, `bottom`, `left` et `right` ; les nombres sont interprétés en pixels. |
 | `size` | string | `s` | Taille du bouton, par exemple `s`, `m` ou `l`. |
 | `variant` | string | `neutral` | Variante de couleur du bouton, par exemple `brand`, `neutral`, `danger`, `warning` ou `success`. |
 | `appearance` | string | `filled` | Apparence du bouton, par exemple `accent`, `filled` ou `plain`. |
@@ -158,23 +160,23 @@ Le menu déroulant du filtre d'entités peut être stylisé avec des variables C
 
 Chaque fois que l'élément Forge est sur le point d'être actualisé à la suite d'une mise à jour du modèle, le spark :
 
-1. lit les valeurs `zoom` et `center` actuelles de l'instance Leaflet dans `ha-map` ;
+1. lit les valeurs `zoom` et `center` actuelles du moteur de rendu de la carte dans `ha-map` ;
 2. attend la fin du cycle de mise à jour de l'élément Forge, puis de `ha-map` ;
-3. appelle `leafletMap.setView(center, zoom, { reset: true })` pour restaurer la position enregistrée sans animation.
+3. restaure la position enregistrée via le moteur cartographique de Home Assistant, sans animation.
 
-Si Leaflet n'est pas encore initialisé au moment de l'actualisation, par exemple au premier rendu, l'enregistrement et la restauration sont ignorés. La carte affiche donc sa vue par défaut au premier chargement.
+Si le moteur de rendu de la carte n'est pas encore initialisé au moment de l'actualisation, par exemple au premier rendu, l'enregistrement est ignoré et aucune restauration n'est tentée. La carte affiche alors sa vue par défaut au premier chargement.
 
 **Mode d'ajustement de la carte :**
 
-Lorsque l'élément Forge et `ha-map` ont terminé leur mise à jour, que la largeur côté client de `ha-map` est supérieure à zéro et que Leaflet est prêt, le spark appelle `fitMap()` sur `ha-map`.
+Lorsque l'élément Forge et `ha-map` ont terminé leur mise à jour et que le moteur cartographique dispose d'une taille exploitable, le spark appelle `fitMap()` sur `ha-map`.
 
 **Mode visite :**
 
 Lorsque la carte est prête — et après la fin de `fit_map` si les deux options sont activées — le spark :
 
 1. résout la liste des points d'intérêt à partir de la configuration `poi` ou des attributs d'état hass `latitude` et `longitude` des entités de `ha-map` ;
-2. ajoute au conteneur Leaflet un bouton `ha-icon-button` entouré d'un anneau SVG de compte à rebours ;
-3. déplace immédiatement la carte vers le premier point, puis lance un minuteur qui appelle `leafletMap.setView()` pour passer au point suivant toutes les `period` secondes ;
+2. ajoute au conteneur du moteur cartographique un bouton `ha-icon-button` entouré d'un anneau SVG de compte à rebours ;
+3. déplace immédiatement la carte vers le premier point, puis lance un minuteur qui passe au point suivant toutes les `period` secondes via le moteur cartographique ;
 4. anime l'anneau de compte à rebours de complet à vide pendant chaque période afin d'indiquer le temps restant sur le point actuel ;
 5. arrête ou redémarre le minuteur lorsque l'utilisateur appuie sur le bouton pause/lecture, et masque ou relance l'anneau.
 
@@ -201,7 +203,7 @@ Lorsque ce mode est actif, le spark :
 6. si `tour` est actif, toute modification du filtre redémarre la visite.
 
 !!! note
-    Le spark cible l'élément `hui-map-card` de l'élément Forge ainsi que l'élément `ha-map` dans son shadowRoot. Il utilise la propriété `leafletMap` exposée par `ha-map`. Si l'élément Forge n'est pas une carte Map, ou s'il est enveloppé dans un élément qui n'expose pas `hui-map-card`, aucun mode ne fonctionnera.
+    Le spark cible l'élément `hui-map-card` de l'élément Forge ainsi que l'élément `ha-map` dans son shadowRoot. Il prend en charge le moteur cartographique de Home Assistant (MapLibre lorsqu'il est disponible, avec Leaflet comme solution de repli) ainsi que les anciennes interfaces basées sur Leaflet. Si l'élément Forge n'est pas une carte Map ou s'il est enveloppé dans un élément qui n'expose pas `hui-map-card`, aucun mode ne fonctionnera.
 
 ## Exemples
 

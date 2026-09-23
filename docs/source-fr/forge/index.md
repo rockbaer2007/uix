@@ -1,6 +1,6 @@
 ---
 title: UIX Forge
-description: Découvrez UIX Forge, un élément personnalisé puissant qui combine modèles, sparks et UIX Styling.
+description: Découvrez UIX Forge, un élément personnalisé puissant qui combine modèles, sparks et styles UIX.
 ---
 UIX Forge permet de créer des éléments Home Assistant avec des modèles pour toute leur configuration, ainsi que des extensions avancées grâce aux [Sparks UIX Forge](./sparks/).
 
@@ -28,7 +28,7 @@ Sparks disponibles :
 - :shield: [Badge d'état](./sparks/state-badge.md) — insère un élément `state-badge` avant ou après un élément.
 - :material-grid: [Grille](./sparks/grid.md) — applique une mise en page **CSS Grid** à un conteneur.
 - :mag: [Recherche](./sparks/search.md) — recherche des éléments avec un sélecteur CSS et applique des modifications aux éléments trouvés.
-- :material-map: [Carte](./sparks/map.md) — conserve le niveau de zoom et le centre d'une carte lors des mises à jour Home Assistant.
+- :material-map: [Carte](./sparks/map.md) — préserve la vue de la carte et ajoute des visites, des curseurs d'historique et des filtres d'entités avec des positions de contrôle configurables.
 - :material-lock: [Verrou](./sparks/lock.md) — superpose un verrou et bloque l'interaction jusqu'à la saisie d'un PIN, d'une phrase secrète ou d'une confirmation.
 - :material-star-four-points-outline: [Icône superposée](./sparks/overlay-icon.md) — superpose une `ha-icon` ou `ha-state-icon` à un élément.
 - :material-image-outline: [Arrière-plan](./sparks/background.md) — ajoute un calque d'arrière-plan, couleur, image, vidéo ou caméra, derrière un élément.

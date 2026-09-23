@@ -1,35 +1,35 @@
 ---
 title: UIX Forge
-description: Learn about UIX Forge, a powerful custom element that combines templates, sparks, and UIX styling.
+description: Erfahre mehr über UIX Forge, ein leistungsfähiges benutzerdefiniertes Element, das Vorlagen, Sparks und UIX-Styling verbindet.
 ---
-UIX Forge provides a way to forge Home Assistant elements allowing for templates for all of the element's configuration, as well as additional advanced augmentation of the element through [UIX Forge Sparks](./sparks/).
+Mit UIX Forge lassen sich Home-Assistant-Elemente erstellen, deren gesamte Konfiguration Vorlagen verwenden kann. Zusätzlich können die Elemente mit [UIX-Forge-Sparks](./sparks/) erweitert werden.
 
-Home Assistant elements supported are card, badge, row, section and picture-element. Cross-context molds allow embedding one element type in a different parent context, such as a card used as a row inside an entities card — see [Cross-context molds](./forge.md#cross-context-molds).
+Unterstützt werden Home-Assistant-Karten, Badges, Zeilen, Abschnitte und Picture-Elemente. Kontextübergreifende Molds ermöglichen es, einen Elementtyp in einem anderen übergeordneten Kontext einzubetten, zum Beispiel eine Karte als Zeile in einer Entities-Karte. Siehe [kontextübergreifende Molds](./forge.md#cross-context-molds).
 
-See [Forge](./forge.md) for complete forge config reference.
+Die vollständige Forge-Konfigurationsreferenz findest du unter [Forge](./forge.md).
 
 ## Foundries
 
-A **foundry** is a server-stored UIX Forge template that lets you define reusable `forge`, `element`, and `uix` configs once and share them across many cards. Reference a foundry with the `foundry:` key and override only what you need locally.
+Eine **Foundry** ist eine auf dem Server gespeicherte UIX-Forge-Vorlage. Damit kannst du wiederverwendbare `forge`-, `element`- und `uix`-Konfigurationen einmal definieren und in mehreren Karten verwenden. Binde eine Foundry mit dem Schlüssel `foundry:` ein und überschreibe lokal nur die Einstellungen, die du ändern möchtest.
 
-See [Foundries](./foundries.md) for a full guide including merge behaviour, nested foundries, and management via the integration options.
+Die Anleitung zu [Foundries](./foundries.md) erklärt das Zusammenführen, verschachtelte Foundries und die Verwaltung über die Integrationsoptionen.
 
 ## Sparks
 
-Sparks are optional behaviours that you add to the `forge.sparks` list. Each spark has a `type` key and its own options.
+Sparks sind optionale Funktionen, die du zur Liste `forge.sparks` hinzufügst. Jeder Spark besitzt einen Schlüssel `type` und eigene Optionen.
 
-Available sparks:
+Verfügbare Sparks:
 
-- :speech_balloon: [Tooltip](./sparks/tooltip.md) — attach a styled tooltip to any element inside the forged element.
-- :material-button-cursor: [Button](./sparks/button.md) - attach a styled button (`ha-button`) with actions as a sibling before or after any element within the forged element.
-- :label: [Attribute](./sparks/attribute.md) — add, replace or remove an attribute of any element within the forged element.
-- :zap: [Event](./sparks/event.md) — receive DOM events from `fire-dom-event` actions and expose their data as template variables.
-- :star: [Tile Icon](./sparks/tile-icon.md) — insert a `ha-tile-icon` element as a sibling before or after any element within the forged element.
-- :shield: [State badge](./sparks/state-badge.md) - insert a `state-badge` element as a sibling before or after any element within the forged element.
-- :material-grid: [Grid](./sparks/grid.md) - apply **CSS Grid** layout to any container element inside a forged element
-- :mag: [Search](./sparks/search.md) - queries a container within a forged element with a CSS selector and optional inner text to find, then apply mutations to the found element(s).
+- :speech_balloon: [Tooltip](./sparks/tooltip.md) — fügt einem Element im erstellten Element einen gestalteten Tooltip hinzu.
+- :material-button-cursor: [Schaltfläche](./sparks/button.md) - fügt vor oder nach einem Element eine gestaltete Schaltfläche (`ha-button`) mit Aktionen ein.
+- :label: [Attribut](./sparks/attribute.md) — fügt ein Attribut hinzu, ersetzt oder entfernt es bei einem Element.
+- :zap: [Ereignis](./sparks/event.md) — empfängt DOM-Ereignisse von `fire-dom-event`-Aktionen und stellt deren Daten als Vorlagenvariablen bereit.
+- :star: [Tile-Symbol](./sparks/tile-icon.md) — fügt vor oder nach einem Element ein `ha-tile-icon`-Element ein.
+- :shield: [Status-Badge](./sparks/state-badge.md) - fügt vor oder nach einem Element ein `state-badge`-Element ein.
+- :material-grid: [Raster](./sparks/grid.md) - wendet ein **CSS-Grid**-Layout auf einen Container innerhalb eines erstellten Elements an.
+- :mag: [Suche](./sparks/search.md) - durchsucht einen Container anhand eines CSS-Selektors und optionalen Textes und verändert die gefundenen Elemente.
 - :material-map: [Map](./sparks/map.md) — bewahrt die Kartenansicht und ergänzt Touren, Verlaufsregler und Entitätsfilter mit konfigurierbaren Positionen für die Bedienelemente.
-- :material-lock: [Lock](./sparks/lock.md) — overlay a lock icon on any element to block interaction until the user passes a PIN, passphrase, or confirmation challenge.
-- :material-star-four-points-outline: [Overlay Icon](./sparks/overlay-icon.md) — overlay a `ha-icon`/`ha-state-icon` on any element inside the forged element.
-- :material-image-outline: [Background](./sparks/background.md) — inject a background layer (colour, image, video, or live camera) behind any element within the forged element.
-- :material-palette: [Theme](./sparks/theme.md) — apply a Frontend theme to the forged element or one of its descendants.
+- :material-lock: [Sperre](./sparks/lock.md) — legt ein Schlosssymbol über ein Element und blockiert die Interaktion, bis eine PIN, Passphrase oder Bestätigung eingegeben wurde.
+- :material-star-four-points-outline: [Overlay-Symbol](./sparks/overlay-icon.md) — legt ein `ha-icon` oder `ha-state-icon` über ein Element.
+- :material-image-outline: [Hintergrund](./sparks/background.md) — fügt hinter einem Element eine Hintergrundebene mit Farbe, Bild, Video oder Live-Kamera ein.
+- :material-palette: [Theme](./sparks/theme.md) — wendet ein Frontend-Theme auf das erstellte Element oder eines seiner untergeordneten Elemente an.
