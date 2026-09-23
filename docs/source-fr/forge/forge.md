@@ -1,59 +1,59 @@
 ---
-title: Forge
-description: UIX Forge config details including macros, billets, template nesting and UIX Styling.
+title: UIX Forge
+description: Configuration de UIX Forge : macros, billets, imbrication des modèles et styles UIX.
 ---
 # UIX Forge
 
-UIX Forge (`custom:uix-forge`) is a custom Lovelace element that combines template-driven configuration with additional behaviors called **sparks**. Use it to:
+UIX Forge (`custom:uix-forge`) est un élément Lovelace personnalisé qui associe une configuration basée sur des modèles à des comportements supplémentaires appelés **sparks**. Utilisez-le pour :
 
-- **Forge** any standard Home Assistant element from templates, allowing the entire element config to react to entity states, user, browser and other template variables.
-- **Add sparks** — self-contained behaviors that augment the forged element.
-- **Apply UIX styles** to the forged element, exactly like any other element. Additionally any spark variables are made available in the `uixForge` template variable.
+- **Créer** n'importe quel élément Home Assistant standard à partir de modèles, afin que toute sa configuration réagisse aux états des entités, à l'utilisateur, au navigateur et aux autres variables de modèle.
+- **Ajouter des sparks** — des comportements autonomes qui enrichissent l'élément créé.
+- **Appliquer des styles UIX** à l'élément créé, comme à tout autre élément. Les variables des sparks sont également accessibles dans la variable de modèle `uixForge`.
 
-!!! tip "Wrap in UIX Forge"
-    Look for the :bulb: icon in YAML code editors for card, badge, row, picture-element, card-feature to easily wrap the existing element's code in UIX Forge to quickly get started from a base element.
+!!! tip "Encapsuler avec UIX Forge"
+    Dans les éditeurs YAML des cartes, badges, lignes, picture-elements et fonctionnalités de carte, cherchez l'icône :bulb: pour encapsuler rapidement le code de l'élément existant dans UIX Forge.
 
-## Basic structure
+## Structure de base
 
 ```yaml
 type: custom:uix-forge
 forge:
   mold: card
-  # optional sparks, macros, hidden, grid_options …
+  # sparks, macros, hidden et grid_options facultatifs…
 element:
   type: tile
   entity: "{{ 'sun.sun' }}"
-  # any valid element config, templates supported
+  # toute configuration d'élément valide ; modèles pris en charge
 ```
 
-`forge` controls how UIX Forge itself behaves; `element` is the configuration of the Home Assistant element that will be rendered inside it.
+`forge` configure le comportement de UIX Forge ; `element` contient la configuration de l'élément Home Assistant affiché à l'intérieur.
 
-## Forge options
+## Options Forge
 
-| Key | Type | Allows Templates | Default | Description |
+| Clé | Type | Modèles acceptés | Valeur par défaut | Description |
 | --- | ---- | ---------------- | ------- | ----------- |
-| `mold` | string | | (required) | How the element is forged, with each `mold` handling required forged element behaviors within Home Assistant Frontend. Standard molds: `"card"`, `"badge"`, `"row"`, `"picture-element"`, `"section"`, `"footer"`, `"card-feature"`. Cross-context molds: `"card_as_row"`, `"card_as_badge"`, `"row_as_card"`, `"row_as_badge"`, `"badge_as_card"`, `"badge_as_row"`, `"badge_as_picture_element"`. See [Cross-context molds](#cross-context-molds). |
-| `macros` | mapping | | — | [template macros](../using/templates.md#macros) available to all templates in the forge config. Macros are also passed to `uix` config in both forge and forged element. See [UIX Styling - variables and macros](#template-variables-and-macros). |
-| `billets` | mapping | | — | [billets](#billets) — named YAML values available as template constants in all templates in the forge config. See [Billets](#billets) |
-| `hidden` | boolean | ✅ | `false` | When truthy the element is hidden. |
-| `grid_options` | mapping | ✅ | — | Lovelace grid options (e.g. `rows`, `columns`) for when `mold` is `card`. Ignored for any other `mold`. |
-| `show_error` | boolean | | `false` | When `true`, show the Lovelace error card instead of hiding it when the forged element errors. |
-| `template_nesting` | string | | `"<<>>"` | Four-character string used to escape nested templates. A single setting controls both Jinja forms: with the default `<<>>`, use `<<...>>` for `{{...}}` and `<%...%>` for `{%...%}` in the same nested template. Use when the element config itself contains Jinja2-like syntax. When nesting multiple forge layers deep, add an extra `<>` pair per additional layer (e.g. `<<< >>>` and `<<% %>>` for two layers of nesting). |
-| `sparks` | list | ✅ | `[]` | List of [spark](./sparks/index.md) configurations to attach to the forged element. |
-| `delayed_hass` | boolean | | - | Flag to delay the passing of hass object to the card until after it is loaded. Used to suppress console errors or other issues for some custom cards. e.g. apexcharts_card. |
+| `mold` | string | | (obligatoire) | Définit le type de création ; chaque `mold` applique le comportement requis dans le frontend Home Assistant. Types standard : `"card"`, `"badge"`, `"row"`, `"picture-element"`, `"section"`, `"footer"`, `"card-feature"`. Types inter-contextes : `"card_as_row"`, `"card_as_badge"`, `"row_as_card"`, `"row_as_badge"`, `"badge_as_card"`, `"badge_as_row"`, `"badge_as_picture_element"`. Voir les [moules inter-contextes](#cross-context-molds). |
+| `macros` | mapping | | — | [Macros de modèle](../using/templates.md#macros) disponibles dans tous les modèles de la configuration Forge. Elles sont également transmises à `uix` pour Forge et l'élément créé. Voir [Variables et macros UIX Styling](#template-variables-and-macros). |
+| `billets` | mapping | | — | [Billets](#billets) : valeurs YAML nommées disponibles comme constantes dans tous les modèles de la configuration Forge. |
+| `hidden` | boolean | ✅ | `false` | Si la valeur est vraie, l'élément est masqué. |
+| `grid_options` | mapping | ✅ | — | Options de grille Lovelace, par exemple `rows` et `columns`, lorsque `mold` vaut `card`. Ignorées pour les autres types. |
+| `show_error` | boolean | | `false` | Si `true`, affiche la carte d'erreur Lovelace au lieu de masquer l'élément lorsque sa création échoue. |
+| `template_nesting` | string | | `"<<>>"` | Chaîne de quatre caractères qui protège les modèles imbriqués. Elle contrôle les deux syntaxes Jinja : avec `<<>>` par défaut, utilisez `<<...>>` pour `{{...}}` et `<%...%>` pour `{%...%}`. À utiliser si la configuration de l'élément contient elle-même une syntaxe de type Jinja2. Pour chaque niveau Forge supplémentaire, ajoutez une paire `<>`, par exemple `<<< >>>` et `<<% %>>` pour deux niveaux. |
+| `sparks` | list | ✅ | `[]` | Liste des configurations de [sparks](./sparks/index.md) à appliquer à l'élément créé. |
+| `delayed_hass` | boolean | | — | Retarde la transmission de l'objet hass à la carte jusqu'à son chargement. Cela peut éviter des erreurs de console ou d'autres problèmes avec certaines cartes personnalisées, par exemple `apexcharts_card`. |
 
 !!! warning
-    [Theme macros](../using/themes.md#macros) are only available in UIX styling templates, not in UIX Forge element/forge templates.
-    Use UIX Forge [Global foundries](../forge/foundries.md#global-foundries) to define `forge.macros` available globally or per `mold`.
+    Les [macros de thème](../using/themes.md#macros) sont disponibles uniquement dans les modèles UIX Styling, pas dans les modèles `element` ou `forge` de UIX Forge.
+    Utilisez les [fonderies globales](./foundries.md#global-foundries) de UIX Forge pour définir des `forge.macros` disponibles globalement ou selon le type de `mold`.
 
-## Element config
+## Configuration de l'élément
 
-Any valid Lovelace element configuration. Every string value in `element` is processed as a template, giving access to the same variables as [UIX templates](../using/templates.md) (`config`, `user`, `browser`, `hash`, `panel`).
+Toute configuration Lovelace valide est acceptée. Chaque valeur de type chaîne dans `element` est traitée comme un modèle et dispose des mêmes variables que les [modèles UIX](../using/templates.md) : `config`, `user`, `browser`, `hash` et `panel`.
 
-The `uix` key inside `element` is passed through as is to [UIX Styling](../using/index.md), with [UIX Styling](../using/index.md) rendering any templates. Use it to style the forged element as you would any other element:
+La clé `uix` de `element` est transmise telle quelle à [UIX Styling](../using/index.md), qui traite les modèles. Utilisez-la pour styliser l'élément créé comme n'importe quel autre élément :
 
-!!! example inline end "Forge example"
-    ![Example forge output](../assets/page-assets/forge/basic-element.png)
+!!! example inline end "Exemple Forge"
+    ![Résultat de l'exemple Forge](../assets/page-assets/forge/basic-element.png)
 
 ```yaml
 type: custom:uix-forge
@@ -69,9 +69,10 @@ element:
       }
 ```
 
-### Element entities config
+<a id="element-entities-config"></a>
+### Configuration des entités de l'élément
 
-You can also use direct templates in the config, eg. template the entities inside a `type: entities` card. This can be an alternative for using [auto-entities](https://github.com/Lint-Free-Technology/lovelace-auto-entities) custom plugin for entities templates.
+Vous pouvez aussi utiliser directement des modèles dans la configuration, par exemple pour générer les entités d'une carte `type: entities`. Cela peut remplacer l'utilisation du module personnalisé [auto-entities](https://github.com/Lint-Free-Technology/lovelace-auto-entities) pour créer une liste d'entités dynamique.
 
 ```yaml
 type: custom:uix-forge
@@ -83,13 +84,13 @@ element:
     {{ integration_entities('sun') }}
 ```
 
-![Element entities config example](../assets/page-assets/forge/basic-element-entities.png)
+![Exemple de configuration des entités de l'élément](../assets/page-assets/forge/basic-element-entities.png)
 
-### Blank card config
+### Configuration de la carte vide
 
-When using UIX Forge molds `card`, `card_as_row` or `card_as_badge`, a default blank card, `custom:uix-forge-blank-card` will be used when no `element` or `element.type` is set. This allows for a blank card to which UIX Forge [sparks](./sparks/index.md) can be applied directly.
+Avec les types `card`, `card_as_row` ou `card_as_badge`, si `element` ou `element.type` n'est pas défini, UIX Forge utilise la carte vide par défaut `custom:uix-forge-blank-card`. Vous pouvez ainsi appliquer directement des [sparks](./sparks/index.md) à une carte vide.
 
-A default config with no sparks will show a placeholder message.
+La configuration par défaut, sans spark, affiche un message d'espace réservé.
 
 ```yaml
 type: "custom:uix-forge"
@@ -97,9 +98,9 @@ forge:
   mold: card
 ```
 
-![Empty uix-forge-blank-card example](../assets/page-assets/forge/blank-card-no-config.png)
+![Carte uix-forge-blank-card vide](../assets/page-assets/forge/blank-card-no-config.png)
 
-Setting `element.title` will show a card with title only.
+La définition de `element.title` affiche une carte contenant uniquement un titre.
 
 ```yaml
 type: "custom:uix-forge"
@@ -109,11 +110,11 @@ element:
   title: "Blank Card Title"
 ```
 
-![uix-forge-blank-card with title example](../assets/page-assets/forge/blank-card-title.png)
+![Carte uix-forge-blank-card avec un titre](../assets/page-assets/forge/blank-card-title.png)
 
-The blank card can be styled to be transparent in context by setting `element.clear`. For molds `card_as_row` and `card_as_badge` this is done automatically when the blank card is in use.
+Définissez `element.clear` pour rendre la carte vide transparente dans son contexte. Avec les types `card_as_row` et `card_as_badge`, cette transparence est activée automatiquement.
 
-This example is of UIX Forge using `mold: card_as_row` as an entities row to generate a blank card over which an [`overlay-icon` spark](./sparks/overlay-icon.md) is displayed.
+Cet exemple utilise UIX Forge avec `mold: card_as_row` dans une ligne Entities pour créer une carte vide sur laquelle le spark [`overlay-icon`](./sparks/overlay-icon.md) est affiché.
 
 ```yaml
 type: entities
@@ -136,27 +137,28 @@ entities:
           }
 ```
 
-![uix-forge-blank-card used as card_as_row](../assets/page-assets/forge/blank-card-as-row.png)
+![Carte vide uix-forge-blank-card utilisée comme card_as_row](../assets/page-assets/forge/blank-card-as-row.png)
 
 !!! tip
-    The blank card content div will be given a height of `var(--row-height, 56px)` when no other content has been applied via a spark, either as a sibling to or child of the div. However when there is a sibling to the div but it is empty, the height will be `0px`. IN all cases this height can be styled explicitly using `--uix-forge-blank-card-height` CSS var as per the `card_as_row` example.
+    Sans autre contenu ajouté par un spark — comme élément frère ou enfant de la `div` — le contenu de la carte vide prend une hauteur de `var(--row-height, 56px)`. Si un élément frère existe mais reste vide, sa hauteur est `0px`. Dans tous les cas, vous pouvez définir explicitement cette hauteur avec la variable CSS `--uix-forge-blank-card-height`, comme dans l'exemple `card_as_row`.
 
-## Template variables and macros
+<a id="template-variables-and-macros"></a>
+## Variables de modèle et macros
 
-Macros from the forge are passed through to UIX Styling for both the forge and the forged element, making forge macros available to use in UIX Styling for both forge and forged element.
+Les macros Forge sont transmises à UIX Styling, à la fois pour Forge et pour l'élément créé. Vous pouvez donc les utiliser dans les styles de l'un comme de l'autre.
 
-Templates will run in different contexts for forging, UIX styling the forge and UIX styling the element. The table below summarizes the different contexts.
+Les modèles s'exécutent dans des contextes différents selon qu'ils servent à créer l'élément, à styliser Forge ou à styliser l'élément. Le tableau ci-dessous résume ces contextes.
 
 <!-- markdownlint-disable MD033 -->
 <!-- markdownlint-disable MD046 -->
-| Context | Template variables |
+| Contexte | Variables de modèle |
 | - | - |
-| Templates in forge and element, except `uix` styling | **forge config**: `config.forge`<br/> **element config**: `config.element`<br/>`config.entity` is available if included in global `uix-forge` config. |
-| Templates in forge `uix` styling | **forge config**: `config.forge`<br/>**element config**: `config.element`<br/>`config.entity` is available if included in global `uix-forge` config. |
-| Templates in element `uix` styling. Here the template is run in regular `uix` styling context for the forged element | **forge config**: unavailable<br/>**element config**: `config`<br/>`config.entity` is available if included in global `uix-forge` config. |
+| Modèles dans `forge` et `element`, sauf dans les styles `uix` | **Configuration Forge** : `config.forge`<br/> **Configuration de l'élément** : `config.element`<br/>`config.entity` est disponible si l'entité est définie dans la configuration globale `uix-forge`. |
+| Modèles dans les styles `uix` de Forge | **Configuration Forge** : `config.forge`<br/>**Configuration de l'élément** : `config.element`<br/>`config.entity` est disponible si l'entité est définie dans la configuration globale `uix-forge`. |
+| Modèles dans les styles `uix` de l'élément. Le modèle s'exécute dans le contexte UIX Styling habituel de l'élément créé. | **Configuration Forge** : indisponible<br/>**Configuration de l'élément** : `config`<br/>`config.entity` est disponible si l'entité est définie dans la configuration globale `uix-forge`. |
 
 !!! tip
-    If you specify `entity` on global `uix-forge` config it will always be available no matter the context. You always need to specifically specify the element entity if it needs one - you can use a template to use `config.entity`.
+    Si vous définissez `entity` dans la configuration globale `uix-forge`, cette valeur sera disponible dans tous les contextes. Vous devez tout de même préciser l'entité de l'élément lorsqu'il en a besoin ; vous pouvez utiliser le modèle `config.entity`.
     ```yaml
     type: custom:uix-forge
     entity: light.bed_light
@@ -173,12 +175,12 @@ Templates will run in different contexts for forging, UIX styling the forge and 
           }
     ```
 
-    ![Example using config entity](../assets/page-assets/forge/config-entity.png)
+    ![Exemple utilisant config.entity](../assets/page-assets/forge/config-entity.png)
 
 !!! warning
-    To use `config.entity` as a template variable in either `forge` or `element` templates you need to define `entity` in global `uix-forge` config as a string (templates not supported). If you wish to compose an entity in a [foundry](foundries.md) from a variable string part you can use `billets` and [billet interpolation](#billet-interpolation).
+    Pour utiliser `config.entity` comme variable dans les modèles `forge` ou `element`, définissez `entity` sous forme de chaîne dans la configuration globale `uix-forge` ; les modèles n'y sont pas pris en charge. Pour composer l'ID d'une entité dans une [fonderie](foundries.md) à partir d'une partie variable, utilisez les `billets` et l'[interpolation des billets](#billet-interpolation).
 
-    Example of a file foundry with an entity using billet interpolation.
+    Exemple de fonderie fichier utilisant l'interpolation d'un billet dans un ID d'entité.
 
     ```yaml
     uix_foundries:
@@ -206,10 +208,10 @@ Templates will run in different contexts for forging, UIX styling the forge and 
             {% endif %}
     ```
 
-### Full example including macro
+### Exemple complet avec une macro
 
-!!! example inline end "Full example including macro"
-    ![Example output](../assets/page-assets/forge/config-entity-full.png)
+!!! example inline end "Exemple complet avec une macro"
+    ![Résultat de l'exemple](../assets/page-assets/forge/config-entity-full.png)
 
 ```yaml
 type: custom:uix-forge
@@ -241,10 +243,10 @@ element:
 
 ### Billets
 
-Billets are named YAML values defined under `forge.billets`. They are available as template constants in all forge templates **and** in any `uix:` style on the forge card or the forged element, and can be used **without parentheses**, unlike macros. Billet string values may reference other billets via `{name}` substitution — see [Billet interpolation](#billet-interpolation) below.
+Les billets sont des valeurs YAML nommées définies sous `forge.billets`. Ils sont disponibles comme constantes dans tous les modèles Forge **et** dans chaque style `uix:` de la carte Forge ou de l'élément créé. Contrairement aux macros, ils s'utilisent **sans parenthèses**. Les valeurs de type chaîne peuvent référencer d'autres billets avec la substitution `{name}` ; voir [Interpolation des billets](#billet-interpolation).
 
 !!! warning
-    Billets cannot contain Jinja2 templates themselves, except inside nested `uix` objects where the template is rendered by UIX Styling and not UIX Forge.
+    Les billets ne peuvent pas contenir eux-mêmes des modèles Jinja2, sauf dans des objets `uix` imbriqués où le modèle est traité par UIX Styling et non par UIX Forge.
 
 ```yaml
 type: custom:uix-forge
@@ -285,31 +287,32 @@ element:
       }
 ```
 
-![Example using billets](../assets/page-assets/forge/billets.gif)
+![Exemple d'utilisation des billets](../assets/page-assets/forge/billets.gif)
 
-#### Billet types
+#### Types de billets
 
-The YAML type of a billet determines how it is represented in templates:
+Le type YAML d'un billet détermine sa représentation dans les modèles :
 
-| YAML type | Example | Jinja2 type | Template usage |
+| Type YAML | Exemple | Type Jinja2 | Utilisation dans un modèle |
 | --------- | ------- | ----------- | -------------- |
-| Empty (`~` or `null`) | `my_billet: ~` | `none` | `{{ my_billet }}` → empty |
-| String | `my_billet: hello` | `str` | `{{ my_billet }}` → `hello` |
-| Number | `my_billet: 42` | `int` or `float` | `{{ my_billet + 1 }}` → `43` |
-| Boolean | `my_billet: true` | `bool` | `{% if my_billet %}…{% endif %}` |
-| List | `my_billet: [1, 2, 3]` | `list` | `{{ my_billet \| join(', ') }}` |
-| Mapping | `my_billet: {a: 1}` | `dict` | `{{ my_billet.a }}` |
+| Vide (`~` ou `null`) | `my_billet: ~` | `none` | `{{ my_billet }}` → vide |
+| Chaîne | `my_billet: hello` | `str` | `{{ my_billet }}` → `hello` |
+| Nombre | `my_billet: 42` | `int` ou `float` | `{{ my_billet + 1 }}` → `43` |
+| Booléen | `my_billet: true` | `bool` | `{% if my_billet %}…{% endif %}` |
+| Liste | `my_billet: [1, 2, 3]` | `list` | `{{ my_billet \| join(', ') }}` |
+| Correspondance | `my_billet: {a: 1}` | `dict` | `{{ my_billet.a }}` |
 
-Each billet is injected as a `{%- set name = value -%}` statement, preserving the native Jinja2 type for all YAML types — no macro wrapper is needed.
+Chaque billet est injecté sous forme d'instruction `{%- set name = value -%}`. Le type Jinja2 natif de chaque valeur YAML est ainsi conservé, sans enveloppe de macro.
 
-#### Billet interpolation
+<a id="billet-interpolation"></a>
+#### Interpolation des billets
 
-String billet values may reference other billets using `{name}` syntax — a simple substitution performed before the billets are turned into Jinja2 variables. Use `{name[N]}` to reference element `N` (0-indexed) from a list billet:
+Les valeurs de type chaîne peuvent référencer d'autres billets avec la syntaxe `{name}`. Cette substitution simple est effectuée avant la conversion des billets en variables Jinja2. Utilisez `{name[N]}` pour référencer l'élément `N` (indexé à partir de zéro) d'un billet de type liste :
 
 ```yaml
 forge:
   billets:
-    room: "bed"                         # plain string
+    room: "bed"                         # chaîne simple
     entity_id: "light.{room}_light"     # → "light.bed_light"
     scenes:
       - bright
@@ -317,7 +320,7 @@ forge:
     default_scene: "{scenes[0]}"        # → "bright"
 ```
 
-Billet references are resolved in dependency order, so declaration order does not matter:
+Les références entre billets sont résolues selon leurs dépendances ; leur ordre de déclaration n'a donc pas d'importance :
 
 ```yaml
 billets:
@@ -326,28 +329,28 @@ billets:
   base: "bed"
 ```
 
-!!! note "Circular references"
-    If billets reference each other in a cycle (directly or through a chain), none of the cycle members can be resolved. UIX logs an error for each and leaves their values unchanged.
+!!! note "Références circulaires"
+    Si des billets se référencent en boucle, directement ou par une chaîne de références, aucun billet de cette boucle ne peut être résolu. UIX consigne une erreur pour chacun et conserve leurs valeurs telles quelles.
 
-#### Billets and foundries
+#### Billets et fonderies
 
-Billets follow the same override behavior as macros: a foundry can define billets, and local forge config can override individual billet entries. Only the billets whose names are referenced in a template are included in that template's preamble.
+Les billets suivent les mêmes règles de remplacement que les macros : une fonderie peut en définir et la configuration Forge locale peut remplacer certaines entrées. Seuls les billets référencés dans un modèle sont inclus dans son préambule.
 
-See [Billets in foundries](./foundries.md#billets-in-foundries) for patterns on defining empty billet slots in a foundry and handling the `none` case in templates.
+Voir [Billets dans les fonderies](./foundries.md#billets-in-foundries) pour apprendre à définir des emplacements vides dans une fonderie et à gérer le cas `none` dans les modèles.
 
-### Ignoring templates in element config
+### Ignorer les modèles de la configuration de l'élément
 
 `{# uix-forge.ignore #}`
 
-If you need to pass through a whole template unchanged to the forged element, you can have UIX Forge ignore the template altogether. Use this when the forged element accepts templates as part of config and template nesting is not required.
+Si vous devez transmettre un modèle entier tel quel à l'élément créé, vous pouvez demander à UIX Forge de ne pas le traiter. Utilisez cette option lorsque l'élément accepte des modèles dans sa configuration et que l'imbrication n'est pas nécessaire.
 
-Templates are ignored by UIX Forge when they include `{# uix-forge.ignore #}`.
+UIX Forge ignore les modèles qui contiennent `{# uix-forge.ignore #}`.
 
-Example markdown cards showing use of `{# uix-forge.ignore #}`.
+Exemples de cartes Markdown utilisant `{# uix-forge.ignore #}`.
 
 ```yaml
 cards:
-  # forged markdown card where `content` templates is rendered by UIX Forge where `config.entity` is valid
+  # carte Markdown créée par Forge : son modèle content est traité par UIX Forge et config.entity est disponible
   - type: custom:uix-forge
     entity: light.bed_light
     forge:
@@ -357,8 +360,8 @@ cards:
       content: |
         **config.entity:** {{ config.entity | default('light.ceiling_lights') }}
 
-  # forged markdown card where `content` template is ignored by UIX Forge
-  # config.entity does not exist for markdown card and will get default text
+  # carte Markdown créée par Forge : le modèle content est ignoré par UIX Forge
+  # config.entity n'existe pas pour cette carte Markdown ; le texte par défaut sera utilisé
   - type: custom:uix-forge
     entity: light.bed_light
     forge:
@@ -370,19 +373,19 @@ cards:
         **config.entity:** {{ config.entity | default('light.ceiling_lights') }}
 ```
 
-![Markdown card with ignored template example](../assets/page-assets/forge/ignored-template.png)
+![Carte Markdown avec un modèle ignoré](../assets/page-assets/forge/ignored-template.png)
 
-When you need for a template to include both local forge or element template and a template for the card itself template nesting needs to be used.
+Si un modèle doit contenir à la fois un modèle Forge ou élément local et un modèle destiné à la carte elle-même, utilisez l'imbrication des modèles.
 
-!!! warning "Ignoring templates and multiple nesting of UIX Forge"
-    As templates are ignored using a Jinja2 comment, `{# #}` the template as rendered will not have the comment. So when using with multiple nesting of UIX Forge template nesting will need to be used to control how templates are rendered.
+!!! warning "Ignorer les modèles et imbriquer plusieurs niveaux UIX Forge"
+    L'ignorance des modèles repose sur un commentaire Jinja2 (`{# #}`), qui disparaît du modèle rendu. Si vous imbriquez plusieurs niveaux UIX Forge, utilisez l'imbrication des modèles pour contrôler leur traitement.
 
-### Template nesting
+### Imbrication des modèles
 
-If the element you are forging uses Jinja style templates or same markers (e.g. ha-nunjucks) then you will need to either ignore or nest these templates. The default nesting characters are `<<>>`. This can be adjusted in forge config if required. Jinja statement/flow-control delimiters (`{% %}`) are inferred from the nesting character config. When default nesting characters `<<>>` are in use, use `<% %>` for single nesting of Jinja statements/flow-control syntax.
+Si l'élément que vous créez utilise des modèles de type Jinja ou les mêmes délimiteurs, comme ha-nunjucks, vous devez soit ignorer ces modèles, soit les imbriquer. Les délimiteurs d'imbrication par défaut sont `<<>>` ; vous pouvez les modifier dans la configuration Forge. Les délimiteurs Jinja d'instructions et de contrôle de flux (`{% %}`) sont déduits de cette configuration. Avec `<<>>`, utilisez `<% %>` pour imbriquer une fois les instructions Jinja.
 
-??? example "Single level template nesting example"
-    Below is an example using `custom:template-entity-row` which itself supports templates. This requires any template that needs to be rendered by `custom:template-entity-row` to be nested in `<<>>` nesting characters.
+??? example "Exemple d'imbrication sur un niveau"
+    L'exemple ci-dessous utilise `custom:template-entity-row`, qui prend lui-même en charge les modèles. Tout modèle destiné à être traité par `custom:template-entity-row` doit donc être entouré des délimiteurs `<<>>`.
     ```yaml
     type: custom:uix-forge
     entity: input_boolean.test_boolean
@@ -396,7 +399,7 @@ If the element you are forging uses Jinja style templates or same markers (e.g. 
           state: |
             <<states(config.entity,with_unit=True)>>
     ```
-    The rendered config for the `entities` card is below. You will see that the nested template gets rendered to a final template with `{#uix#}` template comments surrounding the template. This template will then be rendered in `custom:template-entity-row`, with `config.entity` being a reference to the rendered config entity, which is `input_boolean.test_boolean`.
+    Voici la configuration rendue de la carte `entities`. Le modèle imbriqué devient un modèle final entouré des commentaires `{#uix#}`. Il sera ensuite traité par `custom:template-entity-row`, où `config.entity` fait référence à l'entité résolue `input_boolean.test_boolean`.
     ```yaml
     type: entities
     entities:
@@ -405,14 +408,14 @@ If the element you are forging uses Jinja style templates or same markers (e.g. 
         state: '{#uix#}{{states(config.entity,with_unit=True)}}{#uix#}'
     ```
 
-#### Multiple nesting levels
+#### Plusieurs niveaux d'imbrication
 
-When there are multiple forge layers, each additional layer requires one extra `<` / `>` pair (e.g. `<<<` / `>>>` and `<<% %>>` for two levels). UIX strips one nesting level internally at each intermediate forge layer, so the correct number of delimiters reaches the final forge layer automatically — you only need to set `template_nesting` to the total number of layers deep the value needs to travel.
+Lorsque plusieurs couches Forge sont imbriquées, chaque couche supplémentaire nécessite une paire `<` / `>` de plus, par exemple `<<<` / `>>>` et `<<% %>>` pour deux niveaux. UIX retire un niveau d'imbrication à chaque couche intermédiaire ; les bons délimiteurs atteignent ainsi automatiquement la couche finale. Définissez `template_nesting` selon le nombre total de couches à traverser.
 
-??? example "Multiple nesting levels example with output"
+??? example "Exemple avec plusieurs niveaux d'imbrication et résultat"
     ```yaml
     type: custom:uix-forge
-    entity: media_player.kitchen # overall entity in global uix-forge config
+    entity: media_player.kitchen # entité globale dans la configuration uix-forge
     forge:
       mold: card
       sparks:
@@ -425,15 +428,15 @@ When there are multiple forge layers, each additional layer requires one extra `
       square: false
       cards:
         - type: custom:uix-forge
-          entity: "{{ config.entity }}" # use config.entity directly for nested forge
+          entity: "{{ config.entity }}" # utiliser directement config.entity dans Forge imbriqué
           forge:
             mold: card
           element:
-            entity: "{{ config.entity }}" # use config.entity directly for nested forge element
+            entity: "{{ config.entity }}" # utiliser directement config.entity pour l'élément Forge imbriqué
             type: tile
             state_content: is_volume_muted
         - type: custom:uix-forge
-          entity: "{{ config.entity }}" # use config.entity directly for nested forge
+          entity: "{{ config.entity }}" # utiliser directement config.entity dans Forge imbriqué
           forge:
             mold: card
           element:
@@ -442,7 +445,7 @@ When there are multiple forge layers, each additional layer requires one extra `
               - type: custom:service-call
                 entries:
                   - type: button
-                    entity_id: << config.entity >> # use first level nesting
+                    entity_id: << config.entity >> # utiliser un niveau d'imbrication
                     icon: mdi:volume-high
                     haptics: true
                     tap_action:
@@ -450,15 +453,15 @@ When there are multiple forge layers, each additional layer requires one extra `
                       perform_action: media_player.volume_mute
                       target:
                         entity_id: |
-                          <<< config.entity >>> {# use second level nesting #}
+                          <<< config.entity >>> {# utiliser deux niveaux d'imbrication #}
                       data:
                         is_volume_muted: true
     ```
 
-    ![Nesting example](../assets/page-assets/forge/forge-nesting.gif)
+    ![Exemple d'imbrication](../assets/page-assets/forge/forge-nesting.gif)
 
-??? example "Multiple nesting levels with markdown card"
-    This example shows that the markdown output will render the first level nested template and just output the second level nested template, showing exactly how nesting works.
+??? example "Plusieurs niveaux d'imbrication dans une carte Markdown"
+    Dans cet exemple, le contenu Markdown traite le modèle imbriqué du premier niveau et affiche tel quel celui du deuxième niveau. Cela illustre le fonctionnement de l'imbrication.
 
     ```yaml
     type: custom:uix-forge
@@ -471,25 +474,25 @@ When there are multiple forge layers, each additional layer requires one extra `
         <% if true %><< True >><% endif %>
     ```
 
-    ![Template nesting in markdown card content](../assets/page-assets/forge/template-nesting-markdown.png)
+    ![Imbrication de modèles dans le contenu d'une carte Markdown](../assets/page-assets/forge/template-nesting-markdown.png)
 
-#### Template nesting and macros
+#### Imbrication des modèles et macros
 
-Template nesting **is not** supported in macros. It is impossible to get a rendered template text from a macro. Macros are available to UIX Forge templates and UIX Styling, but templates **are not** available to be rendered in the context of any nested/forged card including Home Assistant markdown card.
+L'imbrication des modèles **n'est pas** prise en charge dans les macros. Une macro ne peut pas renvoyer le texte d'un modèle déjà rendu. Les macros sont accessibles aux modèles UIX Forge et à UIX Styling, mais les modèles **ne peuvent pas** être traités dans le contexte d'une carte imbriquée ou créée, y compris une carte Markdown Home Assistant.
 
 !!! tip
-    Whether to nest markdown content templates or not depends on your use case. If templates are not nested, they are rendered by UIX Forge and the whole markdown card will be updated when the template updates. If your markdown templates are dynamic and update frequently you are best to use template nesting so the markdown card renders the template, using its optimized rendering to update only the output line that has changed. If you need to put complex logic in a macro for markdown card, you can store that in custom_templates in Home Assistant and then call as a nested template. e.g. if you macro in custom_templates is `content()` then you can use `<< content() >>` in your markdown card to have the markdown card render the `content()` macro.
+    Le choix d'imbriquer ou non les modèles du contenu Markdown dépend de votre usage. Sans imbrication, UIX Forge traite les modèles et actualise toute la carte Markdown à chaque changement. Si le contenu est dynamique et change souvent, l'imbrication permet à la carte Markdown d'utiliser son rendu optimisé et de ne mettre à jour que la ligne modifiée. Pour placer une logique complexe dans une macro de carte Markdown, vous pouvez l'enregistrer dans `custom_templates` de Home Assistant et l'appeler comme modèle imbriqué. Par exemple, si la macro est `content()`, utilisez `<< content() >>` pour que la carte Markdown la traite.
 
-#### Using billets in nested templates
+#### Utiliser des billets dans les modèles imbriqués
 
-Billet values are fully available as Jinja2 variables inside `<<...>>` expressions. When UIX builds the template, billet variables are set as Jinja2 `{%- set ... -%}` statements before Home Assistant evaluates the template body. This means `{{ billet_name }}` written inside `<<...>>` is evaluated by HA's template engine and the resolved value becomes part of the expression that the receiving card gets.
+Les valeurs des billets sont disponibles comme variables Jinja2 dans les expressions `<<...>>`. Lorsqu'UIX construit le modèle, les variables des billets sont définies avec des instructions Jinja2 `{%- set ... -%}` avant l'évaluation du corps du modèle par Home Assistant. Ainsi, `{{ billet_name }}` dans `<<...>>` est évalué par HA et sa valeur résolue est transmise à la carte destinataire.
 
-!!! note "Coming from decluttering-card?"
-    In tools like decluttering-card, a variable placeholder such as `[[id]]` is substituted as plain text into the string before anything else happens. In UIX Forge the mechanism is different but the end result is the same: UIX Forge injects billet variables into the generated Jinja2 template, and Home Assistant evaluates them together with the rest of the template body, so `{{ id }}` inside `<<...>>` is replaced with the billet's value before the receiving card ever sees the string.
+!!! note "Vous venez de decluttering-card ?"
+    Dans des outils comme decluttering-card, un espace réservé tel que `[[id]]` est remplacé en texte brut avant tout autre traitement. UIX Forge fonctionne différemment, mais aboutit au même résultat : il injecte les variables des billets dans le modèle Jinja2 généré, puis Home Assistant les évalue avec le reste du modèle. Ainsi, `{{ id }}` dans `<<...>>` est remplacé par la valeur du billet avant que la carte destinataire ne reçoive la chaîne.
 
-    The important difference is that you must use standard Jinja2 expression syntax — `{{ billet_name }}` — not the billet-to-billet interpolation syntax (`{billet_name}`). The `{...}` interpolation syntax is only available inside billet *value* strings (for one billet referencing another), not inside template expressions.
+    La différence essentielle est qu'il faut utiliser la syntaxe d'expression Jinja2 standard — `{{ billet_name }}` — et non la syntaxe d'interpolation entre billets (`{billet_name}`). La syntaxe `{...}` n'est disponible que dans les *valeurs* de billets pour référencer un autre billet, pas dans les expressions de modèle.
 
-A common use-case is driving an `auto-entities` filter template from a billet. For example, with an `id` billet holding a room slug, you can build the device entity list for that room:
+Un cas d'utilisation fréquent consiste à alimenter le modèle de filtre `auto-entities` avec un billet. Par exemple, si le billet `id` contient l'identifiant d'une pièce, vous pouvez générer la liste de ses entités d'appareil :
 
 ```yaml
 type: custom:uix-forge
@@ -507,38 +510,38 @@ element:
     type: entities
 ```
 
-When UIX processes the template, it prepends `{%- set id = "living_room" -%}`. HA then evaluates the template body, resolving `{{id}}` to `living_room`. The expression received by `auto-entities` is:
+Lorsqu'UIX traite le modèle, il ajoute au début `{%- set id = "living_room" -%}`. HA évalue ensuite le modèle et remplace `{{id}}` par `living_room`. L'expression transmise à `auto-entities` est :
 
 ```jinja
 {#uix#}{{ device_entities(device_id('switch.living_room'))|reject('search','device')|list }}{#uix#}
 ```
 
-`auto-entities` evaluates this Jinja2 expression and populates the card with the matching entities. Override the `id` billet per instance (or in a foundry) to reuse the same forge across multiple rooms without duplicating the filter logic.
+`auto-entities` évalue cette expression Jinja2 et ajoute à la carte les entités correspondantes. Remplacez le billet `id` pour chaque instance, ou dans une fonderie, afin de réutiliser la même configuration Forge dans plusieurs pièces sans dupliquer la logique du filtre.
 
 !!! tip
-    Because billet values are resolved at UIX template evaluation time, they are **baked into** the expression that the receiving card gets. If you need the receiving card to re-evaluate a value dynamically (e.g. based on changing HA state), express that logic directly as a Jinja2 function call inside the `<<...>>` block rather than relying on a billet for the dynamic part.
+    Les billets étant résolus lors de l'évaluation du modèle UIX, leur valeur est **intégrée directement** à l'expression reçue par la carte. Si la carte doit réévaluer une valeur dynamiquement, par exemple selon un état HA qui change, écrivez cette logique sous forme d'appel de fonction Jinja2 dans le bloc `<<...>>` au lieu d'utiliser un billet pour cette partie dynamique.
 
-??? warning "Read if you wish to create your own nesting sequence"
-    When using template nesting, the template nesting characters are replaced with Jinja `raw` directives before the template is rendered. The replacement includes a marker for internal readiness code to be able to recognize a rendered template with nesting. With the default `<<>>`, `<<` is replaced with `{% raw %}{#uix#}{{{% endraw %}` and `>>` is replaced with `{% raw %}}}{#uix#}{% endraw %}`; flow-control delimiters are inferred automatically, so `<%` is replaced with `{% raw %}{#uix#}{%{% endraw %}` and `%>` is replaced with `{% raw %}%}{#uix#}{% endraw %}`. If you try and create these sequences without using the nesting shorthand, they must be replicated EXACTLY for forge internal readiness checks to complete.
+??? warning "À lire avant de créer votre propre séquence d'imbrication"
+    Lors de l'imbrication, les délimiteurs sont remplacés par des directives Jinja `raw` avant le rendu. Le remplacement inclut un marqueur qui permet au mécanisme interne de reconnaître le modèle imbriqué rendu. Avec les délimiteurs par défaut `<<>>`, `<<` devient `{% raw %}{#uix#}{{{% endraw %}` et `>>` devient `{% raw %}}}{#uix#}{% endraw %}`. Les délimiteurs de contrôle de flux sont déduits automatiquement : `<%` devient `{% raw %}{#uix#}{%{% endraw %}` et `%>` devient `{% raw %}%}{#uix#}{% endraw %}`. Si vous créez ces séquences sans raccourci d'imbrication, elles doivent être reproduites à l'identique pour que les contrôles internes de Forge aboutissent.
 
-### Using with auto-entities
+### Utiliser avec auto-entities
 
 !!! tip
-   For simple entities templating you may wish to just forge an entities card and template. `entities:` config. See [Element entities config](#element-entities-config).
+    Pour générer simplement des entités avec un modèle, vous pouvez créer une carte Entities et y définir directement la configuration `entities:`. Voir [Configuration des entités de l'élément](#element-entities-config).
 
-UIX Forge supports `custom:auto-entities` in two ways:
+UIX Forge prend en charge `custom:auto-entities` de deux façons :
 
-1. When UIX Forge is used as the main card for auto-entities, UIX Forge accepts and passes through `entities` to the element config, though will not be available on `config.element.entities`
-2. When using UIX Forge as an entity card via auto-entities include filter `options`, UIX Forge accepts `entity` that auto-entities passes through, but does not pass through to element config. It will be available in templates using `config.entity` and you can use `{{ config.entity }}` when you need to specify an entity for the card options.
+1. Lorsque UIX Forge est la carte principale d'auto-entities, il accepte `entities` et le transmet à la configuration de l'élément, mais cette valeur n'est pas disponible dans `config.element.entities`.
+2. Lorsque UIX Forge est utilisé comme carte d'entité dans les options `options` d'un filtre `include` auto-entities, il accepte l'`entity` transmise par auto-entities, mais ne la transmet pas à la configuration de l'élément. Elle reste disponible dans les modèles via `config.entity` ; utilisez `{{ config.entity }}` pour renseigner l'entité dans les options de carte.
 
-??? example "auto-entities example"
+??? example "Exemple avec auto-entities"
     ```yaml
     type: custom:auto-entities
     filter:
       include:
         - options:
             type: custom:uix-forge
-            # auto-entities will populate entity in config, so we can use it in templates
+            # auto-entities renseigne entity dans config ; la valeur est donc disponible dans les modèles
             forge:
               mold: card
               sparks:
@@ -559,11 +562,11 @@ UIX Forge supports `custom:auto-entities` in two ways:
     card_param: cards
     ```
 
-    ![Example using auto-entities](../assets/page-assets/forge/forge-auto-entities.gif)
+    ![Exemple d'utilisation d'auto-entities](../assets/page-assets/forge/forge-auto-entities.gif)
 
-## UIX styling
+## UIX Styling
 
-Add a `uix` key under `forge` to apply [UIX styling](../using/index.md) to the forge element wrapper itself. Template variables `config.forge`, `config.element`, and `uixForge` are available in the style templates, where `config.forge` and `config.element` are the resolved forge and element configs and `uixForge` contains any [spark](./sparks/tooltip.md) template variables. `config.entity` will also be available if set in the global `uix-forge` config.
+Ajoutez une clé `uix` sous `forge` pour appliquer [UIX Styling](../using/index.md) à l'enveloppe de l'élément Forge. Les variables `config.forge`, `config.element` et `uixForge` sont disponibles dans les modèles de style : `config.forge` et `config.element` contiennent les configurations résolues, et `uixForge` contient les variables de modèle des [sparks](./sparks/tooltip.md). `config.entity` est également disponible si l'entité est définie dans la configuration globale `uix-forge`.
 
 ```yaml
 type: custom:uix-forge
@@ -579,14 +582,14 @@ element:
   entity: light.bed_light
 ```
 
-![Example using uix styling](../assets/page-assets/forge/uix-styling.png)
+![Exemple de style UIX](../assets/page-assets/forge/uix-styling.png)
 
-### Element styling
+### Style de l'élément
 
-UIX Styling can be applied to the element in the usual way. Only the usual `config` variable is available which is the standard variable resolved by UIX Styling for elements.
+UIX Styling s'applique à l'élément de la manière habituelle. Seule la variable `config` standard, résolue par UIX Styling pour les éléments, est disponible.
 
 !!! warning
-    Element UIX Styling will **NOT** contain the forge and spark variables available in forge UIX Styling. If you wish to use these then use UIX Styling on the forge rather than the forged element.
+    Le style UIX de l'élément ne contient **PAS** les variables Forge et spark disponibles dans le style UIX de Forge. Pour les utiliser, appliquez UIX Styling à Forge plutôt qu'à l'élément créé.
 
 ```yaml
 type: custom:uix-forge
@@ -607,16 +610,16 @@ element:
       }
 ```
 
-![Example using uix element styling](../assets/page-assets/forge/uix-element-styling.png)
+![Exemple de style UIX appliqué à l'élément](../assets/page-assets/forge/uix-element-styling.png)
 
-### Theme styling
+### Style de thème
 
-The theme type given to UIX forge container matches the mold type, including [cross-context molds](#cross-context-molds). This can be useful in targeting the UIX forge container and styling the contained element.
+Le type de thème attribué au conteneur UIX Forge correspond au type de `mold`, y compris les [moules inter-contextes](#cross-context-molds). Vous pouvez ainsi cibler le conteneur UIX Forge et styliser l'élément qu'il contient.
 
-??? example "Theme cross-context mold: card_as_badge"
-    Here styling is given to all cards used as badges by applying theme styling to `uix-card-as-badge-yaml`. The theming assumes all cards used as badges are home-summary cards. *`energy` is commented out as the demo integration used for image generation does not have energy set up.*
+??? example "Thème pour le moule inter-contexte card_as_badge"
+    Cet exemple applique un style de thème à toutes les cartes utilisées comme badges via `uix-card-as-badge-yaml`. Il suppose que ces cartes sont des cartes home-summary. *`energy` est commenté, car l'intégration de démonstration utilisée pour générer les images ne configure pas l'énergie.*
 
-    Theme:
+    Thème :
     ```yaml
     uix-card-as-badge-yaml: |
       .: |
@@ -653,7 +656,7 @@ The theme type given to UIX forge container matches the mold type, including [cr
         }
     ```
 
-    Dashboard with home-summary cards as badges:
+    Tableau de bord avec des cartes home-summary affichées comme badges :
     ```yaml
     - type: sections
       max_columns: 10
@@ -722,13 +725,13 @@ The theme type given to UIX forge container matches the mold type, including [cr
                 /maintenance?historyBack=1&backPath=/dashboard-root/view-path
     ```
 
-    ![Theming home-summary badges as cards](../assets/page-assets/forge/forge-theme.png)
+    ![Cartes home-summary stylisées comme badges](../assets/page-assets/forge/forge-theme.png)
 
 ## Sections
 
-When using UIX Forge for a section in sections view, use the YAML section editor (use three dots menu) and change type to `custom: uix-forge`. Set forge `mold` to `section`.
+Pour utiliser UIX Forge sur une section d'une vue Sections, ouvrez l'éditeur YAML de la section depuis le menu à trois points et remplacez son type par `custom:uix-forge`. Définissez `mold: section` dans la configuration Forge.
 
-When using UIX Forge for sections, the following config keys can be set directly to configure how the section shows, though they **do not support templates**:
+Avec UIX Forge pour les sections, vous pouvez définir directement les clés suivantes pour configurer leur affichage. Elles **ne prennent pas en charge les modèles** :
 
 - `row_span`
 - `column_span`
@@ -741,33 +744,33 @@ forge:
   # ...
 element:
   # ...
-# section only main configuration keys. Visibility not supported.
-row_span: # row span for section
-column_span: # column span for section
-background: # background for section
+# seules les clés principales de la section sont prises en charge ; pas la visibilité
+row_span: # nombre de lignes de la section
+column_span: # nombre de colonnes de la section
+background: # arrière-plan de la section
 ```
 
-When editing the dashboard in UI mode, the section will be surrounded by red dashed border to show that it is configured by UIX Forge in YAML. All cards contained in the section will show in preview mode, but will not be editable. Use YAML for editing the section.
+Lors de la modification du tableau de bord en mode visuel, une bordure rouge en pointillés entoure la section pour indiquer que sa configuration UIX Forge est en YAML. Les cartes qu'elle contient sont visibles en aperçu, mais ne sont pas modifiables. Modifiez la section en YAML.
 
 !!! warning
-    Visibility in the main config is not supported for `mold: section`. Though the Home Assistant visual editor will let you set visibility you will get an error as soon as you save the section. If you need Frontend visibility options not supported by template (e.g. screen) use a stack card as your element and set Frontend visibility on that element, templates supported.
+    La visibilité dans la configuration principale n'est pas prise en charge avec `mold: section`. Même si l'éditeur visuel Home Assistant permet de la définir, l'enregistrement de la section provoquera une erreur. Pour utiliser des options de visibilité frontend non prises en charge par les modèles, par exemple `screen`, placez une carte stack dans `element` et configurez sa visibilité frontend ; les modèles y sont acceptés.
 
-## Footer
+## Pied de page
 
-Use `mold: footer` to overlay a fixed-position card at the bottom of the viewport. The forged element appears pinned at the bottom of the screen regardless of where the `custom:uix-forge` card is placed in the dashboard. The forge element itself renders as `display: contents`, so it does not take up space in the grid.
+Utilisez `mold: footer` pour afficher une carte fixe en bas de la fenêtre. L'élément créé reste ancré au bas de l'écran, quelle que soit la position de la carte `custom:uix-forge` dans le tableau de bord. L'élément Forge utilise `display: contents` et n'occupe donc pas d'espace dans la grille.
 
-You can use `mold: footer` on sections, masonry and panel dashboards. On a sections dashboard using in place of standard Home Assistant footer gives you added visibility flexibility by using a template for `hidden`.
+Vous pouvez utiliser `mold: footer` dans les tableaux de bord Sections, Masonry et Panel. Dans une vue Sections, il remplace le pied de page Home Assistant standard et offre davantage de contrôle de visibilité grâce aux modèles dans `hidden`.
 
-When editing the dashboard in UI mode, the footer is surrounded by a red dashed border to indicate it is configured by UIX Forge in YAML.
+Lors de la modification du tableau de bord en mode visuel, une bordure rouge en pointillés entoure le pied de page pour indiquer que sa configuration UIX Forge est en YAML.
 
 !!! note
-    The footer element `<hui-view-footer>` is given the CSS position `fixed` rather than the standard `sticky` of a section footer. This is required as `sticky` is only relative to parent element, so the forged footer can only 'break out' to be a footer using `fixed` position. This will give a lightly different appearance in that the footer will be centered to the window and not just the dashboard area. Use asymmetrical padding via `--uix-forge-footer-padding` to adjust if required.
+    L'élément `<hui-view-footer>` utilise la position CSS `fixed` au lieu de `sticky`, utilisée par le pied de page d'une section. `sticky` dépend de l'élément parent ; seule la position `fixed` permet donc au pied de page Forge de sortir de son conteneur. Son apparence diffère légèrement : il est centré dans la fenêtre, et non uniquement dans la zone du tableau de bord. Ajustez-le si besoin avec des marges intérieures asymétriques via `--uix-forge-footer-padding`.
 
-The following forge config key controls the maximum width of the footer:
+La clé de configuration Forge suivante définit la largeur maximale du pied de page :
 
-| Key | Type | Allows Templates | Default | Description |
+| Clé | Type | Modèles acceptés | Valeur par défaut | Description |
 | --- | ---- | ---------------- | ------- | ----------- |
-| `max_width` | string | | `600` | Maximum width of the footer in pixels. |
+| `max_width` | string | | `600` | Largeur maximale du pied de page en pixels. |
 
 ```yaml
 type: custom:uix-forge
@@ -779,17 +782,17 @@ element:
   entity: light.bed_light
 ```
 
-The following CSS variables can be set on the forge element or any ancestor to customise the footer appearance:
+Vous pouvez définir les variables CSS suivantes sur l'élément Forge ou l'un de ses ancêtres pour personnaliser le pied de page :
 
-| Variable | Default | Description |
+| Variable | Valeur par défaut | Description |
 | -------- | ------- | ----------- |
-| `--uix-forge-footer-border-width` | `1px` | Border width of the forged card within the footer. |
-| `--uix-forge-footer-bottom` | `var(--ha-space-2)` | Distance from the bottom of the viewport. |
-| `--uix-forge-footer-padding` | `0 var(--ha-space-2)` | Padding applied to the footer container. |
+| `--uix-forge-footer-border-width` | `1px` | Épaisseur de la bordure de la carte affichée dans le pied de page. |
+| `--uix-forge-footer-bottom` | `var(--ha-space-2)` | Distance par rapport au bas de la fenêtre. |
+| `--uix-forge-footer-padding` | `0 var(--ha-space-2)` | Marge intérieure du conteneur du pied de page. |
 
-### Visibility
+### Visibilité
 
-Use `forge.hidden` (templates supported) to show or hide the footer:
+Utilisez `forge.hidden` (modèles pris en charge) pour afficher ou masquer le pied de page :
 
 ```yaml
 type: custom:uix-forge
@@ -801,9 +804,9 @@ element:
   entity: light.bed_light
 ```
 
-## Card features
+## Fonctionnalités de carte
 
-Use `mold: card-feature` when using UIX Forge as a card feature. Templates will have an additional `context` variable available which is provided by the host card. `context` usually includes `entity_id` which is the entity set on the host card.
+Utilisez `mold: card-feature` lorsque UIX Forge sert de fonctionnalité de carte. Les modèles disposent alors d'une variable supplémentaire `context`, fournie par la carte hôte. Elle contient généralement `entity_id`, l'entité définie sur cette carte.
 
 ```yaml
 type: tile
@@ -818,9 +821,9 @@ features:
 features_position: inline
 ```
 
-![Inline card feature example](../assets/page-assets/forge/card-feature-inline.png)
+![Exemple de fonctionnalité de carte intégrée](../assets/page-assets/forge/card-feature-inline.png)
 
-If you are using multiple card features in bottom position and using `hidden` template, you will need to use auto row height to prevent the host card from occupying the additional space when the card feature is hidden.
+Si plusieurs fonctionnalités de carte sont placées en bas et utilisent un modèle `hidden`, activez la hauteur automatique des lignes afin que la carte hôte ne conserve pas d'espace supplémentaire lorsqu'une fonctionnalité est masquée.
 
 ```yaml
 type: tile
@@ -841,29 +844,30 @@ features:
 features_position: bottom
 ```
 
-![Bottom hidden template card feature example](../assets/page-assets/forge/card-feature-bottom-hidden.png)
+![Fonctionnalité de carte en bas masquée par un modèle](../assets/page-assets/forge/card-feature-bottom-hidden.png)
 
-## Cross-context molds
+<a id="cross-context-molds"></a>
+## Moules inter-contextes
 
-Cross-context molds let you **forge one element type while acting as a different element type** in the parent container. This is the cleanest replacement for the fragile `custom:hui-element` and `custom:hui-xxx-card` hacks, which lack visibility support and can break across HA updates.
+Les moules inter-contextes permettent de **créer un type d'élément tout en se présentant comme un autre type** auprès du conteneur parent. Ils remplacent les astuces fragiles `custom:hui-element` et `custom:hui-xxx-card`, qui ne prennent pas en charge la visibilité et peuvent cesser de fonctionner après une mise à jour HA.
 
-| Mold | Forges | Acts as |
+| Moule | Crée | Se comporte comme |
 | ---- | ------ | ------- |
-| `card_as_row` | `hui-card` (card element) | Row inside an entities / fold-entity-row |
-| `card_as_badge` | `hui-card` (card element) | Badge in a badge container |
-| `row_as_card` | Row element | Card in a card grid |
-| `row_as_badge` | Row element | Badge in a badge container |
-| `badge_as_card` | `hui-badge` (badge element) | Card in a card grid |
-| `badge_as_row` | `hui-badge` (badge element) | Row inside an entities / fold-entity-row |
-| `badge_as_picture_element` | `hui-badge` (badge element) | Picture element inside a picture-elements card |
+| `card_as_row` | `hui-card` (élément carte) | Ligne dans une carte entities ou fold-entity-row |
+| `card_as_badge` | `hui-card` (élément carte) | Badge dans un conteneur de badges |
+| `row_as_card` | Élément ligne | Carte dans une grille de cartes |
+| `row_as_badge` | Élément ligne | Badge dans un conteneur de badges |
+| `badge_as_card` | `hui-badge` (élément badge) | Carte dans une grille de cartes |
+| `badge_as_row` | `hui-badge` (élément badge) | Ligne dans une carte entities ou fold-entity-row |
+| `badge_as_picture_element` | `hui-badge` (élément badge) | Élément picture dans une carte picture-elements |
 
-Each cross-context mold intercepts the inner element's native visibility event, updates its own hidden state, and re-fires the appropriate event for the parent container. `forge.hidden` (templates supported) works across all cross-context molds.
+Chaque moule inter-contexte intercepte l'événement de visibilité natif de l'élément interne, met à jour son propre état masqué puis émet l'événement adapté pour le conteneur parent. `forge.hidden` (modèles pris en charge) fonctionne avec tous les moules inter-contextes.
 
-For `badge_as_picture_element`, the badge element config needs to include the regular picture element positioning in `style` object.
+Avec `badge_as_picture_element`, la configuration du badge doit inclure dans l'objet `style` les paramètres de positionnement habituels d'un picture-element.
 
-### card_as_row — embedding a card as a row
+### card_as_row — intégrer une carte comme ligne
 
-The most common use-case: embed a `glance`, `markdown`, `tile`, or any other card-type element directly inside an `entities` card (or `custom:fold-entity-row`). The card is created as a real `hui-card` element while UIX Forge signals the parent entities card exactly like a regular row.
+Cas d'utilisation courant : intégrer une carte `glance`, `markdown`, `tile` ou tout autre type de carte directement dans une carte `entities` (ou `custom:fold-entity-row`). La carte est créée comme un véritable élément `hui-card`, tandis que UIX Forge la signale à la carte Entities parent comme une ligne standard.
 
 ```yaml
 type: entities
@@ -885,9 +889,9 @@ entities:
   - entity: light.bed_light
 ```
 
-![Glance card embedded as a row inside an entities card](../assets/page-assets/forge/card-as-row.png)
+![Carte Glance intégrée comme ligne dans une carte Entities](../assets/page-assets/forge/card-as-row.png)
 
-### badge as picture-element - embedding a badge as a picture-element
+### badge_as_picture_element — intégrer un badge dans un picture-element
 
 ```yaml
 type: picture-elements
@@ -904,10 +908,10 @@ elements:
 image: https://demo.home-assistant.io/stub_config/floorplan.png
 ```
 
-![badge embedded in a picture-elements card](../assets/page-assets/forge/badge-as-picture-element.png)
+![Badge intégré dans une carte picture-elements](../assets/page-assets/forge/badge-as-picture-element.png)
 
-!!! tip "Visibility"
-    Unlike `custom:hui-element` or `custom:hui-xxx-card`, `forge.hidden` works correctly with `card_as_row`. You can use templates to conditionally show or hide the embedded card and the entities card will respond properly:
+!!! tip "Visibilité"
+    Contrairement à `custom:hui-element` et `custom:hui-xxx-card`, `forge.hidden` fonctionne avec `card_as_row`. Utilisez un modèle pour afficher ou masquer la carte intégrée selon une condition ; la carte Entities réagira correctement :
     ```yaml
     type: "custom:uix-forge"
     forge:
