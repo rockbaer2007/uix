@@ -1,18 +1,18 @@
 ---
-description: Use the more-info spark to embed Home Assistant more-info content inside a UIX Forge element.
+description: Intégrez le contenu « Plus d'informations » de Home Assistant à un élément UIX Forge avec le spark More-info.
 icon: material/information-outline
 ---
 
-# :material-information-outline: More-info spark
+# :material-information-outline: Spark More-info
 
-The `more-info` spark inserts Home Assistant's `ha-more-info-info` element as a sibling before or after a target element inside a UIX Forge element.
+Le spark `more-info` insère l'élément Home Assistant `ha-more-info-info` avant ou après un élément cible dans un élément UIX Forge.
 
-It is most useful with [Blank card config](../forge.md#blank-card-config), where a Forge card has no `element` config and the spark uses the blank card content as its default insertion target.
+Il est particulièrement utile avec la [configuration de carte vide](../forge.md#blank-card-config) : la carte Forge ne possède alors pas de configuration `element`, et le spark insère son contenu dans la carte vide par défaut.
 
 !!! note
-    When any action requires a child more-info view, for example Vacuum Clear Areas, a regular more-info dialog is opened at the child view.
+    Lorsqu'une action nécessite une vue « Plus d'informations » enfant, comme la sélection des zones à nettoyer d'un aspirateur, une boîte de dialogue « Plus d'informations » classique s'ouvre sur cette vue.
 
-## Basic usage
+## Utilisation de base
 
 ```yaml
 type: custom:uix-forge
@@ -25,17 +25,17 @@ forge:
       entity: weather.demo_weather_south
 ```
 
-![Forge spark more-info basic example](../../assets/page-assets/forge/sparks/more-info-basic.png)
+![Exemple de base du spark More-info](../../assets/page-assets/forge/sparks/more-info-basic.png)
 
-## With details
+## Avec les détails
 
-Set `details: true` to add a collapsible details section underneath the main more-info content. The details header includes:
+Définissez `details: true` pour ajouter une section de détails repliable sous le contenu principal. Son en-tête comprend :
 
-- a `Details` subheading
-- a code button to toggle the details view's YAML mode, shown only while the details section is expanded
-- a chevron button to expand or collapse the details section
+- le sous-titre `Détails`
+- un bouton de code qui active ou désactive le mode YAML de la vue détaillée ; il apparaît uniquement lorsque la section est déployée
+- un chevron pour déployer ou replier la section
 
-The collapsible details content is wrapped in an `ha-card` so it inherits normal Home Assistant card styling such as borders, background, and shadow.
+Le contenu détaillé repliable est placé dans un `ha-card` et reprend donc le style habituel des cartes Home Assistant, notamment la bordure, l'arrière-plan et l'ombre.
 
 ```yaml
 type: custom:uix-forge
@@ -49,27 +49,27 @@ forge:
       details: true
 ```
 
-![Forge spark more-info details example](../../assets/page-assets/forge/sparks/more-info-details.gif)
+![Exemple de section de détails avec le spark More-info](../../assets/page-assets/forge/sparks/more-info-details.gif)
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
 | --- | ---- | -------- | ------- | ----------- |
-| `type` | `string` | ✅ | — | Must be `more-info`. |
-| `after` | `string` | | see description | UIX selector for the reference element. The more-info content is inserted as a sibling **after** the matched element. When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, it defaults to `""`. |
-| `before` | `string` | | — | UIX selector for the reference element. The more-info content is inserted as a sibling **before** the matched element. |
-| `entity` | `string` | | `element.entity` | Entity ID shown in the embedded more-info content. If omitted, the spark uses the forged element's `entity` config when available. |
-| `info` | `boolean` | | `true` | If false, does not show the main more-info content (represented by the `ha-more-info-info` element). This can be used in combination with `details: true` to display only the details section. |
-| `details` | `boolean` | | `false` | Adds a collapsible `ha-more-info-details` section under the main info content. |
+| `type` | `string` | ✅ | — | Doit être défini sur `more-info`. |
+| `after` | `string` | | voir la description | Sélecteur UIX de l'élément de référence. Le contenu « Plus d'informations » est inséré comme élément frère **après** l'élément correspondant. Avec la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, la valeur par défaut est `""`. |
+| `before` | `string` | | — | Sélecteur UIX de l'élément de référence. Le contenu « Plus d'informations » est inséré comme élément frère **avant** l'élément correspondant. |
+| `entity` | `string` | | `element.entity` | ID de l'entité affichée dans le contenu intégré. Si cette option est omise, le spark utilise la configuration `entity` de l'élément UIX Forge lorsqu'elle est disponible. |
+| `info` | `boolean` | | `true` | Si cette option vaut `false`, le contenu principal (`ha-more-info-info`) n'est pas affiché. Avec `details: true`, seule la section des détails peut ainsi être affichée. |
+| `details` | `boolean` | | `false` | Ajoute une section repliable `ha-more-info-details` sous le contenu principal. |
 
 !!! note
-    The spark targets the **first** element matched by `after` or `before`.
+    Le spark cible le **premier** élément correspondant à `after` ou `before`.
 
-## Theme styling
+## Styles de thème
 
-The spark applies UIX `more-info` styling to the wrapper containing `ha-more-info-info`, so theme-level `uix-more-info-yaml` paths can target the embedded content the same way they target the more-info dialog.
+Le spark applique les styles UIX `more-info` au conteneur de `ha-more-info-info`. Les chemins de thème `uix-more-info-yaml` peuvent donc cibler le contenu intégré comme ils ciblent la boîte de dialogue « Plus d'informations ».
 
-This example sets the current and forecast high temps text color to red and makes the forecast day labels bold. `ha-more-info-info $$ more-info-weather $` [express search selector](../../concepts/dom.md#express-search-selector) condenses `ha-more-info-info $ more-info-content $ more-info-weather $`.
+Cet exemple colore en rouge les températures maximales actuelles et prévues, et met en gras les noms des jours de prévision. Le sélecteur de recherche abrégée [`ha-more-info-info $$ more-info-weather $`](../../concepts/dom.md#express-search-selector) remplace `ha-more-info-info $ more-info-content $ more-info-weather $`.
 
 ```yaml
 my-theme:
@@ -88,35 +88,35 @@ my-theme:
       }
 ```
 
-![Forge spark more-info theme example](../../assets/page-assets/forge/sparks/more-info-theme.png)
+![Exemple de thème pour le spark More-info](../../assets/page-assets/forge/sparks/more-info-theme.png)
 
-## CSS variables
+## Variables CSS
 
-| Variable | Default | Description |
+| Variable | Valeur par défaut | Description |
 | --- | --- | --- |
-| `--uix-more-info-details-head-height` | `40px` | Height of the details toggle row. |
-| `--uix-more-info-details-head-padding` | `0 var(--ha-space-4, 16px)` | Padding for the details toggle row. |
-| `--uix-more-info-details-head-gap` | `var(--ha-space-2, 8px)` | Gap between details action buttons. |
-| `--uix-more-info-details-outer-padding` | `0 var(--ha-space-6, 24px) var(--ha-space-6, 24px)` | Padding around the outside of the details card. |
-| `--uix-more-info-details-no-info-outer-padding` | `var(--ha-space-6, 24px)` | Padding around the outside of the details card when info is not shown (`info: false`). When details are shown without the info content above, top padding is added. |
-| `--uix-more-info-details-toggle-width` | `32px` | Size of the details action icon buttons. |
-| `--uix-more-info-details-transition-duration` | `350ms` | Transition duration for the details dropdown, toggle icon, and YAML button fade. |
-| `--uix-more-info-details-toggle-color` | `var(--primary-text-color)` | Details action button color. |
-| `--uix-more-info-details-max-height` | `unset` | Maximum expanded details height. Set to a CSS size value to constrain the details dropdown height. Overflow is set to scroll. |
+| `--uix-more-info-details-head-height` | `40px` | Hauteur de la ligne d'en-tête de la section repliable. |
+| `--uix-more-info-details-head-padding` | `0 var(--ha-space-4, 16px)` | Marge intérieure de la ligne d'en-tête. |
+| `--uix-more-info-details-head-gap` | `var(--ha-space-2, 8px)` | Espace entre les boutons d'action des détails. |
+| `--uix-more-info-details-outer-padding` | `0 var(--ha-space-6, 24px) var(--ha-space-6, 24px)` | Marge intérieure autour de la carte de détails. |
+| `--uix-more-info-details-no-info-outer-padding` | `var(--ha-space-6, 24px)` | Marge intérieure autour de la carte lorsque le contenu principal est masqué (`info: false`). Un espace supérieur est ajouté si les détails sont affichés seuls. |
+| `--uix-more-info-details-toggle-width` | `32px` | Taille des boutons d'action de la section de détails. |
+| `--uix-more-info-details-transition-duration` | `350ms` | Durée des transitions de la liste déroulante, de l'icône et de l'apparition du bouton YAML. |
+| `--uix-more-info-details-toggle-color` | `var(--primary-text-color)` | Couleur du bouton d'action des détails. |
+| `--uix-more-info-details-max-height` | `unset` | Hauteur maximale des détails déployés. Définissez une valeur CSS pour limiter leur hauteur ; le contenu excédentaire peut défiler. |
 
-## Operation and styling considerations
+## Fonctionnement et considérations de style
 
-The more-info spark uses the built-in Home Assistant elements `<ha-more-info-info>` and `<ha-more-info-details>`. These elements are designed to be used in the more-info dialog. Using them inside a UIX Forge layout introduces operational and styling considerations.
+Le spark `more-info` utilise les éléments Home Assistant intégrés `<ha-more-info-info>` et `<ha-more-info-details>`, conçus à l'origine pour la boîte de dialogue « Plus d'informations ». Leur utilisation dans une mise en page UIX Forge demande de tenir compte de leur fonctionnement et de leur style.
 
-### YAML details fullscreen button
+### Bouton plein écran des détails YAML
 
-In the more-info dialog, the YAML details mode fullscreen button is constrained to a wide dialog. Without any changes, this would break in the more-info spark because it would be constrained to the dropdown and not break out to fullscreen. To work around this, the more-info spark sets the internal `inDialog` flag on `<ha-more-info-details>` once it has rendered.
+Dans la boîte de dialogue, le bouton plein écran du mode YAML est limité par la largeur de la fenêtre. Dans le spark `more-info`, il resterait confiné à la liste déroulante. Pour éviter cela, le spark définit l'indicateur interne `inDialog` sur `<ha-more-info-details>` après son rendu.
 
-### More-info info content padding
+### Marge intérieure du contenu principal
 
-The inbuilt more-info info content padding is a generous `--ha-space-6` (24px) - the default more-info details outside padding is also set to match this default padding. This is likely too much for use in the more-info spark. As the inbuilt padding is applied in shadowRoot the best method to override is using UIX Styling via theme, also adjusting details outside padding at the same time.
+La marge intérieure par défaut du contenu principal « Plus d'informations » est généreuse : `--ha-space-6` (24 px). La marge extérieure des détails reprend cette valeur. C'est souvent trop important dans le spark `more-info`. Comme cette marge est appliquée dans la racine Shadow DOM, le plus simple est de la remplacer avec UIX Styling dans un thème, en ajustant aussi la marge des détails.
 
-Reduce padding to `--ha-space-3` (8px):
+Réduisez la marge intérieure à `--ha-space-3` (8 px) :
 
 ```yaml
 my-theme:
@@ -132,13 +132,13 @@ my-theme:
       }
 ```
 
-![Forge spark more-info padding example](../../assets/page-assets/forge/sparks/more-info-padding.png)
+![Exemple de marge intérieure réduite du contenu principal](../../assets/page-assets/forge/sparks/more-info-padding.png)
 
-### More-info details content padding
+### Marge intérieure du contenu détaillé
 
-The built-in more-info details content padding is also a generous `--ha-space-6` (24px). This is likely also too much for the more-info spark details section, especially the top padding. As the padding is applied in the shadow root, the best method to override it is using UIX styling via a theme styling `uix-more-info-yaml`.
+La marge intérieure intégrée au contenu détaillé est également généreuse : `--ha-space-6` (24 px). Elle est probablement trop importante dans la section de détails du spark `more-info`, surtout en haut. Comme elle est appliquée dans la racine Shadow DOM, remplacez-la avec UIX Styling dans un thème via `uix-more-info-yaml`.
 
-Styling the more-info details content padding using `uix-more-info-yaml`, also setting reduced padding for the more-info details head:
+Cet exemple réduit la marge intérieure du contenu détaillé avec `uix-more-info-yaml` et ajuste également celle de son en-tête :
 
 ```yaml
 my-theme:
@@ -154,15 +154,15 @@ my-theme:
       }
 ```
 
-![Forge spark more-info details padding example](../../assets/page-assets/forge/sparks/more-info-theme-details.png)
+![Exemple de marge intérieure réduite du contenu détaillé](../../assets/page-assets/forge/sparks/more-info-theme-details.png)
 
-## Using with standard cards
+## Utilisation avec des cartes standard
 
-All the examples above are using the UIX Forge blank card. Due to the nature of the more-info spark and its content it is best to always use a UIX forge blank card in a stack of cards.
+Tous les exemples précédents utilisent la carte vide UIX Forge. En raison du fonctionnement et du contenu du spark `more-info`, il est préférable d'utiliser une carte vide UIX Forge dans une pile de cartes.
 
-Example using a shortcut card in a stack, using UIX Styling to hide borders of cards in stack and then giving regular `ha-card` type styling to the vertical stack.
+L'exemple suivant place une carte de raccourci dans une pile. UIX Styling masque les bordures des cartes de la pile, puis applique à la pile verticale le style habituel d'un `ha-card`.
 
-### Using with shortcut card in vertical stack
+### Carte de raccourci dans une pile verticale
 
 ```yaml
 type: vertical-stack
@@ -215,4 +215,4 @@ uix:
     }
 ```
 
-![Forge spark more-info applied to shortcut card](../../assets/page-assets/forge/sparks/more-info-shortcut-card.png)
+![Spark More-info intégré à une carte de raccourci](../../assets/page-assets/forge/sparks/more-info-shortcut-card.png)
