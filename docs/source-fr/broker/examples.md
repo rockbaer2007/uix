@@ -293,7 +293,7 @@ Méthode :
           "--ha-icon-button-size": 32px
 ```
 
-![Exemple de directive de bouton de courtier](../assets/page-assets/broker/broker-button-directive.png){ width="450" ​​}
+![Exemple de directive de bouton de courtier](../assets/page-assets/broker/broker-button-directive.png){ width="450" }
 
 ## Remplacer la carte suggérée par les entités de périphérique en entités pour les vues en coupe
 
