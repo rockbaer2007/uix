@@ -1,14 +1,14 @@
 ---
-description: Learn about the tooltip spark for UIX Forge — add rich, styled tooltips to any DOM element in a UIX Forge element.
+description: Ajoutez des infobulles riches et personnalisées à n'importe quel élément DOM avec le spark Tooltip de UIX Forge.
 icon: material/chat-outline
 ---
-# :speech_balloon: Tooltip spark
+# :speech_balloon: Spark d'infobulle
 
-The `tooltip` spark attaches a styled tooltip to any element inside a [UIX Forge](../index.md) forged element. It uses Home Assistant's `wa-tooltip` component (the same component used throughout the HA frontend), so it integrates with the HA design system, supports 12 placement positions and floats above all other UI layers via the browser's Popover API.
+Le spark `tooltip` ajoute une infobulle personnalisée à n'importe quel élément d'un élément créé avec [UIX Forge](../index.md). Il utilise le composant Home Assistant `wa-tooltip`, également employé dans l'interface frontend de Home Assistant. Il respecte ainsi son système de design, propose 12 positions et s'affiche au-dessus des autres couches de l'interface grâce à l'API Popover du navigateur.
 
-## Basic usage
+## Utilisation de base
 
-Add a `tooltip` entry to `forge.sparks`:
+Ajoutez une entrée `tooltip` à `forge.sparks` :
 
 ```yaml
 type: custom:uix-forge
@@ -25,7 +25,7 @@ element:
 
 ![Basic tooltip spark](../../assets/page-assets/forge/sparks/tooltip-basic.gif)
 
-The `for` value is a selector that locates the target element within the forged element. It supports the same [DOM navigation syntax](../../concepts/dom.md) as UIX styles, including `$` to cross shadow-root boundaries.
+La valeur de `for` est un sélecteur qui repère l'élément cible à l'intérieur de l'élément créé. Elle accepte la même [syntaxe de navigation dans le DOM](../../concepts/dom.md) que les styles UIX, y compris `$` pour traverser les limites d'une racine Shadow DOM.
 
 ```yaml
 type: custom:uix-forge
@@ -42,28 +42,28 @@ element:
 
 ![Tooltip spark for tile icon](../../assets/page-assets/forge/sparks/tooltip-tile-icon.gif)
 
-Only the **first** element matched by `for` gets the tooltip.
+L'infobulle est ajoutée uniquement au **premier** élément correspondant à `for`.
 
 ## Configuration
 
-| Key | Type | Required | Default | Description |
+| Clé | Type | Obligatoire | Valeur par défaut | Description |
 | --- | ---- | -------- | ------- | ----------- |
-| `type` | `string` | ✅ | — | Must be `tooltip`. |
-| `for` | string | | `element` | UIX selector for the target element. When the UIX Forge element is using [Blank card config](../forge.md#blank-card-config), the default is `uix-forge-blank-card $ div.content`. Otherwise, the default of `element` refers to the root of the forged element. |
-| `content` | string | | `""` | HTML content of the tooltip body. |
-| `placement` | string | | `"top"` | Tooltip position relative to the target. Placement values are `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end`, `right` · `right-start`, `right-end`. |
-| `distance` | number | | `8` | Gap in pixels between the tooltip and the target element. |
-| `skidding` | number | | `0` | Offset in pixels along the target element's axis. |
-| `show_delay` | number | | `150` | Milliseconds to wait before showing the tooltip. |
-| `hide_delay` | number | | `150` | Milliseconds to wait before hiding the tooltip. |
-| `without_arrow` | boolean | | `false` | Set to `true` to hide the directional arrow. |
+| `type` | `string` | ✅ | — | Doit être défini sur `tooltip`. |
+| `for` | string | | `element` | Sélecteur UIX de l'élément cible. Si l'élément UIX Forge utilise la [configuration de carte vide](../forge.md#blank-card-config), la valeur par défaut est `uix-forge-blank-card $ div.content`. Sinon, `element` désigne la racine de l'élément créé avec UIX Forge. |
+| `content` | string | | `""` | Contenu HTML de l'infobulle. |
+| `placement` | string | | `"top"` | Position de l'infobulle par rapport à la cible. Valeurs possibles : `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end`, `right`, `right-start` et `right-end`. |
+| `distance` | number | | `8` | Espace, en pixels, entre l'infobulle et l'élément cible. |
+| `skidding` | number | | `0` | Décalage, en pixels, le long de l'axe de l'élément cible. |
+| `show_delay` | number | | `150` | Délai en millisecondes avant l'affichage de l'infobulle. |
+| `hide_delay` | number | | `150` | Délai en millisecondes avant le masquage de l'infobulle. |
+| `without_arrow` | boolean | | `false` | Définissez cette option sur `true` pour masquer la flèche directionnelle. |
 
 !!! tip
-    You can use the [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) DOM helper to take the guesswork out of finding the right path for `for`.
+    Le helper DOM [`uix_forge_path()`](../../concepts/dom.md#uix_forge_path0-forge-helper) vous aide à déterminer le chemin à utiliser pour `for`.
 
-## Templates in content
+## Modèles dans le contenu
 
-The `content` value is part of the `forge` config and is therefore processed as a template, giving you access to entity states, the `config` object and any other [UIX template variables](../../using/templates.md):
+La valeur de `content` fait partie de la configuration `forge` et est donc traitée comme un modèle. Vous pouvez accéder aux états des entités, à l'objet `config` et aux autres [variables de modèle UIX](../../using/templates.md) :
 
 ```yaml
 type: custom:uix-forge
@@ -82,12 +82,12 @@ element:
 
 ![Tooltip spark with template content](../../assets/page-assets/forge/sparks/tooltip-icon-template.gif)
 
-## Tooltip on a badge
+## Infobulle sur un badge
 
-Here the tooltip works on `hui-badge` which is the element forged by UIX Forge. Hence `for:` is not required as the default `for: element` will select `hui-badge`, the forged element. Generally tooltips will work with the default `for: element` and you only need to be more specific based on your specific use case.
+Dans cet exemple, l'infobulle s'applique à `hui-badge`, l'élément créé par UIX Forge. Il n'est donc pas nécessaire de définir `for` : sa valeur par défaut, `element`, sélectionne `hui-badge`. En général, cette valeur par défaut suffit ; précisez un sélecteur uniquement si votre cas d'usage le demande.
 
 ```yaml
-# A badge placed in the dashboard header
+# Badge placé dans l'en-tête du tableau de bord
     badges:
       - type: custom:uix-forge
         forge:
@@ -104,12 +104,12 @@ Here the tooltip works on `hui-badge` which is the element forged by UIX Forge. 
 
 ![Tooltip spark as applied to a badge](../../assets/page-assets/forge/sparks/tooltip-badge.gif)
 
-## Customising tooltip appearance
+## Personnaliser l'apparence de l'infobulle
 
-The tooltip spark injects CSS variables into the `wa-tooltip` element. Override them by setting `--uix-tooltip-*` variables on the forged element's `uix.style` (or in a theme).
+Le spark `tooltip` ajoute des variables CSS à l'élément `wa-tooltip`. Pour les remplacer, définissez des variables `--uix-tooltip-*` dans `uix.style` de l'élément créé ou dans un thème.
 
 !!! note
-    As a tooltip is added as a sibling to the element it is `for`, if you wish to style the tooltip you will need to make sure your styled element is a parent of the `for` element. In the styling example, the styles are applied to `:host` and the tooltip applied to `ha-card` in the hosts shadow root.
+    L'infobulle étant ajoutée comme élément frère de la cible `for`, l'élément auquel vous appliquez le style doit être son parent. Dans l'exemple ci-dessous, les styles sont appliqués à `:host` et l'infobulle est ajoutée à `ha-card` dans la racine Shadow DOM de l'hôte.
 
 ```yaml
 type: custom:uix-forge
@@ -135,26 +135,26 @@ element:
 
 ### CSS variables reference
 
-| CSS variable | Default | Description |
+| Variable CSS | Valeur par défaut | Description |
 | ------------ | ------- | ----------- |
-| `--uix-tooltip-background-color` | `--secondary-background-color` | Tooltip background colour. |
-| `--uix-tooltip-content-color` | `--primary-text-color` | Tooltip text colour. |
-| `--uix-tooltip-font-family` | `--ha-font-family-body` | Font family. |
-| `--uix-tooltip-font-size` | `--ha-font-size-s` | Font size. |
-| `--uix-tooltip-font-weight` | `--ha-font-weight-normal` | Font weight. |
-| `--uix-tooltip-line-height` | `--ha-line-height-condensed` | Line height. |
-| `--uix-tooltip-padding` | `8px` | Padding inside the tooltip. |
-| `--uix-tooltip-border-radius` | `--ha-border-radius-sm` | Border radius. |
-| `--uix-tooltip-arrow-size` | `8px` | Size of the directional arrow. |
-| `--uix-tooltip-border-width` | — | Border width (unset by default). |
-| `--uix-tooltip-border-color` | — | Border colour (unset by default). |
-| `--uix-tooltip-border-style` | — | Border style (unset by default). |
-| `--uix-tooltip-max-width` | `30ch` | Maximum width of the tooltip. |
-| `--uix-tooltip-show-duration` | `100ms` | Duration of the show animation. |
-| `--uix-tooltip-hide-duration` | `100ms` | Duration of the hide animation. |
-| `--uix-tooltip-opacity` | `1` | Tooltip opacity. |
-| `--uix-tooltip-box-shadow` | `--ha-card-box-shadow` | Box shadow. |
-| `--uix-tooltip-text-align` | `center` | Text alignment. |
-| `--uix-tooltip-text-decoration` | `none` | Text decoration. |
-| `--uix-tooltip-text-transform` | `none` | Text transform. |
-| `--uix-tooltip-overflow-wrap` | `normal` | Overflow-wrap behaviour. |
+| `--uix-tooltip-background-color` | `--secondary-background-color` | Couleur d'arrière-plan de l'infobulle. |
+| `--uix-tooltip-content-color` | `--primary-text-color` | Couleur du texte de l'infobulle. |
+| `--uix-tooltip-font-family` | `--ha-font-family-body` | Famille de polices. |
+| `--uix-tooltip-font-size` | `--ha-font-size-s` | Taille de police. |
+| `--uix-tooltip-font-weight` | `--ha-font-weight-normal` | Graisse de police. |
+| `--uix-tooltip-line-height` | `--ha-line-height-condensed` | Hauteur de ligne. |
+| `--uix-tooltip-padding` | `8px` | Marge intérieure de l'infobulle. |
+| `--uix-tooltip-border-radius` | `--ha-border-radius-sm` | Rayon des angles. |
+| `--uix-tooltip-arrow-size` | `8px` | Taille de la flèche directionnelle. |
+| `--uix-tooltip-border-width` | — | Épaisseur de la bordure (non définie par défaut). |
+| `--uix-tooltip-border-color` | — | Couleur de la bordure (non définie par défaut). |
+| `--uix-tooltip-border-style` | — | Style de la bordure (non défini par défaut). |
+| `--uix-tooltip-max-width` | `30ch` | Largeur maximale de l'infobulle. |
+| `--uix-tooltip-show-duration` | `100ms` | Durée de l'animation d'apparition. |
+| `--uix-tooltip-hide-duration` | `100ms` | Durée de l'animation de disparition. |
+| `--uix-tooltip-opacity` | `1` | Opacité de l'infobulle. |
+| `--uix-tooltip-box-shadow` | `--ha-card-box-shadow` | Ombre portée. |
+| `--uix-tooltip-text-align` | `center` | Alignement du texte. |
+| `--uix-tooltip-text-decoration` | `none` | Décoration du texte. |
+| `--uix-tooltip-text-transform` | `none` | Transformation du texte. |
+| `--uix-tooltip-overflow-wrap` | `normal` | Comportement de retour à la ligne du texte. |
