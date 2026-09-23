@@ -1,13 +1,13 @@
 ---
-title: UIX actions
-description: Learn how UIX actions can clear cache, show more-info or toast messages, protect an action with a code, run JavaScript, and dispatch browser events.
+title: Actions UIX
+description: Découvrez les actions UIX : vider le cache, afficher des informations détaillées ou une notification, protéger une action par un code, exécuter du JavaScript et envoyer des événements du navigateur.
 ---
-# UIX actions
+# Actions UIX
 
-UIX has several custom actions which can be used on Home Assistant Frontend dashboards. These are invoked using `action: fire-dom-event` with a `uix:` object to set the action and any parameters set in the `data:` object. UIX actions can be used on any card that supports the `fire-dom-event` action which includes all standard Home Assistant cards.
+UIX propose plusieurs actions personnalisées utilisables dans les tableaux de bord Home Assistant. Elles sont appelées avec `action: fire-dom-event` ; l'objet `uix:` indique l'action et l'objet `data:` contient ses paramètres. Vous pouvez les utiliser avec toute carte prenant en charge `fire-dom-event`, notamment les cartes standard de Home Assistant.
 
 !!! info
-    UIX action `data:` object parameters are as required by the Home Assistant event called and are not chosen by UIX. This gives rise to multiple `action` config items which may be confusing. However, each has their place. If you have any issues make sure to follow the documented config for each UIX action.
+    Les paramètres de l'objet `data:` d'une action UIX dépendent de l'événement Home Assistant appelé et ne sont pas définis par UIX. La configuration comporte donc plusieurs clés `action`, ce qui peut prêter à confusion. Chacune a toutefois son rôle. En cas de problème, suivez la configuration indiquée pour l'action UIX concernée.
 
 ```yaml
 # ... card config
@@ -20,18 +20,18 @@ UIX has several custom actions which can be used on Home Assistant Frontend dash
 ```
 
 !!! info
-    `action: clear_cache` and `action: more_info` are also valid config and translate to `action: clear-cache` and `action: more-info` respectively.
+    `action: clear_cache` et `action: more_info` sont également acceptés et correspondent respectivement à `action: clear-cache` et `action: more-info`.
 
-## `clear-cache` - clearing Home Assistant Frontend cache
+## `clear-cache` — vider le cache du frontend Home Assistant
 
-Clears the Home Assistant Frontend Application cache and reloads the Browser - localStorage remains untouched. This can be very convenient especially for devices where the option is hidden in a debugging menu and will also clear more than just the Frontend Application cache (e.g. localStorage which clears out many stored items like Browser Mod Browser ID).
+Cette action vide le cache de l'application frontend Home Assistant et recharge le navigateur, sans toucher à `localStorage`. Elle est pratique lorsque l'option est cachée dans un menu de débogage. Elle vide également d'autres données du cache de l'application ; `localStorage`, qui contient notamment l'identifiant du navigateur Browser Mod, reste intact.
 
-| config | setting | default | description |
+| Configuration | Paramètre | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `action: clear-cache` | - | - | Clears the Home Assistant Application cache and reloads the Browser. |
-| `data:` | - | - | not used |
+| `action: clear-cache` | — | — | Vide le cache de l'application Home Assistant et recharge le navigateur. |
+| `data:` | — | — | Non utilisé |
 
-Example button to clear cache and reload.
+Exemple de bouton pour vider le cache et recharger la page :
 
 ```yaml
 show_name: true
@@ -44,19 +44,19 @@ tap_action:
     action: clear-cache
 ```
 
-## `event` - dispatch a browser event
+## `event` — envoyer un événement du navigateur
 
-Dispatches a [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent) on `window`. This is useful for connecting a button action to a UIX Broker interaction in the `browser` realm without adding a `fire-dom-event` listener that unwraps another event.
+Envoie un [`CustomEvent`](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent) sur `window`. Cela permet de relier l'action d'un bouton à une interaction UIX Broker dans le realm `browser`, sans ajouter d'écouteur `fire-dom-event` chargé de déballer un autre événement.
 
-| config | setting | default | description |
+| Configuration | Paramètre | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `action: event` | - | - | Dispatches a browser `CustomEvent` on `window`. |
-| `name` | **REQUIRED** | - | Event name. |
-| `data` | - | `{}` | Event `detail`. |
+| `action: event` | — | — | Envoie un `CustomEvent` du navigateur sur `window`. |
+| `name` | **OBLIGATOIRE** | — | Nom de l'événement. |
+| `data` | — | `{}` | Propriété `detail` de l'événement. |
 
-For a normal dashboard action, the event is dispatched on `window`. For a UIX Broker `button` directive, UIX automatically dispatches from the button's placement reference — its `after` target, `before` target, or directive anchor — with `bubbles: true` and `composed: true`. The receiving Broker interaction can therefore use an event-path anchor such as `target`, `<`, or `<$`; it does not need to re-search from an absolute `select_tree` path.
+Pour une action de tableau de bord classique, l'événement est envoyé sur `window`. Pour une directive `button` d'UIX Broker, UIX l'envoie automatiquement depuis le point d'insertion du bouton — sa cible `after`, sa cible `before` ou l'ancre de la directive — avec `bubbles: true` et `composed: true`. L'interaction Broker qui le reçoit peut donc utiliser une ancre de chemin d'événement telle que `target`, `<` ou `<$`, sans rechercher à nouveau un chemin absolu `select_tree`.
 
-For example, this Broker button dispatches `toggle-yaml-mode` from its placement reference:
+Par exemple, ce bouton Broker envoie l'événement `toggle-yaml-mode` depuis son point d'insertion :
 
 ```yaml
 - type: button
@@ -71,18 +71,18 @@ For example, this Broker button dispatches `toggle-yaml-mode` from its placement
         source: sidebar-button
 ```
 
-## `more-info` - show Home Assistant more-info for an entity with starting view
+## `more-info` — afficher les informations détaillées d'une entité
 
-Shows the Home Assistant more-info dialog with the option to set the starting view of the more-info dialog.
+Affiche la boîte de dialogue Home Assistant des informations détaillées. Vous pouvez choisir la vue affichée à son ouverture.
 
-| config | setting | default | description |
+| Configuration | Paramètre | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `action: more-info` | - | - | Shows the Home Assistant more-info dialog with entity and view options set with `data:` |
-| `data:` | - | - | More-info entity and view options. |
-| | `entity` | - | Entity Id of the entity for which to show more-info. |
-| | `view` | `info` | Initial view of the more-info dialog. Can be set to `info`, `history`, `settings`, `related`, `add_to` , `details` |
+| `action: more-info` | — | — | Affiche la boîte de dialogue des informations détaillées avec les options d'entité et de vue définies dans `data:`. |
+| `data:` | — | — | Options d'entité et de vue pour les informations détaillées. |
+| | `entity` | — | Identifiant de l'entité à afficher. |
+| | `view` | `info` | Vue initiale de la boîte de dialogue : `info`, `history`, `settings`, `related`, `add_to` ou `details`. |
 
-Example showing more-info with history view.
+Exemple d'affichage des informations détaillées avec la vue historique :
 
 ```yaml
 type: tile
@@ -96,29 +96,29 @@ tap_action:
       view: history
 ```
 
-## `toast` - show Home Assistant toast notification
+## `toast` — afficher une notification Home Assistant
 
-Shows a Home Assistant toast notification.
+Affiche une notification temporaire (toast) de Home Assistant.
 
-| config | setting | default | description |
+| Configuration | Paramètre | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `action: toast` | - | - | Shows the Home Assistant toast notification with options set with `data:` |
-| `data:` | - | - | Toast options. |
-| | `id` | - | `id` of the toast message. Provide the same `id` to replace any existing toast message with the same `id` |
-| | `message` | **REQUIRED** | String or object. Provide string for a message without translation. Provide an object with `translationKey` and optional `args` to use a translated message from the Home Assistant translation collection. |
-| | `duration` | `4000` | Duration in ms for which to show the toast. Any duration less than 4000 will be set to 4000 (4 seconds). Use `-1` to have the toast to show indefinitely - will be replaced if another toast is shown. |
-| | `dismissable` | `false` | Shows a close icon to allow the toast message to be immediately dismissed by the user. |
-| | `bottomOffset` | `0` | A positive offset to add to the vertical position above the bottom of the Browser window. toast messages show at a position `--ha-space-4` (Default: 16px) above the bottom of safe area of the Browser window. |
-| | `action` | - | If provided shows a button which will execute the configured `action.tap_action` when clicked. |
-| | `action.primary` | - | If `true` renders the `action` button in primary style which is filled appearance to make it stand out against the toast background. Button variant is always brand. |
-| | `action.text` | **REQUIRED** | String or object. Provide string for a message without translation. Provide an object with `translationKey` and optional `args` to use a translated message from the Home Assistant translation collection. |
-| | `action.tap_action` | **REQUIRED** | Home Assistant action config |
-| | `secondary_action` | - | If provided shows a button to the left of the `action` button which will execute the configured `secondary_action.tap_action` when clicked. |
-| | `secondary_action.primary` | - | If `true` renders the `secondary_action` button in primary style which is filled appearance to make it stand out against the toast background. Button variant is always brand. |
-| | `secondary_action.text` | **REQUIRED** | String or object. Provide string for a message without translation. Provide an object with `translationKey` and optional `args` to use a translated message from the Home Assistant translation collection. |
-| | `secondary_action.tap_action` | **REQUIRED** | Home Assistant action config |
+| `action: toast` | — | — | Affiche une notification temporaire Home Assistant avec les options de `data:`. |
+| `data:` | — | — | Options de la notification. |
+| | `id` | — | Identifiant de la notification. Réutilisez le même identifiant pour remplacer une notification existante. |
+| | `message` | **OBLIGATOIRE** | Chaîne ou objet. Une chaîne n'est pas traduite. Pour utiliser une traduction Home Assistant, indiquez un objet avec `translationKey` et, éventuellement, `args`. |
+| | `duration` | `4000` | Durée d'affichage en millisecondes. Toute valeur inférieure à 4 000 est ramenée à 4 000 (4 secondes). Utilisez `-1` pour un affichage permanent ; une nouvelle notification la remplacera. |
+| | `dismissable` | `false` | Affiche une icône de fermeture qui permet à l'utilisateur de masquer immédiatement la notification. |
+| | `bottomOffset` | `0` | Décalage vertical positif par rapport au bas de la fenêtre du navigateur. Les notifications apparaissent à `--ha-space-4` (16 px par défaut) au-dessus de la limite de la zone sûre. |
+| | `action` | — | Si elle est définie, affiche un bouton qui exécute `action.tap_action` au clic. |
+| | `action.primary` | — | Si la valeur est `true`, affiche le bouton `action` avec le style principal rempli. La variante du bouton est toujours `brand`. |
+| | `action.text` | **OBLIGATOIRE** | Chaîne ou objet définissant le texte du bouton. Une chaîne n'est pas traduite ; pour utiliser une traduction Home Assistant, indiquez un objet avec `translationKey` et, éventuellement, `args`. |
+| | `action.tap_action` | **OBLIGATOIRE** | Configuration d'action Home Assistant. |
+| | `secondary_action` | — | Si elle est définie, affiche à gauche du bouton `action` un bouton qui exécute `secondary_action.tap_action`. |
+| | `secondary_action.primary` | — | Si la valeur est `true`, affiche le bouton `secondary_action` avec le style principal rempli. La variante du bouton est toujours `brand`. |
+| | `secondary_action.text` | **OBLIGATOIRE** | Chaîne ou objet définissant le texte du bouton. Une chaîne n'est pas traduite ; pour utiliser une traduction Home Assistant, indiquez un objet avec `translationKey` et, éventuellement, `args`. |
+| | `secondary_action.tap_action` | **OBLIGATOIRE** | Configuration d'action Home Assistant. |
 
-Example toast with action with translated action text.
+Exemple de notification avec une action dont le libellé est traduit :
 
 ```yaml
 type: tile
@@ -150,23 +150,23 @@ tap_action:
             entity_id: light.ceiling_lights
 ```
 
-![UIX toast action example](../assets/page-assets/extras/extra-toast-action.gif)
+![Exemple d'action de notification UIX](../assets/page-assets/extras/extra-toast-action.gif)
 
-## `javascript` - run javascript code in Browser session
+## `javascript` — exécuter du JavaScript dans la session du navigateur
 
-Runs JavaScript code in the browser session with `hass` provided and an optional `variables` object.
+Exécute du code JavaScript dans la session du navigateur. L'objet `hass` est disponible, ainsi qu'un objet facultatif `variables`.
 
 !!! warning
-    This action executes arbitrary JavaScript in the current Home Assistant frontend session. Only use trusted code/config and be aware it can access data available to the browser session.
+    Cette action exécute du JavaScript arbitraire dans la session frontend Home Assistant actuelle. N'utilisez que du code et une configuration de confiance ; ce code peut accéder aux données disponibles dans la session du navigateur.
 
-| config | setting | default | description |
+| Configuration | Paramètre | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `action: javascript` | - | - | Runs javascript code with options set with `data:` |
-| `data:` | - | - | Javascript options. |
-| | `code` | **REQUIRED** | Javascript code to run. |
-| | `variables` | `{}` | Optional variables object. Each named variable is available in javascript as `variables.<name>`. Named variables can be of any type. |
+| `action: javascript` | — | — | Exécute du JavaScript avec les options définies dans `data:`. |
+| `data:` | — | — | Options JavaScript. |
+| | `code` | **OBLIGATOIRE** | Code JavaScript à exécuter. |
+| | `variables` | `{}` | Objet de variables facultatif. Chaque variable nommée est accessible en JavaScript avec `variables.<name>`. Les valeurs peuvent être de n'importe quel type. |
 
-Example javascript action with variable and using hass object to turn off a light.
+Exemple d'action JavaScript utilisant une variable et l'objet `hass` pour éteindre une lumière :
 
 ```yaml
 type: tile
@@ -183,12 +183,12 @@ tap_action:
         hass.callService("light", "turn_off", {}, { entity_id: variables.entity_id });
 ```
 
-## `locked_action` - require a code or confirmation before an action
+## `locked_action` — demander un code ou une confirmation avant l'action
 
 !!! info
-    `locked_action` available in 8.3.0-beta.2
+    Disponible à partir de la version 8.3.0-beta.2.
 
-Runs a normal Home Assistant action only after the current user passes the configured lock. It is useful for actions such as restarts, opening gates, or changing a critical setting without needing to wrap the entire card in a Forge lock.
+Exécute une action Home Assistant classique uniquement après validation du verrou configuré pour l'utilisateur actuel. Cette action convient notamment au redémarrage, à l'ouverture d'un portail ou à la modification d'un réglage important, sans devoir envelopper toute la carte dans un verrou Forge.
 
 ```yaml
 type: button
@@ -207,61 +207,64 @@ tap_action:
 ```
 
 !!! warning
-    `locked_action` is a frontend interaction guard, not an authorization boundary. Anyone who can edit the dashboard or inspect its loaded configuration can see the code and the protected action. Use Home Assistant permissions and server-side controls for access control.
+    `locked_action` protège une interaction dans le frontend ; il ne constitue pas une limite d'autorisation. Toute personne capable de modifier le tableau de bord ou d'inspecter sa configuration chargée peut voir le code et l'action protégée. Pour contrôler les accès, utilisez les permissions Home Assistant et des contrôles côté serveur.
 
-### Configuration reference
+### Référence de configuration
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `locked_action` | object | — | **Required.** The Home Assistant action to run after the lock is passed. |
-| `locks` | list | `[]` | Ordered list of lock entries. See [Lock matching](#lock-matching) and [Lock entry keys](#lock-entry-keys). |
-| `permissive` | boolean | `false` | When `true`, users who do not match a lock entry may run the action. |
-| `entity` | string | — | Entity ID supplied to the nested action, for action types that use the card entity. |
-| `code_dialog` | object | — | Labels for the code/passphrase dialog. See [Code dialog](#code-dialog). |
-| `id` | string or number | — | Stable identifier for retry and lockout tracking. Strongly recommended when using `retry_delay` or `max_retries`; use a distinct ID for each protected action. |
+| `locked_action` | object | — | **Obligatoire.** Action Home Assistant à exécuter après validation du verrou. |
+| `locks` | list | `[]` | Liste ordonnée de règles de verrouillage. Consultez [Correspondance des verrous](#lock-matching) et [Clés d'une règle](#lock-entry-keys). |
+| `permissive` | boolean | `false` | Si la valeur est `true`, les utilisateurs ne correspondant à aucune règle peuvent exécuter l'action. |
+| `entity` | string | — | Identifiant d'entité transmis à l'action imbriquée, pour les types d'action qui utilisent l'entité de la carte. |
+| `code_dialog` | object | — | Libellés de la demande de code ou de phrase secrète. Consultez [Boîte de dialogue du code](#code-dialog). |
+| `id` | string ou number | — | Identifiant stable utilisé pour suivre les nouvelles tentatives et les blocages. Fortement recommandé avec `retry_delay` ou `max_retries` ; utilisez un identifiant différent pour chaque action protégée. |
 
-`locked_action` accepts any ordinary Home Assistant action object, including `perform-action`, `toggle`, `more-info`, `navigate`, and `fire-dom-event`.
+`locked_action` accepte tout objet d'action Home Assistant classique, notamment `perform-action`, `toggle`, `more-info`, `navigate` et `fire-dom-event`.
 
-### Lock matching
+<a id="lock-matching"></a>
+### Correspondance des verrous
 
-`locks` is an ordered list. The first matching active entry determines the challenge. If no active entry matches, the first matching `active: false` entry allows the action without a challenge.
+`locks` est une liste ordonnée. La première règle active correspondante détermine le contrôle demandé. Si aucune règle active ne correspond, la première règle correspondante avec `active: false` autorise l'action sans contrôle.
 
-| Configuration | Who it matches |
+| Configuration | Utilisateurs concernés |
 | --- | --- |
-| `users` list present | Users whose name is in the list. With `admins: true`, all admins also match. |
-| No `users` list | All non-admin users except users in `except`. |
-| No `users` list with `admins: true` | All users except users in `except`. |
+| La liste `users` est présente | Utilisateurs dont le nom figure dans la liste. Avec `admins: true`, tous les administrateurs correspondent aussi. |
+| Aucune liste `users` | Tous les utilisateurs non administrateurs, sauf ceux de `except`. |
+| Aucune liste `users` avec `admins: true` | Tous les utilisateurs, sauf ceux de `except`. |
 
-`admins` is additive: without it, admins are excluded from an entry unless listed in `users`. When no lock entry matches, `permissive: true` permits the action; with the default `permissive: false`, admins bypass the action guard and non-admins cannot run the action.
+`admins` ajoute les administrateurs à la règle : sans cette option, ils en sont exclus sauf s'ils figurent dans `users`. Si aucune règle ne correspond, `permissive: true` autorise l'action. Avec la valeur par défaut `permissive: false`, les administrateurs contournent le verrou d'interaction et les autres utilisateurs ne peuvent pas exécuter l'action.
 
-### Lock entry keys
+<a id="lock-entry-keys"></a>
+### Clés d'une règle de verrouillage
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `active` | boolean | `true` | Set to `false` to explicitly allow matching users without a challenge. |
-| `code` | string or number | — | Code to enter. An all-numeric code shows the Home Assistant number pad; other values use a password field. |
-| `pin` | string or number | — | Alias for `code`. |
-| `confirmation` | string, boolean, or object | — | A confirmation after any code. `true` uses Home Assistant's default text; a string supplies custom text; an object may provide `title` and `text`. |
-| `users` | list of strings | — | Usernames this entry applies to. |
-| `admins` | boolean | `false` | Extends the entry to admins. On an entry without `users`, this makes it apply to all users. |
-| `except` | list of strings | — | Usernames exempt from an entry without `users`. |
-| `retry_delay` | number or string | — | Delay after a wrong code before another attempt. Numbers are milliseconds; strings accept units such as `"10s"`. |
-| `max_retries` | number | — | Wrong-code attempts allowed before the extended lockout. |
-| `max_retries_delay` | number or string | `30000` | Lockout duration after `max_retries`. Numbers are milliseconds; strings accept units such as `"30s"` or `"5m"`. |
+| `active` | boolean | `true` | Définissez `false` pour autoriser explicitement les utilisateurs correspondants sans contrôle. |
+| `code` | string ou number | — | Code à saisir. Un code uniquement numérique affiche le pavé numérique Home Assistant ; les autres valeurs utilisent un champ de mot de passe. |
+| `pin` | string ou number | — | Alias de `code`. |
+| `confirmation` | string, boolean ou object | — | Confirmation demandée après le code. `true` utilise le texte par défaut de Home Assistant ; une chaîne définit un texte personnalisé ; un objet peut contenir `title` et `text`. |
+| `users` | liste de chaînes | — | Noms des utilisateurs concernés par cette règle. |
+| `admins` | boolean | `false` | Étend la règle aux administrateurs. Sans liste `users`, elle s'applique alors à tous les utilisateurs. |
+| `except` | liste de chaînes | — | Noms des utilisateurs exemptés d'une règle sans `users`. |
+| `retry_delay` | number ou string | — | Délai après un code erroné avant une nouvelle tentative. Les nombres sont en millisecondes ; les chaînes acceptent des unités comme `"10s"`. |
+| `max_retries` | number | — | Nombre de codes erronés autorisés avant le blocage prolongé. |
+| `max_retries_delay` | number ou string | `30000` | Durée du blocage après `max_retries`. Les nombres sont en millisecondes ; les chaînes acceptent des unités comme `"30s"` ou `"5m"`. |
 
-### Code dialog
+<a id="code-dialog"></a>
+### Boîte de dialogue du code
 
-Use `code_dialog` to customise the code or passphrase prompt.
+Utilisez `code_dialog` pour personnaliser la demande de code ou de phrase secrète.
 
-| Key | Type | Default | Description |
+| Clé | Type | Valeur par défaut | Description |
 | --- | --- | --- | --- |
-| `title` | string | Home Assistant default | Dialog title. |
-| `submit_text` | string | Home Assistant default | Confirm button label. |
-| `cancel_text` | string | Home Assistant default | Cancel button label. |
+| `title` | string | Valeur par défaut Home Assistant | Titre de la boîte de dialogue. |
+| `submit_text` | string | Valeur par défaut Home Assistant | Libellé du bouton de confirmation. |
+| `cancel_text` | string | Valeur par défaut Home Assistant | Libellé du bouton d'annulation. |
 
-### Retry tracking
+### Suivi des tentatives
 
-Retry state is retained in the current browser session. Set `id` whenever a retry delay or lockout matters, especially if dashboard configuration can be regenerated by a template or another custom card: an explicit ID survives control recreation. The same ID shares a retry count, so different protected actions should use different IDs.
+L'état des tentatives est conservé dans la session de navigateur actuelle. Définissez `id` dès que le délai entre les tentatives ou le blocage est important, en particulier si un modèle ou une autre carte personnalisée peut recréer la configuration du tableau de bord : un identifiant explicite reste stable après la recréation du contrôle. Le même identifiant partage le compteur de tentatives ; attribuez donc un identifiant distinct à chaque action protégée.
 
 ```yaml
 tap_action:
