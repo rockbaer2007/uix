@@ -227,4 +227,4 @@ rules:
 ```
 
 !!! warning
-    Panel-Zustand ist asynchron. Eine Interaktion, die eine Panel-Regel verwendet, kann keine `block`-Direktive nutzen, weil das Blockieren eines Ereignisses im synchronen Call-Stack des Ereignisses abgeschlossen sein muss. UIX Broker überspringt solche Interaktionen und protokolliert eine Warnung.
+    Der Panel-Zustand ist asynchron. Eine Interaktion mit einer Panel-Regel in ihren Interaktions-`rules` kann keine `block`-Direktive nutzen, weil das Blockieren eines Ereignisses im synchronen Call-Stack des Ereignisses abgeschlossen sein muss. UIX Broker überspringt solche Interaktionen und protokolliert eine Warnung. Spätere Direktiven ohne `block` können weiterhin eigene Panel-Regeln haben; diese Regeln bedingen nur die jeweilige Direktive, nachdem das Ereignis blockiert wurde.

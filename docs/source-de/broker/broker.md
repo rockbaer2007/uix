@@ -36,7 +36,7 @@ Siehe [Realms](./realms.md), [Interaktionsanker](./interaction-anchors.md), [Reg
 | `reentrant` | Standardmäßig `true`. Auf `false` setzen, um passende Ereignisse für dieselbe Interaktion zu ignorieren, solange sie aufgelöst oder ausgeführt wird. |
 | `debug` | Auf `true` setzen, um den Lebenszyklus der Interaktion in der Browser-Entwicklerkonsole zu protokollieren. |
 
-Jede Interaktion ist unabhängig. Alle ihre Regeln müssen passen, bevor Direktiven ausgeführt werden; Direktiven laufen einzeln in der Reihenfolge der Konfiguration.
+Jede Interaktion ist unabhängig. Alle ihre Regeln müssen passen, bevor Direktiven ausgeführt werden; Direktiven laufen einzeln in der Reihenfolge der Konfiguration. Die Direktive `block` wird unabhängig von ihrer Position in der Liste synchron vor den übrigen Direktiven angewendet.
 
 Nutze eine `listen`-Liste im Browser-Realm, wenn dieselbe Interaktion für mehr als ein Browser-Ereignis laufen soll:
 
@@ -87,11 +87,11 @@ YAML-Dateikonfigurationen verwenden dieselbe Home-Assistant-YAML-Auflösung wie 
 
 ## Synchrone und asynchrone Ausführungspfade von Interaktionen
 
-Regeln für erfasste Daten und Browser-Identität laufen synchron vor der Auflösung des Interaktionsankers. Event-Path-Interaktionsanker werden ebenfalls synchron aufgelöst. Dadurch kann eine Interaktion im Browser-Realm eine `block`-Direktive anhand erfasster Daten, Browser-Identität und bereits im zusammengesetzten Ereignispfad vorhandener Elemente anwenden.
+Regeln für erfasste Daten, Browser-Identität, Benutzer, Administratorstatus, URL-Fragmente und Suchparameter laufen synchron vor der Auflösung des Interaktionsankers. Event-Path-Interaktionsanker werden ebenfalls synchron aufgelöst. Dadurch kann eine Interaktion im Browser-Realm eine `block`-Direktive anhand dieser Regeln und bereits im zusammengesetzten Ereignispfad vorhandener Elemente anwenden.
 
 Da die [`block`-Direktive](directives.md) synchron laufen muss, benötigen Interaktionen mit `block`, dass ihre [Interaktionsanker](interaction-anchors.md) und Anker von [Host-Element-Regeln](rules.md#host-element-regeln) sofort verfügbar sind. UIX Broker führt eine synchrone Suche aus; wenn einer davon nicht verfügbar ist, wird die Interaktion übersprungen.
 
-Nachdem eine blockierende Interaktion aufgelöst und `block` angewendet wurde, verwenden Anker späterer `property`-, `event`-, `call`- und `button`-Direktiven weiterhin das normale asynchrone Wiederholungsverhalten.
+Nachdem eine blockierende Interaktion aufgelöst und `block` angewendet wurde, verwenden [Direktivenanker](directives.md#direktivenanker) und ihre Anker von Host-Element-Regeln weiterhin das normale asynchrone Wiederholungsverhalten.
 
 Bei Interaktionen ohne `block` werden fehlende [Interaktionsanker](interaction-anchors.md) und Anker von [Host-Element-Regeln](rules.md#host-element-regeln) alle 50 ms bis zu zwei Sekunden lang erneut gesucht. Dadurch kann eine Interaktion, die auf ein Browser-Ereignis wie `show-dialog` lauscht, warten, bis der Dialog gemountet wurde, bevor der Dialog oder eines seiner Elemente als Interaktionsanker ausgewählt wird.
 
