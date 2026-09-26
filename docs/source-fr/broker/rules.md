@@ -240,4 +240,4 @@ rules:
 ```
 
 !!! warning
-    L’état du panneau est asynchrone. Une interaction utilisant une règle de panneau ne peut pas utiliser une directive `block`, car le blocage d'un événement doit se terminer dans la pile d'appels synchrones de l'événement. UIX Broker ignore ces interactions et enregistre un avertissement.
+    L'état du panneau est asynchrone. Une interaction dont les règles au niveau de l'interaction contiennent une règle de panneau ne peut pas utiliser une directive `block`, car le blocage d'un événement doit se terminer dans la pile d'appels synchrones de l'événement. UIX Broker ignore ces interactions et enregistre un avertissement. Les directives ultérieures autres que `block` peuvent toutefois avoir leurs propres règles de panneau ; celles-ci ne conditionnent que les directives concernées, après le blocage de l'événement.

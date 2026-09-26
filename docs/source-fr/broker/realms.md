@@ -14,6 +14,12 @@ L'interaction `realm` détermine où Broker écoute et comment sa valeur `listen
 
 Tous les domaines prennent en charge les [règles](rules.md) et les [directives](directives.md). L'élément [interaction Anchor](interaction-anchors.md) sélectionné est toujours dans le navigateur actuel, donc un événement capturé à partir du domaine `server` peut toujours mettre à jour un élément du navigateur ou lui envoyer un événement.
 
+## Enregistrements des écouteurs
+
+Broker enregistre un écouteur navigateur pour chaque nom d'événement distinct du domaine `browser` et un abonnement au bus d'événements Home Assistant pour chaque nom d'événement distinct du domaine `server`. Les interactions activées qui utilisent la même valeur `listen` partagent cet enregistrement ; Broker évalue leurs ancres et leurs règles après la réception de l'événement.
+
+Par exemple, deux interactions `browser` qui écoutent toutes deux `uix-applied` utilisent un seul écouteur `window`, et deux interactions `server` qui écoutent toutes deux `state_changed` utilisent un seul abonnement au bus d'événements. Vous pouvez séparer les interactions selon leur cible, leurs règles ou leurs directives lorsque cela rend la configuration plus claire : les regrouper n'est pas nécessaire pour réduire le nombre d'écouteurs.
+
 ## Navigateur
 
 `browser` écoute `window` pendant la phase de capture. Utilisez-le pour les événements DOM tels que `click`, `change`, `show-dialog` et les événements de navigateur personnalisés de Home Assistant. `listen` peut être un nom d'événement ou une liste lorsque la même interaction doit répondre à plusieurs événements.
@@ -46,6 +52,33 @@ Par exemple, exécutez une interaction après le démarrage de Broker et chaque 
 
 L'objet `detail` de l'événement de navigateur est la racine des données capturées. Voir [Règles de données capturées](./rules.md#captured-data-rules) et [Directive d'événement](./directives.md#event) pour savoir comment les données capturées sont mises en correspondance et
 réutilisé.
+
+### Événements du cycle de vie de UIX Styling
+
+UIX Styling émet les événements navigateur suivants, qui remontent dans le DOM et traversent les frontières des composants, depuis son élément `<uix-node>` :
+
+- `uix-applied` — après l'ajout ou la réapplication de UIX à un élément. L'événement peut se déclencher à nouveau lorsque l'élément hôte est mis à jour ou que la configuration UIX est réappliquée ; les directives doivent donc pouvoir être exécutées plusieurs fois sans effet indésirable.
+- `uix-styles-update` — lorsque le nœud UIX met à jour le texte CSS rendu, y compris après une mise à jour pilotée par un modèle. Le dernier texte est disponible dans `detail.uix_node._rendered_styles`, mais Lit n'a pas encore appliqué son élément `<style>`. Pour lire les styles calculés dans une directive ultérieure, utilisez d'abord une directive [`action: javascript`](./directives.md#action-javascript) avec `data.code: "return event.detail.uix_node.updateComplete;"`. L'action attend cette Promise avant l'exécution de la directive suivante.
+- `uix-theme-update` — après le nouveau traitement d'une mise à jour du thème par le nœud UIX. Cet événement est émis même si le CSS UIX obtenu est inchangé.
+
+Les trois événements fournissent l'élément `<uix-node>` d'origine dans `detail.uix_node`. Utilisez l'ancre de chemin d'événement `"< target"` pour sélectionner son élément parent, auquel UIX est appliqué, que le nœud se trouve dans le DOM léger ou dans un DOM fantôme.
+
+Par exemple, définissez `themeMode` d'une carte de carte géographique lorsque UIX est appliqué à la carte ou lorsque son thème est mis à jour :
+
+```yaml
+- realm: browser
+  listen:
+    - uix-applied
+    - uix-theme-update
+  anchor: "< target"
+  rules:
+    - hui-map-card
+  directives:
+    - type: property
+      anchor: "$ ha-map"
+      set: themeMode
+      value: dark
+```
 
 ## Raccourci
 

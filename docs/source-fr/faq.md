@@ -53,6 +53,7 @@ Oui, consultez le tableau ci-dessous.
 | [Fonderies](../forge/foundries.md) (configurations Forge réutilisables) | Non | Oui |
 | [Macros](../using/templates.md#macros) (modèles Jinja réutilisables) | Non | Oui |
 | [Sparks](../forge/sparks/index.md) (comportements autonomes ajoutés aux éléments Forge) | Non | Oui |
+| [Broker](../broker/index.md) (création d'interactions déclaratives avec les événements du frontend) | Non | Oui |
 | [Limitation des mises à jour d'état du frontend](../extras/frontend-states-throttling.md) (facultative) | Non | Oui |
 | [Délai d'application des styles aux dialogues](../extras/dialog-styling-delay.md) (facultatif) | Non | Oui |
 | [Arrière-plans des vues du tableau de bord](../using/view-backgrounds.md) | Non | Oui |
@@ -60,6 +61,8 @@ Oui, consultez le tableau ci-dessous.
 | [Arrière-plans des vues](../using/view-backgrounds.md) | Non | Oui |
 | [Style des icônes — remplacement par entité](../using/icons.md#specifying-for-an-entity-override) | Non | Oui |
 | [Style des images d'entité](../using/images.md) | Non | Oui |
+| [Style des panneaux personnalisés](../using/custom-panels.md), y compris ceux chargés dans des iFrames | Non | Oui |
+| [Style des panneaux d'applications et d'ingress](https://uix.lf.technology/using/apps/), y compris ceux chargés dans des iFrames | Non | Oui |
 | Fenêtre contextuelle pour recharger ou vider le cache | Non | Oui |
 | Documentation détaillée avec exemples visuels | Limitée | Oui |
 | Mod-card | Oui | Oui |

@@ -11,7 +11,12 @@ Les directives s'exécutent une par une après chaque correspondance de règle d
 - [Event](#event) — envoie un `CustomEvent`.
 - [Call](#call) — invoque une méthode d'élément.
 - [Button](#button) — insérez un bouton interactif Home Assistant.
+- [Badge](#badge) — insérez un badge d'état stylisé avec Web Awesome.
+- [Contenu textuel](#text-content) — insérez du texte stylisé à côté d'un élément.
 - [Icône de vignette](#tile-icon) — insérez une icône de vignette interactive Home Assistant.
+- [Info-bulle](#tooltip) — associez une info-bulle stylisée à un élément.
+- [Verrou](#lock) — exigez un défi de déverrouillage avant d'utiliser un élément.
+- [Gestionnaire d'actions](#action-handler) — associez des actions Home Assistant à un élément existant.
 - [Action](#action) — exécutez une action Home Assistant, frontend ou UIX.
 - [Template](#template) — affiche un modèle Jinja2 une fois et enregistre son résultat.
 - [JavaScript](#javascript) — évalue JavaScript de manière synchrone et enregistre sa valeur de retour.
@@ -19,7 +24,7 @@ Les directives s'exécutent une par une après chaque correspondance de règle d
 
 ## Règles de la directive
 
-Ajoutez `rules` à n’importe quelle directive à l’exception de `block` pour conditionner uniquement cette directive. La syntaxe est la même que celle des [règles d'interaction](./rules.md). Pour `property`, `event`, `call`, `button` et `tile-icon`, les règles d'élément hôte inspectent par défaut l'ancre de directive résolue. Pour `action` et `wait`, ils inspectent l’ancre d’interaction. Le `anchor` d'une règle reste relatif à cette ancre par défaut, ou peut être absolu comme d'habitude.
+Ajoutez `rules` à n’importe quelle directive à l’exception de `block` pour conditionner uniquement cette directive. La syntaxe est la même que celle des [règles d'interaction](./rules.md). Pour `property`, `event`, `call`, `action-handler`, `button`, `badge`, `text-content`, `tile-icon`, `tooltip` et `lock`, les règles d'élément hôte inspectent par défaut l'ancre de directive résolue. Pour `action`, `template`, `javascript` et `wait`, elles inspectent l’ancre d'interaction. Une directive `event` ciblant `window` ou `document` utilise également l'ancre d'interaction. L'`anchor` d'une règle reste relatif à cette ancre par défaut, ou peut être absolu comme d'habitude.
 
 ```yaml
 directives:
@@ -34,7 +39,7 @@ directives:
         match: true
 ```
 
-Les règles `panel` obtiennent l'état actuel du panneau lorsque la directive est atteinte. Cela permet à une directive antérieure de s'exécuter quel que soit le panneau actuel, tandis qu'une directive ultérieure ne s'exécute que sur un panneau correspondant.
+Les règles `panel` obtiennent l'état actuel du panneau lors de sa première utilisation, puis le réutilisent pour le reste de l'interaction. Si l'interaction possède elle-même une règle `panel`, les règles des directives réutilisent cet état. Une règle `panel` au niveau d'une directive permet à une directive antérieure de s'exécuter quel que soit le panneau actuel, tandis qu'une directive ultérieure ne s'exécute que si le panneau correspond.
 
 `block` n'accepte pas les règles de directive. Placez sa condition dans le `rules` de l'interaction afin que l'événement soit bloqué de manière synchrone uniquement lorsque l'interaction complète correspond.
 
@@ -302,7 +307,7 @@ Utilisez `uix` pour le style UIX, y compris les styles à l’intérieur de la r
     - Les événements de pointeur, de souris, de toucher et de clic s'arrêtent à l'icône générée. Cela empêche l'ondulation ou le gestionnaire d'action d'un élément conteneur de réagir tout en conservant l'action et l'ondulation de l'icône de tuile.
     - Broker ajoute l'attribut `data-uix-broker-tile-icon` à chaque icône de tuile générée, afin qu'il puisse être sélectionné à partir du style UIX.
 
-##Action
+## Action
 
 `action` exécute un appel de service Home Assistant, une action frontale standard ou l'une des actions spécifiques à UIX Broker.
 
@@ -320,7 +325,7 @@ Utilisez `uix` pour le style UIX, y compris les styles à l’intérieur de la r
       message: Done
 ```
 
-###Action JavaScript
+### Action JavaScript
 
 `action: javascript` est une action de courtier UIX. Mettez le code dans `data.code`. UIX Broker transmet automatiquement `hass`, `anchor`, `event` et `captured` en tant que variables. `hass` est l'objet Home Assistant actif, `anchor` est l'élément DOM d'ancrage d'interaction résolu, `event` est l'événement initiateur et `captured` est les données capturées de l'interaction.
 
@@ -333,6 +338,74 @@ Utilisez `uix` pour le style UIX, y compris les styles à l’intérieur de la r
 ```
 
 Utilisez JavaScript uniquement à partir de configurations UIX fiables.
+
+## Info-bulle
+
+`tooltip` ajoute une info-bulle Home Assistant `wa-tooltip` à côté de la cible sélectionnée. Ses options et variables CSS correspondent à la [spark d'info-bulle Forge](../forge/sparks/tooltip.md). Par défaut, `for` désigne l'ancre de directive résolue ; un sélecteur est relatif à cette ancre et utilise la syntaxe UIX habituelle de `select_tree`. La cible doit être un élément, et non une racine terminale de DOM fantôme.
+
+```yaml
+- type: tooltip
+  content: Ouvrir les commandes de l'éclairage du salon
+  placement: bottom
+```
+
+Utilisez `for: previous` pour associer l'info-bulle au dernier élément créé par une directive précédente de la même interaction. Cette option fonctionne avec `button`, `badge`, `text-content`, `tile-icon` et `lock` (qui crée une superposition de verrouillage). Les directives qui ne créent pas d'élément ne modifient pas cette référence.
+
+```yaml
+- type: button
+  icon: mdi:lightbulb
+  tap_action:
+    action: toggle
+- type: tooltip
+  for: previous
+  content: Allumer ou éteindre l'éclairage
+  placement: bottom
+```
+
+```yaml
+- type: tooltip
+  for: "$ ha-dialog ha-icon-button"
+  content: Fermer
+  without_arrow: true
+```
+
+Utilisez `style` pour définir une table simple de propriétés CSS, notamment les variables `--uix-tooltip-*` directement sur l'info-bulle générée.
+
+```yaml
+- type: tooltip
+  for: previous
+  content: Allumer ou éteindre l'éclairage
+  style:
+    "--uix-tooltip-background-color": var(--primary-color)
+    "--uix-tooltip-content-color": white
+    "--uix-tooltip-max-width": 24ch
+```
+
+`trigger` accepte les modes d'activation Web Awesome séparés par des espaces : `hover`, `focus`, `click` et `manual`. Avec `hover`, l'info-bulle reste ouverte lorsque le pointeur passe de la cible à son contenu, ce qui permet de faire défiler les contenus contraints. `manual` ne déclenche pas l'ouverture automatiquement ; utilisez `open` pour définir son état lors de l'exécution de la directive.
+
+```yaml
+- type: tooltip
+  for: previous
+  trigger: manual
+  open: true
+  content: Cette info-bulle est ouverte par la directive
+```
+
+| Clé | Type | Valeur par défaut | Description |
+| --- | --- | --- | --- |
+| `for` | chaîne | ancre de directive | Sélecteur de cible, ou `previous` pour l'élément créé par la directive précédente. |
+| `content` | chaîne ou nombre | `""` | Contenu HTML de l'info-bulle. Les nombres sont affichés comme du texte. |
+| `placement` | chaîne | `"top"` | `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end`, `right`, `right-start` ou `right-end`. |
+| `distance` | nombre | `8` | Écart en pixels entre l'info-bulle et la cible. |
+| `skidding` | nombre | `0` | Décalage en pixels le long de l'axe de la cible. |
+| `show_delay` | nombre | `150` | Délai en millisecondes avant l'affichage. |
+| `hide_delay` | nombre | `150` | Délai en millisecondes avant le masquage. |
+| `trigger` | chaîne | `"hover focus"` | Modes d'activation séparés par des espaces : `hover`, `focus`, `click` ou `manual`. |
+| `open` | booléen | `false` | Définit l'état d'ouverture lors de l'exécution de la directive, notamment avec `trigger: manual`. |
+| `without_arrow` | booléen | `false` | Masque la flèche directionnelle. |
+| `style` | objet | — | Dictionnaire simple de propriétés CSS et de valeurs, appliquées en ligne à `wa-tooltip`. |
+
+L'info-bulle est insérée comme élément frère de sa cible. Définissez les variables CSS `--uix-tooltip-*` sur le parent de la cible ou sur un ancêtre pour la personnaliser ; consultez la [référence des variables CSS de la spark d'info-bulle Forge](../forge/sparks/tooltip.md#css-variables-reference).
 
 ## Modèle
 
@@ -368,7 +441,7 @@ Les modèles reçoivent les résultats des directives antérieures dans la varia
 
 ## JavaScript
 
-`javascript` évalue une fois `code` et enregistre sa valeur de retour synchrone sous `id`. Le code reçoit `hass`, `anchor`, `event`, `captured` et `directive` ; `directive` contient des résultats de directives antérieures issus de la même interaction. Renvoie un scalaire, un objet ou un tableau ; les directives suivantes peuvent l'utiliser comme `@id` sans conversion.
+`javascript` évalue une fois `code` et enregistre sa valeur de retour synchrone sous `id`. Le code reçoit `hass`, `anchor`, `event`, `captured` et `directive` ; `directive` contient des résultats de directives antérieures issus de la même interaction. Renvoyez un scalaire, un objet ou un tableau ; les directives suivantes peuvent l'utiliser comme `@id` sans conversion. Les mêmes [exigences concernant les identifiants](#template) que pour la directive `template` s'appliquent. Une Promise renvoyée n'est pas attendue ; utilisez une directive [`action: javascript`](#action-javascript) qui renvoie une Promise si les directives suivantes doivent attendre la fin du travail asynchrone.
 
 ```yaml
 - type: javascript
