@@ -6,21 +6,21 @@ description: "Appliquer des opérations déclaratives UIX Broker à un élément
 
 Les directives s'exécutent une par une après chaque correspondance de règle d'interaction. Chaque directive effectue une opération configurée, en utilisant l'ancre d'interaction par défaut ou une ancre de directive explicitement sélectionnée si elle est prise en charge. À l'exception de `block`, une directive peut également avoir son propre `rules` ; la directive ne s'exécute que lorsque toutes correspondent, sinon Broker l'ignore et passe à la directive suivante.
 
-- [Block](#block) — empêche l'action et la propagation par défaut de l'événement initiateur du navigateur.
-- [Property](#property) — définit ou efface une propriété d'objet JavaScript.
-- [Event](#event) — envoie un `CustomEvent`.
-- [Call](#call) — invoque une méthode d'élément.
-- [Button](#button) — insérez un bouton interactif Home Assistant.
-- [Badge](#badge) — insérez un badge d'état stylisé avec Web Awesome.
-- [Contenu textuel](#text-content) — insérez du texte stylisé à côté d'un élément.
-- [Icône de vignette](#tile-icon) — insérez une icône de vignette interactive Home Assistant.
-- [Info-bulle](#tooltip) — associez une info-bulle stylisée à un élément.
-- [Verrou](#lock) — exigez un défi de déverrouillage avant d'utiliser un élément.
-- [Gestionnaire d'actions](#action-handler) — associez des actions Home Assistant à un élément existant.
-- [Action](#action) — exécutez une action Home Assistant, frontend ou UIX.
-- [Template](#template) — affiche un modèle Jinja2 une fois et enregistre son résultat.
-- [JavaScript](#javascript) — évalue JavaScript de manière synchrone et enregistre sa valeur de retour.
-- [Wait](#wait) — retarde la prochaine directive.
+- [Bloquer](#bloquer) — empêche l'action par défaut et la propagation de l'événement navigateur déclencheur.
+- [Propriété](#propriété) — définit ou efface une propriété d'un objet JavaScript.
+- [Événement](#événement) — distribue un `CustomEvent`.
+- [Appeler](#appeler) — appelle une méthode d'un élément.
+- [Bouton](#bouton) — insère un bouton interactif Home Assistant.
+- [Badge](#badge) — insère un badge d'état stylisé avec Web Awesome.
+- [Contenu textuel](#contenu-textuel) — insère du texte stylisé à côté d'un élément.
+- [Icône de tuile](#icône-de-tuile) — insère une icône de tuile interactive Home Assistant.
+- [Info-bulle](#info-bulle) — associe une info-bulle stylisée à un élément.
+- [Verrou](#verrou) — exige un défi de déverrouillage avant l'utilisation d'un élément.
+- [Gestionnaire d'actions](#gestionnaire-dactions) — associe des actions Home Assistant à un élément existant.
+- [Action](#action) — exécute une action Home Assistant, frontend ou UIX.
+- [Modèle](#modèle) — affiche une fois un modèle Jinja2 et enregistre son résultat.
+- [JavaScript](#javascript) — exécute synchroniquement du JavaScript et enregistre sa valeur de retour.
+- [Attendre](#attendre) — retarde la directive suivante.
 
 ## Règles de la directive
 
@@ -236,6 +236,124 @@ Utilisez `uix` pour le style UIX, y compris les styles à l’intérieur de la r
     - La même variable CSS `--uix-button-margin` que l'étincelle du bouton Forge s'applique. La marge par défaut est `-6px` pour un bouton étiqueté et `0px` pour un bouton contenant uniquement une icône.
     - D'autres variables CSS applicables à l'étincelle du bouton Forge s'appliquent également.
 
+## Badge
+
+`badge` insère un élément `uix-badge` à côté de l'ancre de directive. Le badge utilise la base et les styles Web Awesome adaptés par Home Assistant ; ses variantes suivent donc le thème Home Assistant actif. UIX conserve un nom d'élément spécifique et n'enregistre pas le composant global `wa-badge` de Web Awesome.
+
+Par défaut, le badge est inséré après l'ancre. Utilisez `after` ou `before` pour choisir un autre élément frère, avec la même syntaxe UIX `select_tree` que pour `button`. Si cet élément est un `ha-button` ou un `ha-tile-icon`, UIX affiche automatiquement le badge sur cet élément. Pour toute autre cible, `placement` positionne le badge sur son parent.
+
+```yaml
+- type: badge
+  content: 3
+  variant: danger
+  appearance: filled
+  pill: true
+```
+
+Utilisez `style` pour définir directement des propriétés CSS, ou `uix` pour appliquer les styles UIX. Le type UIX est `uix-broker-badge` ; les paramètres résolus sont disponibles sous `config` et les résultats des directives `template` ou `javascript` précédentes sous `directive` dans les modèles UIX.
+
+```yaml
+- type: badge
+  anchor: "$ div.title"
+  before: ".label"
+  content: Expérimental
+  variant: warning
+  appearance: outlined
+  start_icon: mdi:flask-outline
+  style:
+    margin-inline-start: 8px
+```
+
+| Clé | Type | Valeur par défaut | Description |
+| --- | --- | --- | --- |
+| `after` | chaîne | ancre de directive | Sélecteur relatif de l'élément de référence. Le badge est normalement inséré après lui. Pour `ha-button` ou `ha-tile-icon`, il est affiché directement sur cet élément. Avec `placement` sur toute autre cible, il est positionné sur son parent. |
+| `before` | chaîne | — | Même comportement que `after`, mais avant l'élément de référence. |
+| `for` | `previous` | — | À utiliser après une directive qui crée un élément pour le cibler. Incompatible avec `after` et `before`. |
+| `content` | chaîne ou nombre | `""` | Texte affiché dans le badge. |
+| `variant` | chaîne | `brand` | `brand`, `neutral`, `success`, `warning` ou `danger`. |
+| `appearance` | chaîne | `accent` | `accent`, `filled`, `outlined` ou `filled-outlined`. |
+| `pill` | booléen | `false` | Donne au badge une forme de pilule entièrement arrondie. |
+| `attention` | chaîne | `none` | `none`, `pulse` ou `bounce`. |
+| `placement` | chaîne | — | Position sur `ha-button` ou `ha-tile-icon` ; pour toute autre cible, positionne le badge sur le parent au lieu de l'insérer comme élément frère. Valeurs : `top`, `top-start`, `top-end`, `bottom`, `bottom-start`, `bottom-end`, `left`, `left-start`, `left-end`, `right`, `right-start`, `right-end`. |
+| `start_icon` / `end_icon` | chaîne | — | Icône MDI avant ou après le contenu. |
+| `style` | objet | — | Propriétés CSS et valeurs appliquées en ligne à `uix-badge`. |
+| `uix` | objet | — | Configuration UIX appliquée au badge généré, de type `uix-broker-badge`. |
+
+### Positionnement automatique
+
+Le positionnement automatique s'applique lorsque l'ancre résolue ou la référence `after` / `before` est l'un des éléments suivants. Un bouton créé par la spark UIX est traité comme son élément `ha-button` contenu.
+
+| Cible | Position | Mise en œuvre |
+| --- | --- | --- |
+| `ha-button` | Coin supérieur droit | UIX insère le badge dans le bouton, selon le modèle de badge Web Awesome ; son diamètre s'aligne sur les bords supérieur et droit du bouton rendu. |
+| `ha-tile-icon` | Coin supérieur droit | UIX utilise l'emplacement par défaut documenté de l'icône, les décalages de badge de tuile de Home Assistant et une taille compacte. |
+
+Pour ces cibles, `after` et `before` désignent l'élément qui reçoit le badge et ne contrôlent pas son insertion comme élément frère. Sans `placement`, les autres cibles utilisent l'insertion habituelle. Avec `placement`, le badge reste en dehors de la cible et se positionne au bord du parent, sans mesurer ni modifier la cible ; cette option convient surtout si la cible remplit son parent.
+
+Toutes les positions utilisent par défaut la petite taille de police `--ha-font-size-xs` et un espacement compact de `0.25em 0.5em`. Les valeurs de `placement` sont identiques à celles de `wa-tooltip` ; `ha-button` et `ha-tile-icon` utilisent `top-end` par défaut. Pour les autres cibles, `placement` active le positionnement sur le parent ; sans cette option, le badge reste un élément frère.
+
+Définissez les variables CSS de la [spark Forge Badge](../forge/sparks/state-badge.md) dans `style` pour un badge ou via `uix` pour des règles réutilisables. `--uix-badge-offset-x` et `--uix-badge-offset-y` ajustent les badges positionnés ; les valeurs positives les déplacent vers la droite et le bas.
+
+```yaml
+- type: badge
+  after: "$ ha-button"
+  content: 3
+  variant: danger
+  pill: true
+  placement: bottom-end
+```
+
+Utilisez `for: previous` juste après `button` pour afficher le badge sur le bouton créé. L'élément précédent est le `ha-button` généré ; le badge y est donc placé automatiquement.
+
+```yaml
+- type: button
+  label: Salon
+  end_icon: mdi:lightbulb-fluorescent-tube-outline
+  tap_action:
+    action: toggle
+- type: badge
+  for: previous
+  content: 3
+  variant: danger
+  pill: true
+```
+
+!!! note
+    - Définissez au plus un des paramètres `after` et `before`.
+    - `for: previous` ne peut pas être combiné avec `after` ou `before`.
+    - Les badges ciblant `ha-button` et `ha-tile-icon` sont ajoutés directement sur l'élément, et non comme élément frère.
+    - `content` est inséré comme texte, pas comme HTML.
+
+## Contenu textuel
+
+`text-content` insère un `<span>` contenant du texte immédiatement après l'ancre de directive. Cette option permet d'éviter un pseudo-élément CSS lorsqu'il sert uniquement à ajouter une petite étiquette ou une ligne secondaire. Le `span` créé porte l'attribut `data-uix-broker-text-content` et est réutilisé lors des exécutions suivantes de la même directive.
+
+```yaml
+- type: text-content
+  anchor: "$ div.panels-list div.wrapper ha-list-nav slot ha-list-item-button#sidebar-panel-home $ a#item div.content div.headline slot"
+  content: Sécurisé
+  style:
+    display: block
+    font-size: var(--ha-font-size-s)
+    font-weight: var(--ha-font-weight-medium)
+    line-height: 1
+    color: var(--success-color)
+    width: min-content
+- type: tooltip
+  for: previous
+  content: Toutes les zones d'alarme de la maison sont sécurisées
+  placement: top
+```
+
+`content` est toujours inséré comme texte, jamais comme HTML. Il accepte une chaîne ou un nombre, ainsi que les données capturées et les résultats des directives `template` ou `javascript` précédentes. Utilisez `style` pour appliquer des propriétés CSS en ligne au `span` généré.
+
+Si la destination est un emplacement nommé, utilisez soit l'élément `<slot>` lui-même comme ancre, comme dans l'exemple, soit un élément du DOM léger déjà affecté à cet emplacement. Dans ce dernier cas, UIX copie l'attribut `slot` de l'ancre afin que le `span` soit projeté dans le même emplacement. `text-content` n'a pas d'option `slot` : il suit l'ancre résolue.
+
+| Clé | Type | Valeur par défaut | Description |
+| --- | --- | --- | --- |
+| `content` | chaîne ou nombre | `""` | Texte inséré dans le `span` généré. |
+| `style` | objet | — | Propriétés CSS et valeurs appliquées en ligne au `span` généré. |
+
 ## Icône de tuile
 
 !!! info
@@ -306,6 +424,100 @@ Utilisez `uix` pour le style UIX, y compris les styles à l’intérieur de la r
     - Les icônes de vignettes basées sur les entités sont mises à jour lorsque l'état de Home Assistant est mis à jour.
     - Les événements de pointeur, de souris, de toucher et de clic s'arrêtent à l'icône générée. Cela empêche l'ondulation ou le gestionnaire d'action d'un élément conteneur de réagir tout en conservant l'action et l'ondulation de l'icône de tuile.
     - Broker ajoute l'attribut `data-uix-broker-tile-icon` à chaque icône de tuile générée, afin qu'il puisse être sélectionné à partir du style UIX.
+
+## Verrou
+
+`lock` superpose un verrou à l'ancre de directive et empêche son utilisation jusqu'à ce que l'utilisateur actuel réussisse le défi configuré : code PIN, phrase secrète ou confirmation. La directive utilise les mêmes règles d'accès, tentatives, icônes et variables CSS `--uix-lock-*` que la [spark Forge Lock](../forge/sparks/lock.md).
+
+```yaml
+- type: lock
+  action: tap
+  duration: 5s
+  entity: light.living_room
+  unlocked_action:
+    action: toggle
+  locks:
+    - code: 1234
+      admins: true
+```
+
+Par défaut, l'ancre de directive est l'élément verrouillé. Définissez `for` sur un sélecteur relatif pour verrouiller un descendant, ou utilisez `for: previous` juste après une directive créant un élément, telle que `button`, `badge` ou `tile-icon`.
+
+```yaml
+- type: button
+  icon: mdi:account
+- type: lock
+  for: previous
+  locks:
+    - confirmation: true
+      admins: true
+```
+
+Utilisez `anchor` pour modifier la racine des sélecteurs `for`. `locks`, `permissive`, `code_dialog`, `action`, `duration`, `icon_locked`, `icon_unlocked`, `icon_locked_color`, `icon_unlocked_color`, `icon_position` et `icon_size` ont le même sens que pour la spark Forge Lock.
+
+`unlocked_action` est facultatif. Une action Home Assistant normale s'exécute sur `entity` ; `element_tap`, `element_hold` et `element_double_tap` déclenchent l'action correspondante de la configuration de l'élément verrouillé, si elle existe.
+
+Utilisez `style` pour définir des propriétés CSS sur la superposition générée. Les variables `--uix-lock-*` sont généralement préférables, car elles restent applicables pendant les transitions entre les états verrouillé, déverrouillé et bloqué.
+
+```yaml
+- type: lock
+  style:
+    "--uix-lock-background": rgba(0, 0, 0, 0.25)
+    "--uix-lock-icon-size": 20px
+    z-index: 2
+```
+
+Utilisez `uix` pour styliser la superposition avec UIX. Son type UIX est `uix-broker-lock` ; les paramètres résolus sont disponibles sous `config` et les résultats des directives `template` ou `javascript` précédentes sous `directive`.
+
+```yaml
+- type: lock
+  locks:
+    - confirmation: true
+      admins: true
+  uix:
+    style: |
+      :host {
+        --uix-lock-background: {{ 'rgba(0, 0, 0, 0.35)' if config.locks else 'transparent' }};
+      }
+```
+
+## Gestionnaire d'actions
+
+`action-handler` associe le gestionnaire d'actions Home Assistant à l'ancre de directive. Configurez une ou plusieurs actions standard Home Assistant ; `tap_action`, `hold_action` et `double_tap_action` sont pris en charge. L'action correspondante est déclenchée depuis l'ancre sous la forme d'un événement `hass-action` normal.
+
+UIX Broker prend en charge chaque type d'action configuré : son événement `action` n'est transmis ni aux autres écouteurs de l'ancre ni à ceux de ses ancêtres. Utilisez cette directive pour remplacer le comportement existant de ce type d'action, et non pour combiner des actions. Omettez un type d'action ou définissez son action sur `none` pour le laisser inchangé.
+
+Définissez `entity` pour transmettre un identifiant d'entité aux actions qui en ont besoin, telles que `toggle` et `more-info`. `cursor` ne modifie le curseur que sur l'ancre de cette directive et vaut `pointer` par défaut ; vous pouvez le remplacer par toute valeur CSS, comme `default` ou `auto`.
+
+```yaml
+- type: action-handler
+  anchor: "$ div.menu div.title"
+  tap_action:
+    action: navigate
+    navigation_path: /home
+```
+
+```yaml
+- type: action-handler
+  anchor: "$ div.menu div.title"
+  cursor: default
+  entity: light.living_room
+  tap_action:
+    action: toggle
+  hold_action:
+    action: more-info
+  double_tap_action:
+    action: navigate
+    navigation_path: /dashboard-lights
+```
+
+| Clé | Type | Description |
+| --- | --- | --- |
+| `entity` | chaîne | Identifiant d'entité transmis aux actions qui en ont besoin. |
+| `cursor` | chaîne | Curseur CSS de l'ancre. Valeur par défaut : `pointer`. |
+| `tap_action` | action | Action exécutée lors d'un appui. |
+| `hold_action` | action | Action exécutée lors d'un appui prolongé. |
+| `double_tap_action` | action | Action exécutée lors d'un double appui. |
 
 ## Action
 

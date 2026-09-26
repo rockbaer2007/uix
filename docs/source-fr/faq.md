@@ -62,7 +62,7 @@ Oui, consultez le tableau ci-dessous.
 | [Style des icônes — remplacement par entité](../using/icons.md#specifying-for-an-entity-override) | Non | Oui |
 | [Style des images d'entité](../using/images.md) | Non | Oui |
 | [Style des panneaux personnalisés](../using/custom-panels.md), y compris ceux chargés dans des iFrames | Non | Oui |
-| [Style des panneaux d'applications et d'ingress](https://uix.lf.technology/using/apps/), y compris ceux chargés dans des iFrames | Non | Oui |
+| [Style des panneaux d'applications et d'ingress](../using/apps.md), y compris ceux chargés dans des iFrames | Non | Oui |
 | Fenêtre contextuelle pour recharger ou vider le cache | Non | Oui |
 | Documentation détaillée avec exemples visuels | Limitée | Oui |
 | Mod-card | Oui | Oui |
